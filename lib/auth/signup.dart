@@ -38,8 +38,8 @@ class _signupState extends State<signup> {
                       height: 20,
                     ),
                     Text("signup",
-                        style:
-                            TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
                     Container(
                       height: 10,
                     ),
@@ -48,64 +48,64 @@ class _signupState extends State<signup> {
                     Container(height: 20),
                     Text(
                       "Username",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     Container(height: 10),
                     CustomTextForm(
-                      hinttext: "Enter Your Username",
-                      mycontroller: username,
-                      validator: (val) {
+                        hinttext: "Enter Your Username",
+                        mycontroller: username,
+                        validator: (val) {
                           if (val == null || val.isEmpty) {
                             return 'Please enter some text';
                           }
                           return null;
-                        }
-                    ),
+                        }),
                     Text(
                       "Email",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     Container(height: 10),
                     CustomTextForm(
-                      hinttext: "Enter Your Email",
-                      mycontroller: email,
-                      validator: (val) {
+                        hinttext: "Enter Your Email",
+                        mycontroller: email,
+                        validator: (val) {
                           if (val == null || val.isEmpty) {
                             return 'Please enter some text';
                           }
                           return null;
-                        }
-                    ),
+                        }),
                     Text(
                       "Password",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     Container(height: 10),
                     CustomTextForm(
-                      hinttext: "Enter Your Password",
-                      mycontroller: password,
-                      validator: (val) {
+                        hinttext: "Enter Your Password",
+                        mycontroller: password,
+                        validator: (val) {
                           if (val == null || val.isEmpty) {
                             return 'Please enter some text';
                           }
                           return null;
-                        }
-                    ),
+                        }),
                     Text(
                       "Confirm Password",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     Container(height: 10),
                     CustomTextForm(
-                      hinttext: " Confirm Your Password",
-                      mycontroller: confirmpassword,
-                      validator: (val) {
+                        hinttext: " Confirm Your Password",
+                        mycontroller: confirmpassword,
+                        validator: (val) {
                           if (val == null || val.isEmpty) {
                             return 'Please enter some text';
                           }
                           return null;
-                        }
-                    ),
+                        }),
                   ],
                 ),
               ),
@@ -113,8 +113,7 @@ class _signupState extends State<signup> {
               CustomButton(
                 title: "signup",
                 onPressed: () async {
-                  
-                if (formState.currentState!.validate()){
+                  if (formState.currentState!.validate()) {
                     try {
                       // ignore: unused_local_variable
                       final credential = await FirebaseAuth.instance
@@ -122,7 +121,8 @@ class _signupState extends State<signup> {
                         email: email.text,
                         password: password.text,
                       );
-                      Navigator.of(context).pushReplacementNamed("homepage");
+                      FirebaseAuth.instance.currentUser!.sendEmailVerification(); // to send message inbox to verify
+                      Navigator.of(context).pushReplacementNamed("login");
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'weak-password') {
                         print('The password provided is too weak.');

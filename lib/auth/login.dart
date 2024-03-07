@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/componenents/customlogoauth.dart';
 import 'package:flutter_app/componenents/textformfield.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +19,27 @@ class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   GlobalKey<FormState> formState = GlobalKey<FormState>();
+  Future signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      return;
+    }
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    Navigator.of(context).pushNamedAndRemoveUntil("homepag", (rout) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +122,17 @@ class _LoginState extends State<Login> {
                         email: email.text,
                         password: password.text,
                       );
-                      Navigator.of(context).pushReplacementNamed("homepage");
+                      if (credential.user!.emailVerified) {
+                        Navigator.of(context).pushReplacementNamed("homepage");
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          title: 'Error',
+                          desc: 'verify you email and press link of reset  ',
+                        ).show();
+                      }
                     } catch (e) {
                       String errorMessage =
                           "An error occurred, please try again.";
@@ -150,7 +182,9 @@ class _LoginState extends State<Login> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                     textColor: Color.fromARGB(255, 56, 159, 59),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithGoogle();
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

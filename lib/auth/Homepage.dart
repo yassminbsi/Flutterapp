@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,11 +11,21 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black87,
+        onPressed:() {
+        Navigator.of(context).pushNamed("Addviews");
+
+      },
+      child: Icon(Icons.add,color: Color(0xFFFFCA20), ),
+      ),
       appBar: AppBar(
-        title: const Text('Bonjour Mybus'),
+        title: const Text('E-Karhabty'),
         actions: [
           IconButton(
               onPressed: () async {
+                GoogleSignIn googleSignIn = GoogleSignIn();
+                googleSignIn..disconnect();
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil("login", (route) => false);
@@ -22,16 +33,170 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(Icons.exit_to_app))
         ],
       ),
-      body: ListView(children: [
-        FirebaseAuth.instance.currentUser!.emailVerified
-            ? Text("hi..")
-            : MaterialButton(
-                textColor: const Color.fromARGB(255, 139, 20, 20),
-                onPressed: () {
-                  FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                },
-                child: Text("Verified your email"),
-              )
+      body: ListView
+      (children: [
+        Card(
+            color: Color.fromARGB(255, 236, 229, 229),
+            
+            child: Container(
+              height: 120,
+                padding: EdgeInsets.all(10),
+                child: Row(
+                 
+                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                 
+                  children: [
+            
+                    Image.asset("images/308.png", width: 50,
+                    ),
+                    
+                    Text("Ligne 1"),
+                    Container(width: 80), 
+                     Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text
+                      (
+                        'Time',
+                        
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          
+                        ),
+                        
+                      ),
+                      width: 100,
+                      height: 65,
+                      color: Color(0xFFFFCA20),
+                    ),
+                    
+                  ],
+                ))),
+        Card(
+            color: Color.fromARGB(255, 236, 229, 229),
+            child: Container(
+              height: 120,
+                padding: EdgeInsets.all(10),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/308.png",
+                      width: 50,
+                    ),
+                    Text("Ligne 2"),
+                    Container(width: 80),
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text(
+                        'Time',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                      width: 100,
+                      height: 65,
+                      color: Color(0xFFFFCA20),
+                    ),
+                  ],
+                ))),
+        Card(
+            color: Color.fromARGB(255, 236, 229, 229),
+            child: Container(
+              height: 120,
+                padding: EdgeInsets.all(10),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/308.png",
+                      width: 50,
+                    ),
+                    Text("Ligne 3"),
+                    Container(width: 80),
+                   Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text(
+                        'Time',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                      width: 100,
+                      height: 65,
+                      color: Color(0xFFFFCA20),
+                    ),
+                  ],
+                ))),
+        Card(
+            color: Color.fromARGB(255, 236, 229, 229),
+            child: Container(
+              height: 120,
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/308.png",
+                      width: 50,
+                    ),
+                    Text("Ligne 4"),
+                    Container(width: 80),
+                   Container(
+                    padding: EdgeInsets.all(15),
+                      child: Text(
+                        'Time',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                      width: 100,
+                      height: 65,
+                      color: Color(0xFFFFCA20),
+                    ),
+                  ],
+                ))),
+        Card(
+            color: Color.fromARGB(255, 236, 229, 229),
+            
+            child: Container(
+              
+              height: 120,
+                padding: EdgeInsets.all(10),
+                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/308.png",
+                      width: 50,
+                    ),
+                    Text("Ligne 5"),
+                    Container(width: 80),
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text(
+                        'Time',
+                        style: TextStyle(
+                          color:Colors.black,
+                            
+                          fontSize: 14,
+                        ),
+                      ),
+                      width: 100,
+                      height: 65,
+                      color: Color(0xFFFFCA20),
+                      
+                    ),
+                  ],
+                ))),
       ]),
     );
   }
