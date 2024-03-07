@@ -5,7 +5,6 @@ import 'package:flutter_app/auth/Homepage.dart';
 import 'package:flutter_app/auth/login.dart';
 import 'package:flutter_app/auth/signup.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

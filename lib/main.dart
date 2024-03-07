@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/auth/Homepage.dart';
 import 'package:flutter_app/auth/login.dart';
 import 'package:flutter_app/auth/signup.dart';
+import 'package:flutter_app/views/add.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,12 +44,21 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Fixed the case of 'build'
     return MaterialApp(
+      theme: ThemeData(appBarTheme: AppBarTheme(
+        backgroundColor:  Color(0xFFFFCA20),
+        titleTextStyle: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),
+      iconTheme: IconThemeData(color: Colors.black87 , size: 28)
+      )),
       debugShowCheckedModeBanner: false,
-      home: FirebaseAuth.instance.currentUser == null ? Login() : Homepage(),
+      home: (FirebaseAuth.instance.currentUser != null &&
+              FirebaseAuth.instance.currentUser!.emailVerified)
+          ? Homepage()
+          : Login(),
       routes: {
         "signup": (context) => signup(),
         "login": (context) => Login(),
         "homepage": (context) => Homepage(),
+        "Addviews": (context) => AddCard(),
       },
     );
   }

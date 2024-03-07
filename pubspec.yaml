@@ -74,6 +74,7 @@ flutter:
   assets:
      - images/Bus.png
      - images/google.png
+     - images/308.png
 
   #   - images/a_dot_ham.jpeg
 
