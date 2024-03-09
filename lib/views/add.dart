@@ -12,8 +12,14 @@ class AddCard extends StatefulWidget {
 
 class _AddCardState extends State<AddCard> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
-  TextEditingController name = TextEditingController();
+  TextEditingController bus_id = TextEditingController();
+  TextEditingController mat_b = TextEditingController();
+  TextEditingController year_b = TextEditingController();
+  TextEditingController volume_b = TextEditingController();
+  TextEditingController assurance_b = TextEditingController();
+  
   CollectionReference bus = FirebaseFirestore.instance.collection('bus');
+  
 
   addBus() async {
     if (formState.currentState!.validate()) {
@@ -21,7 +27,11 @@ class _AddCardState extends State<AddCard> {
         DocumentReference response = await
         bus
         .add({
-          "name": name.text
+          "bus_id": bus_id.text,
+          "mat_id": mat_b.text,
+          "year_b": year_b.text,
+          "volume_b": volume_b.text,
+          "assurance_b": assurance_b.text,
           });
         Navigator.of(context).pushReplacementNamed("homepage");
       } catch (e) {
@@ -42,8 +52,53 @@ class _AddCardState extends State<AddCard> {
                 padding: EdgeInsetsDirectional.symmetric(
                     vertical: 20, horizontal: 20),
                 child: CustomTextFormAdd(
-                  hinttext: "Enter New Bus",
-                  mycontroller: name,
+                  hinttext: "Numéro Bus",
+                  mycontroller: bus_id,
+                 
+                  validator: (val) =>
+                      (val!.isEmpty) ? "Enter valid number" : null,
+                ),
+              ),
+              Container(
+                padding: EdgeInsetsDirectional.symmetric(
+                    vertical: 20, horizontal: 20),
+                child: CustomTextFormAdd(
+                  hinttext: "Matricule",
+                  mycontroller: mat_b,
+                 
+                  validator: (val) =>
+                      (val!.isEmpty) ? "Enter valid number" : null,
+                ),
+              ),
+              Container(
+                padding: EdgeInsetsDirectional.symmetric(
+                    vertical: 20, horizontal: 20),
+                child: CustomTextFormAdd(
+                  hinttext: "Année",
+                  mycontroller: year_b,
+                 
+                  validator: (val) =>
+                      (val!.isEmpty) ? "Enter valid number" : null,
+                ),
+              ),
+              Container(
+                padding: EdgeInsetsDirectional.symmetric(
+                    vertical: 20, horizontal: 20),
+                child: CustomTextFormAdd(
+                  hinttext: "volume",
+                  mycontroller: volume_b,
+                 
+                  validator: (val) =>
+                      (val!.isEmpty) ? "Enter valid number" : null,
+                ),
+              ),
+              Container(
+                padding: EdgeInsetsDirectional.symmetric(
+                    vertical: 20, horizontal: 20),
+                child: CustomTextFormAdd(
+                  hinttext: "assurance",
+                  mycontroller: assurance_b,
+                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
