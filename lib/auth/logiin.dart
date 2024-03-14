@@ -32,7 +32,7 @@ class LoginPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Let's Sign in",
+                "Se Connecter",
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

@@ -42,8 +42,8 @@ getData() async{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 50, 112, 173),
-        title:  const Text("Consultation", style: TextStyle(color: Colors.white,)),
+        backgroundColor: Color(0xFFFFCA20),
+        title:  const Text("Consultation", style: TextStyle(color: Colors.black54,)),
         actions: [
           Row(
             children: [
@@ -69,17 +69,17 @@ getData() async{
                   CircleAvatar(
                     child: Image.asset('images/icon_user.png'),
                   ),
-                  Text('Yassmin Bsissa'),
-                  Text('yassminbsissa74@gmail.com', style: TextStyle(fontSize: 14),),
+                  Text('Nom Admin'),
+                  Text('Email Admin', style: TextStyle(fontSize: 14),),
                 ],
                 ),
                 ),
                 ListTile(
                   onTap: () {Get.to(HomeAdmin());},
-                  leading: Icon(Icons.home, color: Colors.white,),
-                  title: Text('Home Admin', style: TextStyle(color: Colors.white, fontSize: 24 ),
+                  leading: Icon(Icons.home, color: Colors.black54,),
+                  title: Text('Home Admin', style: TextStyle(color: Colors.black54, fontSize: 24 ),
                   ),
-                  tileColor: Color.fromARGB(255, 50, 112, 173),
+                  tileColor: Colors.black54,
                 ),
                 ListTile(
                   onTap: (){ Get.to(AddBus());},
