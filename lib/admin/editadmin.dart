@@ -82,16 +82,16 @@ EditAdmin() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.white),),
-      backgroundColor: Color.fromARGB(255, 50, 112, 173),
+      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.black54),),
+      
       actions: [
         Row(
           children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
+            Text("Déconnexion", style: TextStyle(color: Colors.black54),),
             IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
+            }, icon: Icon(Icons.exit_to_app, color: Colors.black54,)),
           ],
         )
         ],
@@ -110,7 +110,7 @@ EditAdmin() async{
                 CustomLogoAuth(),
                 Center(
           child: Text("Modifier admin",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 25, 96, 167))),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54)),
                 ),
                 Container(height: 10,),
                 Text("Nom", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
@@ -120,7 +120,7 @@ EditAdmin() async{
           mycontroller: nom,
           validator: (val) {
             if (val == "") {
-              return "Ne peut pas être vide";
+              return "Veuillez saisir votre nom";
             }
           }, 
           
@@ -133,7 +133,7 @@ EditAdmin() async{
           mycontroller: prenom,
           validator: (val) {
             if (val == "") {
-              return "Ne peut pas être vide";
+              return "Veuillez saisir votre prénom";
             }
           },
           ),
@@ -147,7 +147,7 @@ CustomTextFormAdd(
   mycontroller: phone,
   validator: (val) {
     if (val!.isEmpty) {
-      return "Ne peut pas être vide";
+      return "Veuillez saisir votre N° de téléphone";
     } else if (int.tryParse(val) == null) {
       return "Format invalide. Entrez un numéro de téléphone valide.";
     }
@@ -161,7 +161,7 @@ CustomTextFormAdd(
   mycontroller: email,
   validator: (val) {
     if (val == "") {
-      return "Ne peut pas être vide";
+      return "Veuillez saisir votre e-mail";
     } else if (!RegExp(r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val!)) {
       return "Format invalide (ex: exemple@gmail.com)";
     }
@@ -178,7 +178,7 @@ CustomTextFormAdd(
   mycontroller: password,
   validator: (val) {
     if (val!.isEmpty) {
-      return "Ne peut pas être vide";
+      return "Veuillez saisir votre mot de passe";
     }
   },
 ),
@@ -192,7 +192,7 @@ CustomTextFormAdd(
   mycontroller: confirmpassword,
   validator: (val) {
     if (val!.isEmpty) {
-      return "Ne peut pas être vide";
+      return "Veuillez saisir votre mot de passe";
     } else if (val != password.text) {
       return "Les mots de passe ne correspondent pas";
     }
@@ -203,7 +203,7 @@ CustomTextFormAdd(
             ),
             ),
             MaterialButton(
-              child: Text("Enregistrer les modifications") ,
+              child: Text("Sauvegarder") ,
               onPressed: (){
                 EditAdmin();
               },)

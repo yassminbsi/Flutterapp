@@ -41,15 +41,15 @@ getData() async{
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 25, 96, 167),
-        foregroundColor: Colors.white,
+        backgroundColor: Color(0xFFFFCA20),
+        foregroundColor: Colors.black54,
         onPressed:() {
           Navigator.of(context).pushNamed("/AddAdmin");
         } ,
         child: Icon(Icons.add),
         ),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 50, 112, 173),
+        backgroundColor: Color(0xFFFFCA20),
         title:  const Text('Liste Admin', style: TextStyle(color: Colors.white),),
         actions: [
           Row(
@@ -86,7 +86,7 @@ getData() async{
                   leading: Icon(Icons.home, color: Colors.white,),
                   title: Text('Home Admin', style: TextStyle(color: Colors.white, fontSize: 24 ),
                   ),
-                  tileColor: Color.fromARGB(255, 50, 112, 173),
+                  tileColor: Colors.black87,
                 ),
                 ListTile(
                   onTap: (){ Get.to(AddBus());},
@@ -184,22 +184,32 @@ getData() async{
                 child: Card(
                   child: Container(
                     padding:EdgeInsets.all(10),
-                    color: Color.fromARGB(255, 236, 236, 236),
-                    child:  Row(
-  crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
-  children: [
-    Image.asset("images/icon_user.png", height: 50,),
-    SizedBox(width: 8), // Espace entre l'image et le texte
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
-      children: [
-        Text("Nom: ${data[i]['nom']}"),
-        Text("Prénom: ${data[i]['prenom']}"),
-        
-      ],
-    ),
-  ],
-),
+                    color: Color.fromARGB(255, 236, 229, 229),
+                    child:  Container(
+                      height: 120,
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .center, // Aligner les éléments en haut
+                      children: [
+                        Image.asset("images/308.png", width: 50,),
+                        SizedBox(width: 8), 
+                        // Espace entre l'image et le texte
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                           // Aligner les textes à gauche
+                            children: [
+                              Text("Nom: ${data[i]['nom']}"),
+                              Text("Prénom: ${data[i]['prenom']}"),
+                              
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    ),
 
                   ),
                 ),

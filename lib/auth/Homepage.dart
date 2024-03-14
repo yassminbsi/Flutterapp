@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  const 
+  Homepage({super.key});
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
   List<QueryDocumentSnapshot> data = [];
+  bool isLoading = true;
 
   getData() async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('bus').get();
     data.addAll(querySnapshot.docs);
+     isLoading = false;
     setState(() {
       
     });
@@ -52,57 +55,62 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(Icons.exit_to_app))
         ],
       ),
-      body: GridView.builder(
-        itemCount: data.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1, mainAxisExtent: 160),
-        itemBuilder: (context, i) {
-           return Card(
-              color: Color.fromARGB(255, 236, 229, 229),
-              child: Container(
-                  height: 120,
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "images/308.png",
-                        width: 50,
-                      ),
-                      Text("Ligne 3"),
-                      Container(width: 80),
-                      Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: [Text(
-                            '${data [i]['bus_id']}',
-                            
-                        
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
+      body: WillPopScope( 
+        child: isLoading== true ? Center(child: CircularProgressIndicator(),)
+        :GridView.builder(
+          itemCount: data.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1, mainAxisExtent: 160),
+          itemBuilder: (context, i) {
+             return InkWell(
+                    onTap: () {
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //  builder: (context) =>
+                      // NoteView(categoryid: data[i].id)));
+                    },
+                    onLongPress: () {},
+                    child: Card(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        color: Color.fromARGB(255, 236, 229, 229),
+                        child: Container(
+                          height: 120,
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                               "images/308.png",
+                                 width: 50,
+                              ),
+                               Container(width: 80),
+                              // Espace entre l'image et le texte
+                              Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Aligner les textes à gauche
+                                  children: [
+                                    Text("Bus: ${data[i]['nombus']}"),
+                                    Text("Station: ${data[i]['station']}"),
+                                    
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '${data[i]['mat_b']}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            ),
-                          ),
-                          ]
                         ),
-                      
-                       
-                        
-                        
-                        width: 100,
-                        height: 65,
-                        color: Color(0xFFFFCA20),
                       ),
-                    ],
-                  )));
+                    ),
+                  );
+                  ;
+          },
+        ),
+        onWillPop: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("/login", (route) => false);
+          return Future.value(false);
         },
       ),
     );

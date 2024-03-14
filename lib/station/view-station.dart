@@ -40,8 +40,8 @@ getData() async{
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 25, 96, 167),
-        foregroundColor: Colors.white,
+        backgroundColor:  Color(0xFFFFCA20),
+        foregroundColor: Colors.black54,
         onPressed:() {
           Navigator.of(context).pushNamed("/AddStation");
         } ,
@@ -75,6 +75,7 @@ getData() async{
             mainAxisExtent:120 ),
           itemBuilder: (context, i) {
             return  Card(
+              color: Color.fromARGB(255, 236, 229, 229),
               child: ListTile(
                 title: Text("Station: ${data[i]['nomstation']}", style: TextStyle(fontSize: 20),),
                 subtitle: Column(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-import 'homee.dart';
+import 'Homepage.dart';
 
 class AuthController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -69,7 +69,7 @@ class AuthController extends GetxController
           verificationId: firebaseVerificationId, smsCode: otp.value);
       // Sign the user in (or link) with the credential
       await auth.signInWithCredential(credential);
-      Get.off(HomePage());
+      Get.off(Homepage());
     } catch (e) {
       statusMessage.value = "Invalid  OTP";
       statusMessageColor = Colors.red.obs;
