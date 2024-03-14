@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+
+
+class CustomButtonAuth extends StatelessWidget {
   final void Function()? onPressed;
   final String title;
-  const CustomButton({super.key, this.onPressed, required this.title});
+  const CustomButtonAuth({super.key, this.onPressed, required this.title, required String hinttext, required String? Function(dynamic val) validator, required TextEditingController mycontroller, required bool obscureText});
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      height: 50,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      textColor: Colors.white,
-      onPressed: onPressed,
-      child: Text(title ,  style: TextStyle(
-              color: Color.fromARGB(255, 0, 0, 0),
-              fontWeight: FontWeight.bold,
-              fontSize: 15)),
-      color:  Color(0xFFFFCA20),
-    );
+            height: 50,
+            shape: 
+             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            color: Color.fromARGB(255, 25, 96, 167),
+            textColor: Colors.white,
+            onPressed: onPressed,
+            child: Text(title),
+            
+          );
   }
 }

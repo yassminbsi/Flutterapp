@@ -1,11 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/admin/addadmin.dart';
-import 'package:flutter_app/admin/view-admin.dart';
+import 'package:flutter_app/admin/consulteradmin.dart';
+import 'package:flutter_app/admin/editadmin.dart';
 import 'package:flutter_app/auth/home_admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/editbus.dart';
+import 'package:flutter_app/bus/view-bus.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
 import 'package:flutter_app/station/addstation.dart';
@@ -14,17 +15,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeBus extends StatefulWidget {
-  const HomeBus({super.key});
-  State<HomeBus> createState() => _HomeBusState();
+class AccueilAdmin extends StatefulWidget {
+  const AccueilAdmin({super.key});
+  State<AccueilAdmin> createState() => _AccueilAdminState();
 }
-
-class _HomeBusState extends State<HomeBus> {
+class _AccueilAdminState extends State<AccueilAdmin> {
 List<QueryDocumentSnapshot> data = [];
 bool isLoading= true;
 getData() async{
   QuerySnapshot querySnapshot=
-  await FirebaseFirestore.instance.collection("bus").get();
+  await FirebaseFirestore.instance.collection("admin").get();
   
   data.addAll(querySnapshot.docs) ;
   isLoading= false;
@@ -39,22 +39,18 @@ getData() async{
   }
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
-    
-    String? email = user?.email;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 25, 96, 167),
         foregroundColor: Colors.white,
-    
         onPressed:() {
-          Navigator.of(context).pushNamed("/AddBus");
+          Navigator.of(context).pushNamed("/AddAdmin");
         } ,
         child: Icon(Icons.add),
         ),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 50, 112, 173),
-        title:  const Text('Liste de bus', style: TextStyle(color: Colors.white),),
+        title:  const Text('Liste Admin', style: TextStyle(color: Colors.white),),
         actions: [
           Row(
             children: [
@@ -80,17 +76,15 @@ getData() async{
                   CircleAvatar(
                     child: Image.asset('images/icon_user.png'),
                   ),
-                 Text('Compte admin:'),
-                Text(email ?? 'user@example.com', style: TextStyle(fontSize: 14),),
+                  Text('Yassmin Bsissa'),
+                  Text('yassminbsissa74@gmail.com', style: TextStyle(fontSize: 14),),
                 ],
                 ),
                 ),
                 ListTile(
                   onTap: () {Get.to(HomeAdmin());},
                   leading: Icon(Icons.home, color: Colors.white,),
-                  title: Text(
-                    'Home Admin',
-                    style: TextStyle(color: Colors.white, fontSize: 24 ),
+                  title: Text('Home Admin', style: TextStyle(color: Colors.white, fontSize: 24 ),
                   ),
                   tileColor: Color.fromARGB(255, 50, 112, 173),
                 ),
@@ -147,6 +141,7 @@ getData() async{
       WillPopScope(
         child: isLoading== true ? Center(child: CircularProgressIndicator(),) 
         :GridView.builder(
+          
           itemCount: data.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
@@ -154,30 +149,35 @@ getData() async{
           itemBuilder: (context, i) {
             return  
               InkWell(
-                onTap: () {
-                 // Navigator.of(context).push(MaterialPageRoute(
-                  //  builder: (context) =>
-                   // NoteView(categoryid: data[i].id)));
-                },
+                
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                  ConsultAdmin(adminid: data[i].id)));
+              },
                 onLongPress: () {
                   AwesomeDialog(
                context: context,
                dialogType: DialogType.info,
                animType: AnimType.rightSlide,
-               title: 'Confirmation',
-               desc: 'Voulez-vous vraiment modifier ou supprimer ce bus?',
+                title: 'Confirmation',
+               desc: 'Voulez-vous vraiment modifier ou supprimer cet admin?',
                btnCancelText: "Supprimer" ,
                btnOkText: "Modifier",
                btnCancelOnPress: ()  async {
-               await FirebaseFirestore.instance.collection("bus").doc(data [i].id).delete();
-               Navigator.of(context).pushReplacementNamed("/HomeBus");
+               await FirebaseFirestore.instance.collection("admin").doc(data [i].id).delete();
+               Navigator.of(context).pushReplacementNamed("/AccueilAdmin");
                },
                btnOkOnPress: () async {
                 Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => EditBus(
+                .push(MaterialPageRoute(builder: (context) => EditAdmin(
                   docid: data[i].id,
-                  oldnombus: data[i]["nombus"],
-                  oldstation: data[i]["station"],
+                  oldnom: data[i]["nom"],
+                  oldprenom: data[i]["prenom"],
+                  oldphone: data[i]["phone"],
+                  oldemail: data[i]["email"],
+                  oldpassword: data[i]["password"],
+                  oldconfirmpassword: data[i]["nom"]
                   )));
                }).show();
                 },
@@ -185,22 +185,25 @@ getData() async{
                   child: Container(
                     padding:EdgeInsets.all(10),
                     color: Color.fromARGB(255, 236, 236, 236),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
-                      children: [
-                       Image.asset("images/icon_bus5.png", height: 50,),
-                        SizedBox(width: 8), // Espace entre l'image et le texte
-                        Column(
-                        crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
-                         children: [
-                        Text("Bus: ${data[i]['nombus']}"),
-                         Text("Station: ${data[i]['station']}"),
-                            ],
-                         ),
+                    child:  Row(
+  crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+  children: [
+    Image.asset("images/icon_user.png", height: 50,),
+    SizedBox(width: 8), // Espace entre l'image et le texte
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
+      children: [
+        Text("Nom: ${data[i]['nom']}"),
+        Text("Prénom: ${data[i]['prenom']}"),
+        
+      ],
+    ),
   ],
 ),
+
                   ),
                 ),
+       
               );
           },
              
