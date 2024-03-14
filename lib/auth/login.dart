@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   GlobalKey<FormState> formState = GlobalKey<FormState>();
+  
   Future signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -112,8 +113,8 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-              CustomButton(
-                title: "login",
+             MaterialButton(
+                child: Text("login"),
                 onPressed: () async {
                   if (formState.currentState!.validate()) {
                     try {

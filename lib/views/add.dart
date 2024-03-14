@@ -17,22 +17,19 @@ class _AddCardState extends State<AddCard> {
   TextEditingController year_b = TextEditingController();
   TextEditingController volume_b = TextEditingController();
   TextEditingController assurance_b = TextEditingController();
-  
+
   CollectionReference bus = FirebaseFirestore.instance.collection('bus');
-  
 
   addBus() async {
     if (formState.currentState!.validate()) {
       try {
-        DocumentReference response = await
-        bus
-        .add({
+        DocumentReference response = await bus.add({
           "bus_id": bus_id.text,
           "mat_id": mat_b.text,
           "year_b": year_b.text,
           "volume_b": volume_b.text,
           "assurance_b": assurance_b.text,
-          });
+        });
         Navigator.of(context).pushReplacementNamed("homepage");
       } catch (e) {
         print("error $e");
@@ -42,7 +39,6 @@ class _AddCardState extends State<AddCard> {
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
         appBar: AppBar(title: Text("add Bus")),
         body: Form(
@@ -54,7 +50,6 @@ class _AddCardState extends State<AddCard> {
                 child: CustomTextFormAdd(
                   hinttext: "Numéro Bus",
                   mycontroller: bus_id,
-                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
@@ -65,7 +60,6 @@ class _AddCardState extends State<AddCard> {
                 child: CustomTextFormAdd(
                   hinttext: "Matricule",
                   mycontroller: mat_b,
-                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
@@ -76,7 +70,6 @@ class _AddCardState extends State<AddCard> {
                 child: CustomTextFormAdd(
                   hinttext: "Année",
                   mycontroller: year_b,
-                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
@@ -87,7 +80,6 @@ class _AddCardState extends State<AddCard> {
                 child: CustomTextFormAdd(
                   hinttext: "volume",
                   mycontroller: volume_b,
-                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
@@ -98,17 +90,13 @@ class _AddCardState extends State<AddCard> {
                 child: CustomTextFormAdd(
                   hinttext: "assurance",
                   mycontroller: assurance_b,
-                 
                   validator: (val) =>
                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
               ),
-              CustomButton(
-                title: "Add Bus",
-                onPressed: () {
-                  addBus();
-                },
-              ),
+           MaterialButton(onPressed: (){})
             ])));
   }
 }
+
+        

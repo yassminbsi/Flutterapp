@@ -110,8 +110,8 @@ class _signupState extends State<signup> {
                 ),
               ),
               Container(height: 20),
-              CustomButton(
-                title: "signup",
+              MaterialButton(
+                child: Text ("Signup"),
                 onPressed: () async {
                   if (formState.currentState!.validate()) {
                     try {

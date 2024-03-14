@@ -46,6 +46,17 @@ dependencies:
   pin_code_fields: ^8.0.1
   get: ^4.6.5
   firebase_ui_auth: ^1.4.3
+  http: ^1.1.0
+  map: ^1.4.1
+  flutter_map: ^5.0.0
+  latlong2: ^0.9.0
+  geolocator: ^9.0.2
+  flutter_typeahead: ^4.6.2
+  ionicons: ^0.1.2
+  geocoding: ^2.1.0
+  flutter_local_notifications: ^5.0.0
+  fluttericon: ^2.0.0
+  awesome_icons: ^1.1.0
   
 
 dev_dependencies:
