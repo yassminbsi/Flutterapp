@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+/*import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
@@ -44,8 +44,8 @@ getData() async{
     String? email = user?.email;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor:  Color(0xFFFFCA20),
-        foregroundColor: Colors.black54,
+        backgroundColor: Color.fromARGB(255, 25, 96, 167),
+        foregroundColor: Colors.white,
     
         onPressed:() {
           Navigator.of(context).pushNamed("/AddBus");
@@ -184,7 +184,7 @@ getData() async{
                 child: Card(
                   child: Container(
                     padding:EdgeInsets.all(10),
-                    color: Color.fromARGB(255, 236, 229, 229),
+                    color: Color.fromARGB(255, 236, 236, 236),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
                       children: [
@@ -212,4 +212,4 @@ getData() async{
       )
        );
   }
-}
+}*/

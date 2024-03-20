@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor:  Color.fromARGB(255, 30, 30, 49),
       body: Stack(children: [
         Obx(() => authController.isOtpSent.value
             ? _buildVerifyOtpForm()
@@ -23,107 +23,164 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildGetOtpForm() {
     return SafeArea(
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Se Connecter",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Obx(() => Column(
-                      children: [
-                        TextFormField(
-                          keyboardType: TextInputType.number,
-                          maxLength: 8,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          onChanged: (val) {
-                            authController.phoneNo.value = val;
-                            authController.showPrefix.value = val.length > 0;
-                          },
-                          onSaved: (val) => authController.phoneNo.value = val!,
-                          validator: (val) => (val!.isEmpty || val!.length < 8)
-                              ? "Enter valid number"
-                              : null,
-                          decoration: InputDecoration(
-                            hintText: "Mobile Number",
-                            labelText: "Mobile Number",
-                            floatingLabelBehavior: FloatingLabelBehavior.auto,
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10)),
-                            prefix: authController.showPrefix.value
-                                ? Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    child: Text(
-                                      '(+216)',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                : null,
-                            suffixIcon: _buildSuffixIcon(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 22,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              final form = _formKey.currentState;
-                              if (form!.validate()) {
-                                form.save();
-                                authController.getOtp();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              // backgroundColor: kPrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: Text(
-                                'Get OTP',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )),
-              ),
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+
+        children: [
+           Text(
+            "TRACK MY ROUTE",
+            style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.w900,
+                color: Color.fromARGB(255, 216, 216, 216)),
           ),
-        ),
+          Image.asset(
+            "images/309.png",
+            width: 300,
+          ),
+                              
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                     
+                    ),
+                    child: Obx(() => Column(
+                          children: [
+                          TextFormField(
+  keyboardType: TextInputType.number,
+  maxLength: 8,
+  style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  ),
+  onChanged: (val) {
+    authController.phoneNo.value = val;
+    authController.showPrefix.value = val.length > 0;
+  },
+  onSaved: (val) => authController.phoneNo.value = val!,
+  validator: (val) => (val!.isEmpty || val!.length < 8) ? "Enter valid number" : null,
+  decoration: InputDecoration(
+    border: OutlineInputBorder(),
+                                
+                                labelText: ' Enter Your Number',
+   
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelStyle: TextStyle(
+                                  color:Colors.grey,// Set the color of the label text
+                                ),
+    contentPadding: EdgeInsets.symmetric(vertical: 8), 
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color:Colors.grey,),
+      borderRadius: BorderRadius.circular(10), 
+    ),
+      
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFFFCA20)),
+      borderRadius: BorderRadius.circular(5), 
+    ),
+    prefix: authController.showPrefix.value
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              '(+216)',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        : null,
+    suffixIcon: _buildSuffixIcon(),
+  ),
+)
+,
+                            SizedBox(
+                              height: 22,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  final form = _formKey.currentState;
+                                  if (form!.validate()) {
+                                    form.save();
+                                    authController.getOtp();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  
+                                  backgroundColor:   Color.fromARGB(255, 30, 30, 49),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                      color:Colors.grey,
+                                       
+                                    ),
+                                    
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(14.0),
+                                  child: Text(
+                                    'TRACK YOUR BUS',
+                                    style: TextStyle(fontSize: 16,color:Colors.grey,),
+                                  ),
+                                ),
+                              ),
+                            ),
+                           
+                            SizedBox(
+                              width: double.infinity,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Get.toNamed("/loginAdmin");
+                                },
+                                
+                                child: Padding(
+                                  padding: EdgeInsets.all(14.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'S\'inscrire  ? ',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color:Colors.grey,),
+                                        ),
+                                        TextSpan(
+                                          text: 'se connecter',
+                                          style: TextStyle(
+                                              fontSize: 14, color: Color(0xFFFFCA20)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+          
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -185,7 +242,7 @@ class LoginPage extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(28),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.grey,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -240,7 +297,7 @@ class LoginPage extends StatelessWidget {
                       },
                       style: ButtonStyle(
                         foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
+                            MaterialStateProperty.all<Color>(Colors.grey),
                         // backgroundColor:
                         //     MaterialStateProperty.all<Color>(kPrimaryColor),
                         shape:
@@ -295,7 +352,12 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
+             Image.asset(
+              "images/309.png",
+              width: 100,
+            ),
           ],
+         
         ),
       ),
     );
@@ -343,6 +405,7 @@ class LoginPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12)),
           ),
         ),
+       
       ),
     );
   }

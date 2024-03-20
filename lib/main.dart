@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/auth/login.dart';
 import 'package:flutter_app/auth/signup.dart';
+import 'package:flutter_app/route/app_views.dart';
 import 'package:flutter_app/views/add.dart';
 import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/view-bus.dart';
+import 'package:flutter_app/bus/viewbus.dart';
+import 'package:flutter_app/route/app_page.dart';
+import 'package:flutter_app/route/app_route.dart';
 
 import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
@@ -64,6 +67,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     // Fixed the case of 'build'
     return GetMaterialApp(
+      getPages: AppPageList.MyList,
+      initialRoute: AppRoute.dashboard,
+      debugShowCheckedModeBanner: false,
+      
+      themeMode: ThemeMode.light,
       theme: ThemeData(
           appBarTheme: AppBarTheme(
               backgroundColor: Color(0xFFFFCA20),
@@ -72,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
               iconTheme: IconThemeData(color: Colors.black87, size: 28))),
-      getPages: [
+     /* getPages: [
         GetPage(name: "/login", page: () => LoginPage()),
         GetPage(name: "/home", page: () => Homepage()),
         GetPage(name: "/signupAdmin", page: () => signupAdmin()),
@@ -88,7 +96,8 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: "/HomeParcours", page: () => HomeParcours()),
         GetPage(name: "/AddParcours", page: () => AddParcours()),
       ],
-      initialRoute: "/login",
+      */
+      //initialRoute: "/login",
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/view-bus.dart';
+import 'package:flutter_app/bus/viewbus.dart';
 import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
