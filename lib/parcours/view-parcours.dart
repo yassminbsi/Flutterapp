@@ -3,7 +3,7 @@ import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/home_admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/view-bus.dart';
+import 'package:flutter_app/bus/viewbus.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/station/addstation.dart';
 import 'package:flutter_app/station/view-station.dart';

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+/*import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/componenents/customtextfieldadd.dart';
@@ -81,7 +81,7 @@ class _AddCardState extends State<AddCard> {
                   hinttext: "volume",
                   mycontroller: volume_b,
                   validator: (val) =>
-                      (val!.isEmpty) ? "Enter valid number" : null,
+                       (val!.isEmpty) ? "Enter valid number" : null,
                 ),
               ),
               Container(
@@ -99,4 +99,4 @@ class _AddCardState extends State<AddCard> {
   }
 }
 
-        
+        */

@@ -188,7 +188,7 @@ getData() async{
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
                       children: [
-                       Image.asset("images/icon_bus5.png", height: 50,),
+                       Image.asset("images/Bus.png", height: 50,),
                         SizedBox(width: 8), // Espace entre l'image et le texte
                         Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
