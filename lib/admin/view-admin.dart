@@ -102,36 +102,38 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                   style: TextStyle(
                       color: Color.fromARGB(255, 181, 181, 181), fontSize: 24),
                 ),
-                tileColor: Colors.black87,
+               
               ),
-              ListTile(
-                onTap: () {
-                  Get.to(AddAdmin());
-                },
-                leading: Icon(
-                  Icons.add,
-                  color: Color.fromARGB(255, 240, 240, 240),
+              
+ListTile(
+                  onTap: () {Get.to(HomeAdmin());},
+                  leading: Icon(Icons.home, color: Colors.white,),
+                  title: Text('Home Admin', style: TextStyle(color: Colors.white, fontSize: 24 ),
+                  ),
+                  tileColor: Colors.black87,
                 ),
-                title: Text(
-                  'Ajouter Admin',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 181, 181, 181), fontSize: 18),
+               
+                ListTile(
+                  onTap: (){ Get.to(HomeBus());},
+                  leading: Icon(Icons.list),
+                  title: Text('Gérer Bus',
+                  ),
                 ),
-              ),
-              ListTile(
-                onTap: () {
-                  Get.to(AccueilAdmin());
-                },
-                leading: Icon(
-                  Icons.admin_panel_settings,
-                  color: Color.fromARGB(255, 240, 240, 240),
+                
+               
+                
+                ListTile(
+                  onTap: (){ Get.to(HomeStation());},
+                  leading: Icon(Icons.star_outline_sharp),
+                  title: Text('Gérer Stations'),
                 ),
-                title: Text(
-                  'Gérer les admins',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 181, 181, 181), fontSize: 18),
+               
+                ListTile(
+                  onTap: (){ Get.to(HomeParcours());},
+                  leading: Icon(Icons.list),
+                  title: Text('Gérer Parcours'),
                 ),
-              ),
+              
               ListTile(
                 onTap: () {
                   Get.to(LoginPage());

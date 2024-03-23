@@ -74,9 +74,9 @@ class _MyAppState extends State<MyApp> {
       themeMode: ThemeMode.light,
       theme: ThemeData(
           appBarTheme: AppBarTheme(
-              backgroundColor: Color(0xFFFFCA20),
+              backgroundColor:  Color(0xFF25243A),
               titleTextStyle: TextStyle(
-                  color: Colors.black87,
+                 
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
               iconTheme: IconThemeData(color: Colors.black87, size: 28))),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/home_admin.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
+import 'package:flutter_app/parcours/editparcours.dart';
 import 'package:flutter_app/station/addstation.dart';
 import 'package:flutter_app/station/view-station.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,13 +21,39 @@ class HomeParcours extends StatefulWidget {
 }
 
 class _HomeParcoursState extends State<HomeParcours> {
+  List<QueryDocumentSnapshot> data = [];
+bool isLoading= true;
+getData() async{
+  QuerySnapshot querySnapshot=
+  await FirebaseFirestore.instance.collection("parcours").where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  
+  data.addAll(querySnapshot.docs) ;
+  isLoading= false;
+  setState(() {
+    
+  });
+}
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Liste de parcours", style: TextStyle(color: Colors.white),),
-      backgroundColor: Color.fromARGB(255, 50, 112, 173),
-      actions: [
-        Row(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor:  Color(0xFFFFCA20),
+        foregroundColor: Colors.black54,
+        onPressed:() {
+          Navigator.of(context).pushNamed("/AddParcours");
+        } ,
+        child: Icon(Icons.add),
+        ),
+      appBar: AppBar(
+        title:  const Text('Liste Parcours', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 50, 112, 173),
+        actions: [
+          Row(
           children: [
             Text("Déconnexion", style: TextStyle(color: Colors.white),),
             IconButton(onPressed: () async {
@@ -36,82 +64,66 @@ class _HomeParcoursState extends State<HomeParcours> {
         )
         ],
         ),
-        drawer:
-      Drawer(
-        backgroundColor: Colors.white,
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    child: Image.asset('images/icon_user.png'),
+       
+       body:
+      WillPopScope(
+        child: isLoading== true ? Center(child: CircularProgressIndicator(),) 
+        :GridView.builder(
+          
+          itemCount: data.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            mainAxisExtent:120 ),
+          itemBuilder: (context, i) {
+            return  Card(
+              color: Color.fromARGB(255, 236, 229, 229),
+              child: ListTile(
+                title: Text("Parcours: ${data[i]['nomparcours']}", style: TextStyle(fontSize: 20),),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Depart:${data[i]['departparcours']}",),
+                    Text("Arrivee:${data[i]['arriveparcours']}",),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed:(){
+                        showDialog(
+                          context: context,
+                           builder: (context) => EditParcours(
+                  
+                  nomparcours: data[i]['nomparcours'],
+                  departparcours: data[i]['departparcours'],
+                  arriveparcours: data[i]['arriveparcours'],
+                  ));
+                  },
+                  child: Icon(Icons.edit, size: 32,color: Colors.green,),
                   ),
-                  Text('Yassmin Bsissa'),
-                  Text('yassminbsissa74@gmail.com', style: TextStyle(fontSize: 14),),
-                ],
+                  TextButton(
+                  onPressed:(){
+                  FirebaseFirestore.instance.collection("parcours").doc(data [i].id).delete();
+               Navigator.of(context).pushReplacementNamed("/HomeParcours");
+               },
+               child: Icon(Icons.delete, size: 32,color: Colors.red,),
                 ),
+                  ],
                 ),
-                ListTile(
-                  onTap: () {Get.to(HomeAdmin());},
-                  leading: Icon(Icons.home, color: Colors.white,),
-                  title: Text(
-                    'Home Admin',
-                    style: TextStyle(color: Colors.white, fontSize: 24 ),
-                  ),
-                  tileColor: Color.fromARGB(255, 50, 112, 173),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(AddBus());},
-                  leading: Icon(Icons.add),
-                  title: Text('Ajouter bus'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(HomeBus());},
-                  leading: Icon(Icons.list),
-                  title: Text('Gérer les lignes de bus',
-                  ),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(AddAdmin());},
-                  leading: Icon(Icons.add),
-                  title: Text('Ajouter Admin'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(AccueilAdmin());},
-                  leading: Icon(Icons.admin_panel_settings),
-                  title: Text('Gérer les admins'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(AddStation());},
-                  leading: Icon(Icons.add),
-                  title: Text('Ajouter Station'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(HomeStation());},
-                  leading: Icon(Icons.star_outline_sharp),
-                  title: Text('Gérer les stations'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(AddParcours());},
-                  leading: Icon(Icons.add),
-                  title: Text('Ajouter un parcours'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(HomeParcours());},
-                  leading: Icon(Icons.list),
-                  title: Text('Gérer les parcours'),
-                ),
-                ListTile(
-                  onTap: (){ Get.to(LoginPage());},
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text('Déconnexion'),
-                ),
-          ],
-        ),
-      ),
+              ),
+            );
+            
+              
+          },
+             
+             
+          ), onWillPop: () {
+            
+            Navigator.of(context).pushNamedAndRemoveUntil("/HomeAdmin", (route) => false);
+            return Future.value(false);
+          },
+      )
     );
   }
 }
