@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Completer<GoogleMapController> _controller = Completer();
-  late  GoogleMapController newGoogleMapController;
+  late GoogleMapController newGoogleMapController;
 
   late Position currentPosition;
   var geoLocator = Geolocator();
@@ -152,7 +152,34 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           //HamburgerButton for Drawer
-          
+          Positioned(
+            top: 36.0,
+            left: 22.0,
+            child: GestureDetector(
+             
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 6.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(
+                        0.7,
+                        0.7,
+                      ),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                    child: Icon((drawerOpen) ? Icons.menu : Icons.close, color: Colors.black),
+                ),
+              )
+            ),
+          ),
 
           //Search UI
           Positioned(
