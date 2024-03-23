@@ -19,13 +19,15 @@ class _MainScreenState extends State<MainScreen> {
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Completer<GoogleMapController> _controller = Completer();
-  late GoogleMapController newGoogleMapController;
+  GoogleMapController? newGoogleMapController;
 
-  late Position currentPosition;
+  Position? currentPosition;
+  
+  
   var geoLocator = Geolocator();
 
   bool drawerOpen = true;
-  late String address1;
+  String? address1;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -41,10 +43,10 @@ class _MainScreenState extends State<MainScreen> {
 
     CameraPosition cameraPosition =
     new CameraPosition(target: latLngPosition, zoom: 14);
-    newGoogleMapController.animateCamera(
+    newGoogleMapController?.animateCamera(
         (CameraUpdate.newCameraPosition(cameraPosition)));
 
-    address1 = AssistantMethods.searchCoordinateAddress(currentPosition, context) as String;
+    address1 = AssistantMethods.searchCoordinateAddress(currentPosition!, context) as String;
 
   }
 
@@ -53,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
 
-    AssistantMethods.searchCoordinateAddress(currentPosition, context);
+    AssistantMethods.searchCoordinateAddress(currentPosition!, context);
 
     return Scaffold(
       key: scaffoldKey,
