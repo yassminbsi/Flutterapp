@@ -64,13 +64,13 @@ class _AddAdminState extends State<AddAdmin> {
       appBar: AppBar(
         title: Text(
           "",
-          style: TextStyle(color: Colors.black54),
+          style: TextStyle(),
         ),
-        backgroundColor: Color(0xFFFFCA20),
+        
         actions: [
           Row(
             children: [
-              Text(
+             /* Text(
                 "Déconnexion",
                 style: TextStyle(color: Colors.black54),
               ),
@@ -83,7 +83,7 @@ class _AddAdminState extends State<AddAdmin> {
                   icon: Icon(
                     Icons.exit_to_app,
                     color: Colors.black54,
-                  )),
+                  )),*/
             ],
           )
         ],

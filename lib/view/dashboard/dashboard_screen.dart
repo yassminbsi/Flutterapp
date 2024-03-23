@@ -63,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5),
             unselectedLabelStyle: const TextStyle(fontSize: 11),
             snakeViewColor: Theme.of(context).primaryColor,
-            unselectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Color(0xFF25243A),
             selectedItemColor:Color(0xFFffd400),
             showUnselectedLabels: true,
             currentIndex: controller.tabIndex,
