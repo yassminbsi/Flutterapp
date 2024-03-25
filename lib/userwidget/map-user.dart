@@ -137,6 +137,29 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                 ),
+                 GestureDetector(
+                  onTap: () {},
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    title:
+                     Text(
+                      "Visit Profile",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                     
+
+                  ),
+                ),
+                 GestureDetector(
+                  onTap: () {},
+                  child: ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text(
+                      "Visit Profile",
+                      style: TextStyle(fontSize: 15.0),
+                    ),
+                  ),
+                ),
                 GestureDetector(
                   onTap: () {},
                   child: ListTile(
