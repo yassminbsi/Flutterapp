@@ -141,10 +141,13 @@ class _MainScreenState extends State<MainScreen> {
                   onTap: () {},
                   child: ListTile(
                     leading: Icon(Icons.person),
-                    title: Text(
+                    title:
+                     Text(
                       "Visit Profile",
                       style: TextStyle(fontSize: 15.0),
                     ),
+                     
+
                   ),
                 ),
                  GestureDetector(
