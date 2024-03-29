@@ -6,11 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EditParcours extends StatefulWidget {
+   final String docid;
   final String nomparcours;
   final String departparcours;
   final String arriveparcours;
   
-  const EditParcours({super.key, required this.nomparcours,  required this.departparcours, required this.arriveparcours, });
+  const EditParcours({super.key, required this.docid, required this.nomparcours,  required this.departparcours, required this.arriveparcours, });
 
   @override
   State<EditParcours> createState() => _EditStationState();
@@ -31,7 +32,7 @@ EditParcours() async{
       setState(() {
         
       });
-    await parcours.doc(widget.nomparcours).update({
+    await parcours.doc(widget.docid).update({
       "nomparcours": nomparcours.text,
       "departparcours": departparcours.text,
       "arriveparcours":arriveparcours.text,

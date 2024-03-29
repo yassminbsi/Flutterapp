@@ -28,10 +28,18 @@ import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/search_bus.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:get/get.dart';
+import 'mapwidget/constnats/strings.dart';
+import 'mapwidget/app_router.dart';
+
+
+
+
+late String initialRoute;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+ 
+ await Firebase.initializeApp(
     // Replace with actual values
     options: FirebaseOptions(
       apiKey: "AIzaSyAtrv9RvhCFSzO9QA3VbCsg0SSuN8yy_EM",
@@ -40,64 +48,41 @@ void main() async {
       projectId: "flutterapp-6a28d",
     ),
   );
-  runApp(const MyApp());
+
+  FirebaseAuth.instance.authStateChanges().listen((user) {
+    if (user == null) {
+      initialRoute = loginScreen;
+    } else {
+      initialRoute = mapScreen;
+    }
+   
+  });
+ 
+  runApp(
+    MyApp(
+      appRouter: AppRouter(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  final AppRouter appRouter;
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('=============User is currently signed out!');
-      } else {
-        print('=============User is signed in!');
-      }
-    });
-    super.initState();
-  }
+  const MyApp({
+    Key? key,
+    required this.appRouter,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Fixed the case of 'build'
-    return GetMaterialApp(
-      getPages: AppPageList.MyList,
-      initialRoute: AppRoute.dashboard,
+    return MaterialApp(
+      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      
-      themeMode: ThemeMode.light,
       theme: ThemeData(
-          appBarTheme: AppBarTheme(
-              backgroundColor:  Color(0xFF25243A),
-              titleTextStyle: TextStyle(
-                 
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-              iconTheme: IconThemeData(color: Colors.black87, size: 28))),
-     /* getPages: [
-        GetPage(name: "/login", page: () => LoginPage()),
-        GetPage(name: "/home", page: () => Homepage()),
-        GetPage(name: "/signupAdmin", page: () => signupAdmin()),
-        GetPage(name: "/loginAdmin", page: () => LoginAdmin()),
-        GetPage(name: "/HomeAdmin", page: () => HomeAdmin()),
-        GetPage(name: "/HomeBus", page: () => HomeBus()),
-        GetPage(name: "/AddBus", page: () => AddBus()),
-        GetPage(name: "/AccueilAdmin", page: () => AccueilAdmin()),
-        GetPage(name: "/AddAdmin", page: () => AddAdmin()),
-        GetPage(name: "/HomeStation", page: () => HomeStation()),
-        GetPage(name: "/AddStation", page: () => AddStation()),
-        GetPage(name: "/SearchBus", page: () => SearchBus()),
-        GetPage(name: "/HomeParcours", page: () => HomeParcours()),
-        GetPage(name: "/AddParcours", page: () => AddParcours()),
-      ],
-      */
-      //initialRoute: "/login",
+        primarySwatch: Colors.blue,
+      ),
+      onGenerateRoute: appRouter.generateRoute,
+      initialRoute: initialRoute,
     );
   }
 }

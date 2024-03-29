@@ -21,7 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void findPlace(String placeName) async{
     if (placeName.length > 1){
       String autoCompleteUrl =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapkey";
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Paris&key=$GOOGLE_MAPS_API_KEY";
 
       var res = await RequestAssistant.getRequest(autoCompleteUrl);
 
@@ -58,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   offset: Offset(0.7, 0.7))
             ]),
             child: Padding(
-              padding: EdgeInsets.all(25),
+              padding: EdgeInsets.all(5),
               child: Column(
                 children: [
                   SizedBox(
@@ -84,11 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Row(
                     children: [
-                      Image.asset(
-                        "assets/images/pickicon.png",
-                        height: 16.0,
-                        width: 16.0,
-                      ),
+                     
                       SizedBox(
                         width: 18.0,
                       ),
@@ -121,11 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   Row(
                     children: [
-                      Image.asset(
-                        "assets/images/desticon.png",
-                        height: 16.0,
-                        width: 16.0,
-                      ),
+                     
                       SizedBox(
                         width: 18.0,
                       ),

@@ -1,1 +1,1 @@
-String mapkey = "";
+String GOOGLE_MAPS_API_KEY = "AIzaSyC7ckSip1a_oVGM1y7nPSWGUdTEPbkANIA";
