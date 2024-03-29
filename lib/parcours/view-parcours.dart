@@ -15,8 +15,6 @@ import 'package:get/get.dart';
 
 class HomeParcours extends StatefulWidget {
   const HomeParcours({super.key});
-
-  @override
   State<HomeParcours> createState() => _HomeParcoursState();
 }
 
@@ -94,7 +92,7 @@ getData() async{
                         showDialog(
                           context: context,
                            builder: (context) => EditParcours(
-                  
+                  docid: data[i].id,
                   nomparcours: data[i]['nomparcours'],
                   departparcours: data[i]['departparcours'],
                   arriveparcours: data[i]['arriveparcours'],
