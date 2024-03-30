@@ -26,7 +26,7 @@ import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 
 import '../auth/logiin.dart';
-
+ /*
 class AppPage {
   static var List = [
     GetPage(
@@ -34,6 +34,8 @@ class AppPage {
         page: () => const DashboardScreen(),
         binding: DashboardBinding())
   ];
+
+ 
 
   static var getPages = List + [
     GetPage(name: "/login", page: () => LoginPage()),
@@ -52,3 +54,4 @@ class AppPage {
     GetPage(name: "/AddParcours", page: () => AddParcours()),
   ];
 }
+*/

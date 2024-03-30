@@ -31,9 +31,6 @@ import 'package:get/get.dart';
 import 'mapwidget/constnats/strings.dart';
 import 'mapwidget/app_router.dart';
 
-
-
-
 late String initialRoute;
 
 void main() async {
@@ -50,28 +47,30 @@ void main() async {
   );
 
   FirebaseAuth.instance.authStateChanges().listen((user) {
-    if (user == null) {
-      initialRoute = loginScreen;
-    } else {
+   
       initialRoute = mapScreen;
-    }
+    
    
   });
  
   runApp(
-    MyApp(
-      appRouter: AppRouter(),
-    ),
+    MyApp(),
   );
 }
 
-class MyApp extends StatelessWidget {
-  final AppRouter appRouter;
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-  const MyApp({
-    Key? key,
-    required this.appRouter,
-  }) : super(key: key);
+class _MyAppState extends State<MyApp> {
+  late AppRouter appRouter;
+
+  @override
+  void initState() {
+    super.initState();
+    appRouter = AppRouter();
+  }
 
   @override
   Widget build(BuildContext context) {

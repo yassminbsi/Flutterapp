@@ -12,7 +12,10 @@ import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 const loginScreen = '/login-screen';
 const otpScreen = '/otp-screen';
 const mapScreen = '/map-screen';
-const LoginPage = '/login';
+const Login = '/login';
+const Connecter = '/loginAdmin';
+const bus = '/home';
+
 
 
 

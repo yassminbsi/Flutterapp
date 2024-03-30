@@ -29,10 +29,10 @@ import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 
 
-
+/*
 class AppPageList {
   static var MyList = [
-    GetPage(name: "/login", page: () => MainScreen()),
+    GetPage(name: "/login", page: () => LoginPage()),
     GetPage(name: "/home", page: () => Homepage()),
     GetPage(name: "/signupAdmin", page: () => signupAdmin()),
     GetPage(name: "/loginAdmin", page: () => LoginAdmin()),
@@ -48,3 +48,4 @@ class AppPageList {
     GetPage(name: "/AddParcours", page: () => AddParcours()),
   ];
 }
+*/
