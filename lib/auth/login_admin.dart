@@ -150,7 +150,7 @@ TextFormField(
             });
   if (credential.user!.emailVerified){
    
-     Navigator.pushNamed( context,"/HomeAdmin");
+     Navigator.pushNamed( context, "/dashboard");
   } else {
     AwesomeDialog(
              context: context,

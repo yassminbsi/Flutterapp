@@ -38,6 +38,7 @@ class _AddAdminState extends State<AddAdmin> {
             "email": email.text,
             "password": password.text,
             "confirmpassword": confirmpassword.text,
+            // "role": "admin"
             // Ajoutez d'autres champs du bus au besoin
           },
         );

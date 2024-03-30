@@ -14,7 +14,8 @@ const otpScreen = '/otp-screen';
 const mapScreen = '/map-screen';
 const Login = '/login';
 const Connecter = '/loginAdmin';
-const bus = '/home';
+const bus = '/dashboard';
+
 
 
 

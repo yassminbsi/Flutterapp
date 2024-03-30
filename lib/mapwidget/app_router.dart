@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/view-admin.dart';
+import 'package:flutter_app/auth/home_admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
@@ -51,19 +52,19 @@ class AppRouter {
           ),
         );
 
-       case Login:
+        case Login:
         return MaterialPageRoute(
           builder: (_) =>  LoginPage(),
         );
 
-         case Connecter:
+        case Connecter:
         return MaterialPageRoute(
           builder: (_) =>  LoginAdmin(),
         );
 
         case bus:
         return MaterialPageRoute(
-          builder: (_) =>  Homepage(),
+          builder: (_) =>  DashboardScreen(),
         );
          
         

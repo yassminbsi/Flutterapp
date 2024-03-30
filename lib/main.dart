@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/auth/login.dart';
 import 'package:flutter_app/auth/signup.dart';
+import 'package:flutter_app/mapwidget/constnats/strings.dart';
 import 'package:flutter_app/route/app_views.dart';
 import 'package:flutter_app/views/add.dart';
 import 'package:flutter_app/bus/addbus.dart';
@@ -46,9 +47,15 @@ void main() async {
     ),
   );
 
-  FirebaseAuth.instance.authStateChanges().listen((user) {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
    
-      initialRoute = mapScreen;
+      //initialRoute = mapScreen;
+
+      if (user == null) {
+        initialRoute = loginScreen;
+      } else {
+        initialRoute = bus;
+      }
     
    
   });
@@ -75,6 +82,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
