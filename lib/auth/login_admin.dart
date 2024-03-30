@@ -149,7 +149,8 @@ TextFormField(
               
             });
   if (credential.user!.emailVerified){
-    Navigator.of(context).pushReplacementNamed("/HomeAdmin"); 
+   
+     Navigator.pushNamed( context,"/HomeAdmin");
   } else {
     AwesomeDialog(
              context: context,

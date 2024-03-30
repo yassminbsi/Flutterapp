@@ -1,3 +1,5 @@
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/auth/auth_controller.dart';
@@ -12,175 +14,185 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor:  Color.fromARGB(255, 30, 30, 49),
-      body: Stack(children: [
-        Obx(() => authController.isOtpSent.value
-            ? _buildVerifyOtpForm()
-            : _buildGetOtpForm())
-      ]),
+      backgroundColor: Color.fromARGB(255, 30, 30, 49),
+      body: Stack(
+        children: [
+          Obx(() => authController.isOtpSent.value
+              ? _buildVerifyOtpForm()
+              : _buildGetOtpForm(context)),
+        ],
+      ),
     );
   }
 
-  Widget _buildGetOtpForm() {
+  Widget _buildGetOtpForm(BuildContext context) {
     return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-
-        children: [
-           Text(
-            "TRACK MY ROUTE",
-            style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.w900,
-                color: Color.fromARGB(255, 216, 216, 216)),
-          ),
-          Image.asset(
-            "images/309.png",
-            width: 300,
-          ),
-                              
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
-                     
-                    ),
-                    child: Obx(() => Column(
-                          children: [
-                          TextFormField(
-  keyboardType: TextInputType.number,
-  maxLength: 8,
-  style: TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  ),
-  onChanged: (val) {
-    authController.phoneNo.value = val;
-    authController.showPrefix.value = val.length > 0;
-  },
-  onSaved: (val) => authController.phoneNo.value = val!,
-  validator: (val) => (val!.isEmpty || val!.length < 8) ? "Enter valid number" : null,
-  decoration: InputDecoration(
-    border: OutlineInputBorder(),
-                                
-                                labelText: ' Enter Your Number',
-   
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    labelStyle: TextStyle(
-                                  color:Colors.grey,// Set the color of the label text
-                                ),
-    contentPadding: EdgeInsets.symmetric(vertical: 8), 
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color:Colors.grey,),
-      borderRadius: BorderRadius.circular(10), 
-    ),
-      
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xFFFFCA20)),
-      borderRadius: BorderRadius.circular(5), 
-    ),
-    prefix: authController.showPrefix.value
-        ? Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              '(+216)',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+      child: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "TRACK MY ROUTE",
+                style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.w900,
+                    color: Color.fromARGB(255, 216, 216, 216)),
               ),
-            ),
-          )
-        : null,
-    suffixIcon: _buildSuffixIcon(),
-  ),
-)
-,
-                            SizedBox(
-                              height: 22,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  final form = _formKey.currentState;
-                                  if (form!.validate()) {
-                                    form.save();
-                                    authController.getOtp();
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  
-                                  backgroundColor:   Color.fromARGB(255, 30, 30, 49),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                      side: BorderSide(
-                                      color:Colors.grey,
-                                       
+              Image.asset(
+                "images/309.png",
+                width: 300,
+              ),
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Obx(() => Column(
+                              children: [
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 8,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  onChanged: (val) {
+                                    authController.phoneNo.value = val;
+                                    authController.showPrefix.value =
+                                        val.length > 0;
+                                  },
+                                  onSaved: (val) =>
+                                      authController.phoneNo.value = val!,
+                                  validator: (val) => (val!.isEmpty ||
+                                          val!.length < 8)
+                                      ? "Enter valid number"
+                                      : null,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Enter Your Number',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
                                     ),
-                                    
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 8),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    prefix: authController.showPrefix.value
+                                        ? Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Text(
+                                              '(+216)',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          )
+                                        : null,
+                                    suffixIcon: _buildSuffixIcon(),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(14.0),
-                                  child: Text(
-                                    'TRACK YOUR BUS',
-                                    style: TextStyle(fontSize: 16,color:Colors.grey,),
-                                  ),
+                                SizedBox(
+                                  height: 22,
                                 ),
-                              ),
-                            ),
-                           
-                            SizedBox(
-                              width: double.infinity,
-                              child: MaterialButton(
-                                onPressed: () {
-                                  Get.toNamed("/loginAdmin");
-                                },
-                                
-                                child: Padding(
-                                  padding: EdgeInsets.all(14.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'S\'inscrire  ? ',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color:Colors.grey,),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      final form = _formKey.currentState;
+                                      if (form!.validate()) {
+                                        form.save();
+                                        authController.getOtp();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 30, 30, 49),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        side: BorderSide(
+                                          color: Colors.grey,
                                         ),
-                                        TextSpan(
-                                          text: 'se connecter',
-                                          style: TextStyle(
-                                              fontSize: 14, color: Color(0xFFFFCA20)),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'TRACK YOUR BUS',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey,
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-          
                                 ),
-                              ),
-                            ),
-                          ],
-                        )),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, "/loginAdmin");
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.0),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'S\'inscrire  ? ',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'se connecter',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Color(0xFFFFCA20),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

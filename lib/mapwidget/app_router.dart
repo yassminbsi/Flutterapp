@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/view-admin.dart';
+import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
+import 'package:flutter_app/bus/viewbus.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
@@ -49,9 +51,19 @@ class AppRouter {
           ),
         );
 
-       case '/HomeAdmin':
+       case Login:
         return MaterialPageRoute(
-          builder: (_) =>  DashboardScreen(),
+          builder: (_) =>  LoginPage(),
+        );
+
+         case Connecter:
+        return MaterialPageRoute(
+          builder: (_) =>  LoginAdmin(),
+        );
+
+        case bus:
+        return MaterialPageRoute(
+          builder: (_) =>  Homepage(),
         );
          
         
