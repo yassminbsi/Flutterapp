@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void navigateToOtherComponent(BuildContext context) {
-    Navigator.pushNamed(context, '/login');
+    Navigator.pushNamed(context, '/register');
   }
 
   Widget _buildNextButton(BuildContext context) {

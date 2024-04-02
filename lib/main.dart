@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/auth/login.dart';
 import 'package:flutter_app/auth/signup.dart';
 import 'package:flutter_app/mapwidget/constnats/strings.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
+import 'package:flutter_app/role/home.dart';
 import 'package:flutter_app/route/app_views.dart';
+import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 import 'package:flutter_app/views/add.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
@@ -32,7 +36,7 @@ import 'package:get/get.dart';
 import 'mapwidget/constnats/strings.dart';
 import 'mapwidget/app_router.dart';
 
-late String initialRoute;
+String ?initialRoute;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,17 +51,48 @@ void main() async {
     ),
   );
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-   
-      //initialRoute = mapScreen;
-
-      if (user == null) {
-        initialRoute = Try;
-      } 
-    
-   
+FirebaseAuth.instance.authStateChanges().listen((user) {
+    if (user == null) {
+      initialRoute = loginScreen;
+    } else {
+       FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  if (user != null) {
+    var kk = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.get('rool') == "Admin") {
+           initialRoute = Connecter;
+        } else {
+         initialRoute= bus;
+        }
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+}});
+    }
   });
+
  
+
+ 
+ /*FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  if (user != null) {
+    FirebaseFirestore.instance.collection('admin').doc(user.uid).get().then((documentSnapshot) {
+      if (documentSnapshot.exists) {
+        String? role = (documentSnapshot.data() as Map<String, dynamic>?)?['role'];
+        if (role == "role") initialRoute = mapScreen;
+      }
+    }).catchError((error) {
+      print("Error getting user data: $error");
+    });
+  }
+});
+*/
+
   runApp(
     MyApp(),
   );

@@ -30,11 +30,11 @@ class _RegisterState extends State<Register> {
   bool _isObscure2 = true;
   File? file;
   var options = [
-    'Student',
-    'Teacher',
+    'Admin',
+    'SuperAdmin',
   ];
-  var _currentItemSelected = "Student";
-  var rool = "Student";
+  var _currentItemSelected = "Admin";
+  var rool = "Admin";
 
   @override
   Widget build(BuildContext context) {
@@ -249,12 +249,7 @@ class _RegisterState extends State<Register> {
                               height: 40,
                               onPressed: () {
                                 CircularProgressIndicator();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginUser(),
-                                  ),
-                                );
+                                Navigator.of(context).pushNamed("/loginbasedrole");
                               },
                               child: Text(
                                 "Login",
