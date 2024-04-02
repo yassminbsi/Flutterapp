@@ -18,9 +18,10 @@ const bus = '/dashboard';
 const Inscrire= '/signupAdmin';
 const AdAdmin ='/AddAdmin';
 
+const Initial = "/register";
+const loginuser = "/loginbasedrole";
+const homeuser ='/homeuser';
 
-
-const Try ="/check";
 
 
 

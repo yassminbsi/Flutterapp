@@ -37,7 +37,7 @@ class _TeacherState extends State<Teacher> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginPage(),
+        builder: (context) => LoginUser(),
       ),
     );
   }
