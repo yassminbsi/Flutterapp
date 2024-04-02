@@ -5,6 +5,7 @@ import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/bus/viewbus.dart';
+import 'package:flutter_app/role/register.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
@@ -66,8 +67,16 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) =>  DashboardScreen(),
         );
-         
-        
+    
+
+         case  Inscrire:
+        return MaterialPageRoute(
+          builder: (_) =>  signupAdmin(),
+        );
+        case  Try:
+        return MaterialPageRoute(
+          builder: (_) =>  Register(),
+        );
     }
   }
 }
