@@ -52,10 +52,8 @@ void main() async {
       //initialRoute = mapScreen;
 
       if (user == null) {
-        initialRoute = loginScreen;
-      } else {
-        initialRoute = bus;
-      }
+        initialRoute = Try;
+      } 
     
    
   });

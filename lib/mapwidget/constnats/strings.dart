@@ -15,6 +15,13 @@ const mapScreen = '/map-screen';
 const Login = '/login';
 const Connecter = '/loginAdmin';
 const bus = '/dashboard';
+const Inscrire= '/signupAdmin';
+const AdAdmin ='/AddAdmin';
+
+
+
+const Try ="/check";
+
 
 
 
