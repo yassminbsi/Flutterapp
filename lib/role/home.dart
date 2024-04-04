@@ -47,3 +47,22 @@ class _HomeUserState extends State<HomeUser> {
     );
   }
 }
+/*FirebaseAuth.instance.authStateChanges().listen((user) async {
+  if (user == null) {
+    initialRoute = loginScreen;
+  } else {
+    final userDataSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (userDataSnapshot.exists) {
+      final userRole = userDataSnapshot.get('role');
+      initialRoute = userRole == "Admin" ? otpScreen : bus;
+    } else {
+      print('Document does not exist in the database');
+      // Set default route or handle error case
+    }
+  }
+});
+ */
