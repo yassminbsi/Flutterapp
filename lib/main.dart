@@ -36,86 +36,80 @@ import 'package:get/get.dart';
 import 'mapwidget/constnats/strings.dart';
 import 'mapwidget/app_router.dart';
 
-String ?initialRoute;
+   late String initialRoute;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- 
- await Firebase.initializeApp(
-    // Replace with actual values
-    options: FirebaseOptions(
+  await Firebase.initializeApp(   options:FirebaseOptions(
       apiKey: "AIzaSyAtrv9RvhCFSzO9QA3VbCsg0SSuN8yy_EM",
       appId: "1:478912769142:android:3b8d047fbbd19072c94357",
       messagingSenderId: "478912769142",
       projectId: "flutterapp-6a28d",
-    ),
-  );
+    ),);
 
-FirebaseAuth.instance.authStateChanges().listen((user) {
+  FirebaseAuth.instance.authStateChanges().listen((user) async {
     if (user == null) {
       initialRoute = loginScreen;
     } else {
-       FirebaseAuth.instance.authStateChanges().listen((User? user) {
-  if (user != null) {
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('rool') == "Admin") {
-           initialRoute = Connecter;
-        } else {
-         initialRoute= bus;
-        }
+      // Retrieve user's role from Firestore
+      String userRole = await getUserRole(user.uid);
+
+      // Set initialRoute based on user's role
+      if (userRole == "Admin") {
+        initialRoute = otpScreen;
       } else {
-        print('Document does not exist on the database');
+        initialRoute = bus;
       }
-    });
-}});
     }
+    runApp(
+      MyApp(
+        appRouter: AppRouter(),
+        initialRoute: initialRoute,
+      ),
+    );
   });
+}
 
- 
+Future<String> getUserRole(String userId) async {
+  String role = "user"; // Default role
+  try {
+    // Query Firestore to get user's role
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
 
- 
- /*FirebaseAuth.instance.authStateChanges().listen((User? user) {
-  if (user != null) {
-    FirebaseFirestore.instance.collection('admin').doc(user.uid).get().then((documentSnapshot) {
-      if (documentSnapshot.exists) {
-        String? role = (documentSnapshot.data() as Map<String, dynamic>?)?['role'];
-        if (role == "role") initialRoute = mapScreen;
+    if (userDoc.exists) {
+      // Explicitly cast userDoc.data() to Map<String, dynamic>
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+
+      // Check if 'role' field exists in the document
+     if (userData != null && userData.containsKey('rool') && userData.containsKey('email')) {
+        role = userData['rool'];
       }
-    }).catchError((error) {
-      print("Error getting user data: $error");
-    });
-  }
-});
-*/
 
-  runApp(
-    MyApp(),
-  );
+      
+    }
+  } catch (e) {
+    print("Error fetching user role: $e");
+  }
+  return role;
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
 
-class _MyAppState extends State<MyApp> {
-  late AppRouter appRouter;
+class MyApp extends StatelessWidget {
+  final AppRouter appRouter;
+  final String initialRoute;
 
-  @override
-  void initState() {
-    super.initState();
-    appRouter = AppRouter();
-  }
+  const MyApp({
+    Key? key,
+    required this.appRouter,
+    required this.initialRoute,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

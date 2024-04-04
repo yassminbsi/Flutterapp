@@ -17,6 +17,7 @@ const Connecter = '/loginAdmin';
 const bus = '/dashboard';
 const Inscrire= '/signupAdmin';
 const AdAdmin ='/AddAdmin';
+const screen ="/AddBus";
 
 const Initial = "/register";
 const loginuser = "/loginbasedrole";
