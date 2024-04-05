@@ -55,8 +55,9 @@ AddBus() async{
   Widget build(BuildContext context) {
     return Scaffold(
       
-      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.white),),
-      backgroundColor: Color.fromARGB(255, 50, 112, 173),
+      appBar: AppBar( backgroundColor: Color(0xFF25243A),
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Ajouter Bus',  style: TextStyle(color: Color(0xFFffd400)),),
       actions: [
         Row(
           children: [
@@ -83,7 +84,7 @@ AddBus() async{
                  CustomLogoAuth(),
           
                 Center(
-          child: Text("Ajouter un bus",
+          child: Text("",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 25, 96, 167))),
                 ),
                 Container(height: 20,),

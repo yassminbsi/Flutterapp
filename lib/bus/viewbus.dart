@@ -53,16 +53,24 @@ getData() async{
         child: Icon(Icons.add),
         ),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 50, 112, 173),
-        title:  const Text('Liste de bus', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0xFF25243A),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon for returning to the previous component
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
+          },
+        ),
+        
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Liste de Bus',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
             children: [
-              Text("Déconnexion", style: TextStyle(color: Colors.white),),
+              Text("Déconnexion", style: TextStyle(color: Color.fromARGB(255, 183, 178, 178)),),
               IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                      }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
+                      }, icon: Icon(Icons.exit_to_app, color: const Color.fromARGB(255, 183, 178, 178),)),
             ],
           )
         ],
@@ -188,7 +196,7 @@ getData() async{
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
                       children: [
-                       Image.asset("images/Bus.png", height: 50,),
+                       Image.asset("images/308.png", height: 50,),
                         SizedBox(width: 8), // Espace entre l'image et le texte
                         Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche

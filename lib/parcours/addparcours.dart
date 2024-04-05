@@ -33,7 +33,10 @@ AddParcours() async{
       });
     DocumentReference response = await station.add(
   {
-    "nomparcours" : FirebaseAuth.instance.currentUser!.uid,
+    "Utilisateur": {
+      "id": FirebaseAuth.instance.currentUser!.uid,
+    },
+    "nomparcours" : nomparcours.text,
     "departparcours": departparcours.text,
     "arriveparcours": arriveparcours.text,
    
@@ -106,7 +109,7 @@ AddParcours() async{
               ), // Ajout d'un espace vertical entre les champs de texte
                 CustomTextForm(
           hinttext: "arrivee parcours",
-          mycontroller: departparcours,
+          mycontroller: arriveparcours,
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -118,7 +121,7 @@ AddParcours() async{
               ),
                 CustomTextForm(
           hinttext: "depart",
-          mycontroller: arriveparcours,
+          mycontroller: departparcours,
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";

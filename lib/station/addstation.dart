@@ -32,7 +32,9 @@ AddStation() async{
       });
     DocumentReference response = await station.add(
   {
-    "id" : FirebaseAuth.instance.currentUser!.uid,
+     "Utilisateur": {
+              "id": FirebaseAuth.instance.currentUser!.uid,
+            },
     "nomstation": nomstation.text,
     "latitude": latitude.text,
     "longtude": longtude.text,
@@ -59,10 +61,12 @@ AddStation() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.white),),
-      backgroundColor: Color.fromARGB(255, 50, 112, 173),
-      actions: [
-        Row(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF25243A),
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Ajouter Station',  style: TextStyle(color: Color(0xFFffd400)),),
+        actions: [
+          Row(
           children: [
             Text("Déconnexion", style: TextStyle(color: Colors.white),),
             IconButton(onPressed: () async {
@@ -71,7 +75,8 @@ AddStation() async{
             }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
           ],
         )
-        ],),
+        ],
+        ),
       body: Form(
         key: formState,
         child: isLoading ? Container(child: CircularProgressIndicator()) 
@@ -89,11 +94,16 @@ AddStation() async{
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 25, 96, 167))),
                 ),
                 Container(height: 20,),
-                Text("Nom de station", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                Text("Nom de station", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15 , color: Color(0xFF25243A),),
               ),
-                CustomTextForm(
-          hinttext: "Entrer nom de station ",
-          mycontroller: nomstation,
+                TextFormField(
+           
+          controller: nomstation,
+          decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                label: Text('Nom Station')),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -101,11 +111,16 @@ AddStation() async{
           }, 
                 ),
                 SizedBox(height: 10),
-                Text("Latitude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                Text("Latitude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,  color: Color(0xFF25243A),),
               ), // Ajout d'un espace vertical entre les champs de texte
-                CustomTextForm(
-          hinttext: "Entrer latitude",
-          mycontroller: latitude,
+                TextFormField(
+          
+          controller: latitude,
+          decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                label: Text('Latitude')),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -113,11 +128,16 @@ AddStation() async{
           },
                 ),
                 SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-                Text("Longtude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                Text("Longitude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Color(0xFF25243A),),
               ),
-                CustomTextForm(
-          hinttext: "Entrer longtude",
-          mycontroller: longtude,
+                TextFormField(
+          
+          controller: longtude,
+           decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                label: Text('Longitude')),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";

@@ -56,9 +56,9 @@ void main() async {
 
       // Set initialRoute based on user's role
       if (userRole == "Admin") {
-        initialRoute = otpScreen;
-      } else {
         initialRoute = bus;
+      } else {
+        initialRoute = mapScreen;
       }
     }
     runApp(
