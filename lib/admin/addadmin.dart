@@ -43,7 +43,7 @@ class _AddAdminState extends State<AddAdmin> {
           },
         );
         Navigator.of(context)
-            .pushNamedAndRemoveUntil("/AccueilAdmin", (route) => false);
+            .pushNamedAndRemoveUntil("/dashboard", (route) => false);
       } catch (e) {
         isLoading = false;
         setState(() {});
@@ -62,33 +62,22 @@ class _AddAdminState extends State<AddAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "",
-          style: TextStyle(),
-        ),
-        
+       appBar: AppBar(
+        backgroundColor: Color(0xFF25243A),
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Ajouter Admin',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
-            children: [
-             /* Text(
-                "Déconnexion",
-                style: TextStyle(color: Colors.black54),
-              ),
-              IconButton(
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil("/login", (route) => false);
-                  },
-                  icon: Icon(
-                    Icons.exit_to_app,
-                    color: Colors.black54,
-                  )),*/
-            ],
-          )
+          children: [
+            Text("Déconnexion", style: TextStyle(color: Colors.white),),
+            IconButton(onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
+          ],
+        )
         ],
-      ),
+        ),
       body: Form(
         key: formState,
         child: isLoading

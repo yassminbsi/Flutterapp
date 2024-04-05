@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeStation extends StatefulWidget {
+  
   const HomeStation({super.key});
   State<HomeStation> createState() => _HomeStationState();
 }
@@ -38,6 +40,9 @@ getData() async{
   }
   @override
   Widget build(BuildContext context) {
+     User? user = FirebaseAuth.instance.currentUser;
+    
+    String? email = user?.email;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor:  Color(0xFFFFCA20),
@@ -47,21 +52,29 @@ getData() async{
         } ,
         child: Icon(Icons.add),
         ),
-      appBar: AppBar(
-        title:  const Text('Liste Station', style: TextStyle(color: Colors.white),),
-        backgroundColor: Color.fromARGB(255, 50, 112, 173),
+     appBar: AppBar(
+        backgroundColor: Color(0xFF25243A),
+       leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon for returning to the previous component
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
+          },
+        ),
+       
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Liste stations',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
-            children: [
-              Text("Déconnexion",  style: TextStyle(color: Colors.white),),
-              IconButton(onPressed: () async {
+          children: [
+            Text("Déconnexion", style: TextStyle(color: Colors.white),),
+            IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                      }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-            ],
-          )
+            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
+          ],
+        )
         ],
-      ),
+        ),
 
      
       body:
@@ -74,44 +87,59 @@ getData() async{
             crossAxisCount: 1,
             mainAxisExtent:120 ),
           itemBuilder: (context, i) {
-            return  Card(
-              color: Color.fromARGB(255, 236, 229, 229),
-              child: ListTile(
-                title: Text("Station: ${data[i]['nomstation']}", style: TextStyle(fontSize: 20),),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Latitude:${data[i]['latitude']}",),
-                    Text("Longtude:${data[i]['longtude']}",),
-                  ],
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed:(){
-                        showDialog(
-                          context: context,
-                           builder: (context) => EditStation(
+            return  InkWell(
+                onTap: () {
+                 // Navigator.of(context).push(MaterialPageRoute(
+                  //  builder: (context) =>
+                   // NoteView(categoryid: data[i].id)));
+                },
+                onLongPress: () {
+                  AwesomeDialog(
+               context: context,
+               dialogType: DialogType.info,
+               animType: AnimType.rightSlide,
+               title: 'Confirmation',
+               desc: 'Voulez-vous vraiment modifier ou supprimer ce bus?',
+               btnCancelText: "Supprimer" ,
+               btnOkText: "Modifier",
+               btnCancelOnPress: ()  async {
+               await FirebaseFirestore.instance.collection("bus").doc(data [i].id).delete();
+               Navigator.of(context).pushReplacementNamed("/HomeBus");
+               },
+               btnOkOnPress: () async {
+                Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => EditStation(
                   docid: data[i].id,
                   oldnomstation: data[i]["nomstation"],
                   oldlatitude: data[i]["latitude"],
                   oldlongtude: data[i]["longtude"],
-                  ));
-                  },
-                  child: Icon(Icons.edit, size: 32,color: Colors.green,),
+
+    
+                
+                  )));
+               }).show();
+                },
+                child: Card(
+                  child: Container(
+                    padding:EdgeInsets.all(10),
+                    color: Color.fromARGB(255, 236, 236, 236),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+                      children: [
+                       Image.asset("images/308.png", height: 50,),
+                        SizedBox(width: 8), // Espace entre l'image et le texte
+                        Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
+                         children: [
+                        Text("Bus: ${data[i]['nombus']}"),
+                         Text("Station: ${data[i]['station']}"),
+                            ],
+                         ),
+  ],
+),
                   ),
-                  TextButton(
-                  onPressed:(){
-                  FirebaseFirestore.instance.collection("station").doc(data [i].id).delete();
-               Navigator.of(context).pushReplacementNamed("/HomeStation");
-               },
-               child: Icon(Icons.delete, size: 32,color: Colors.red,),
                 ),
-                  ],
-                ),
-              ),
-            );
+              );
             
               
           },

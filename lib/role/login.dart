@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/otp_screen.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 import 'Student.dart';
 import 'Teacher.dart';
@@ -27,7 +29,7 @@ class _LoginUserState extends State<LoginUser> {
         child: Column(
           children: <Widget>[
             Container(
-              color: Colors.orangeAccent[700],
+              color:  Color(0xFF25243A),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.70,
               child: Center(
@@ -177,34 +179,7 @@ class _LoginUserState extends State<LoginUser> {
                 ),
               ),
             ),
-            Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-
-                   
-                    
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        
-                       
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            
           ],
         ),
       ),
@@ -223,14 +198,14 @@ class _LoginUserState extends State<LoginUser> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MapScreen(),
+              builder: (context) => DashboardScreen(),
             ),
           );
         } else {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => DashboardScreen(),
+              builder: (context) => MapScreen(),
             ),
           );
         }

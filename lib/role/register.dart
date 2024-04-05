@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'login.dart';
+
 // import 'model.dart';
 
 class Register extends StatefulWidget {
@@ -39,12 +40,12 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange[900],
+      backgroundColor:  Color(0xFF25243A),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
-              color: Colors.orangeAccent[700],
+              color:  Color(0xFF25243A),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
@@ -60,7 +61,7 @@ class _RegisterState extends State<Register> {
                           height: 80,
                         ),
                         Text(
-                          "Register Now",
+                          "Track My Bus",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -194,46 +195,39 @@ class _RegisterState extends State<Register> {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Rool : ",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            DropdownButton<String>(
-                              dropdownColor: Colors.blue[900],
-                              isDense: true,
-                              isExpanded: false,
-                              iconEnabledColor: Colors.white,
-                              focusColor: Colors.white,
-                              items: options.map((String dropDownStringItem) {
-                                return DropdownMenuItem<String>(
-                                  value: dropDownStringItem,
-                                  child: Text(
-                                    dropDownStringItem,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (newValueSelected) {
-                                setState(() {
-                                  _currentItemSelected = newValueSelected!;
-                                  rool = newValueSelected;
-                                });
-                              },
-                              value: _currentItemSelected,
-                            ),
-                          ],
-                        ),
+                       Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    
+    Row(
+      children: options.map((String option) {
+        return Row(
+          children: [
+            Radio(
+              value: option,
+              groupValue: rool,
+              onChanged: (String? value) {
+                setState(() {
+                  rool = value!;
+                });
+              },
+              activeColor: Colors.white,
+            ),
+            Text(
+              option,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    ),
+  ],
+),
+
                         SizedBox(
                           height: 20,
                         ),
@@ -286,7 +280,7 @@ class _RegisterState extends State<Register> {
                           height: 20,
                         ),
                         Text(
-                          "WEBFUN",
+                          "",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
@@ -315,11 +309,16 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  postDetailsToFirestore(String email, String rool) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var user = _auth.currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({'email': emailController.text, 'rool': rool});
-    Navigator.of(context).pushNamed("/loginbasedrole");
-  }
+  Future<void> postDetailsToFirestore(String email, String rool) async {
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  var user = _auth.currentUser;
+
+  // Reference the "users" collection and add a document to it
+  CollectionReference ref = FirebaseFirestore.instance.collection('users');
+  ref.doc(user!.uid).set({'email': email, 'rool': rool});
+  
+  Navigator.of(context).pushNamed("/loginbasedrole");
 }
+}
+
+

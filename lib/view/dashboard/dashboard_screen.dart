@@ -73,10 +73,10 @@ class DashboardScreen extends StatelessWidget {
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.account_circle
                 ), label: 'Admin Panel',),
-              BottomNavigationBarItem(icon: Icon(Icons.bus_alert
-                  ), label: 'Bus'),
+              BottomNavigationBarItem(icon: Icon(Icons.chair_alt_outlined
+                  ), label: 'Station'),
               BottomNavigationBarItem(icon: Icon(Icons.route), label: 'Parcours'),
-              BottomNavigationBarItem(icon: Icon(Icons.chair_alt_outlined), label: 'Station')
+              BottomNavigationBarItem(icon: Icon(Icons.bus_alert), label: 'Bus')
             ],
           ),
         ),

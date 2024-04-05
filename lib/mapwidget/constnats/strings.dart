@@ -18,10 +18,18 @@ const bus = '/dashboard';
 const Inscrire= '/signupAdmin';
 const AdAdmin ='/AddAdmin';
 const screen ="/AddBus";
-
 const Initial = "/register";
 const loginuser = "/loginbasedrole";
-const homeuser ='/homeuser';
+const homeBus = "/HomeBus";
+const addAdmin='/AddAdmin';
+const Accueil='/AccueilAdmin';
+
+const homeParcours ="/HomeParcours";
+const addParcours ="/AddParcours";
+
+const addStation='/AddStation';
+const homeStation = "/HomeStation";
+
 
 
 

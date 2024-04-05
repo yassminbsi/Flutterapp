@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 
 class EditParcours extends StatefulWidget {
    final String docid;
-  final String nomparcours;
-  final String departparcours;
-  final String arriveparcours;
+  final String oldnomparcours;
+  final String olddepartparcours;
+  final String oldarriveparcours;
   
-  const EditParcours({super.key, required this.docid, required this.nomparcours,  required this.departparcours, required this.arriveparcours, });
+  const EditParcours({super.key, required this.docid, required this.oldnomparcours,  required this.olddepartparcours, required this.oldarriveparcours, });
 
   @override
   State<EditParcours> createState() => _EditStationState();
@@ -60,9 +60,9 @@ EditParcours() async{
 @override
   void initState() {
     super.initState();
-    nomparcours.text= widget.nomparcours;
-    departparcours.text= widget.departparcours;
-    arriveparcours.text= widget.arriveparcours;
+    nomparcours.text= widget.oldnomparcours;
+    departparcours.text= widget.olddepartparcours;
+    arriveparcours.text= widget.oldarriveparcours;
     
 
   }
@@ -116,7 +116,7 @@ EditParcours() async{
               ),
                 CustomTextForm(
           hinttext: "Entrer Arrivée",
-          mycontroller: departparcours,
+          mycontroller: arriveparcours,
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -129,7 +129,7 @@ EditParcours() async{
               ),
                 CustomTextForm(
           hinttext: "Entrer Depart",
-          mycontroller: arriveparcours,
+          mycontroller: departparcours,
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -140,24 +140,11 @@ EditParcours() async{
               ],
             ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                    MaterialButton(
-                      child: Text("Modifier"),
-                      onPressed: (){
-                       EditParcours();
-                      },),
-                      SizedBox(height: 30, width: 20,),
-                      MaterialButton(
-                      child: Text("Annuler"),
-                      onPressed: (){
-                      Navigator.of(context).pushReplacementNamed("/HomeParcours");
-                      },),
-                 
-               
-              ],
-            )
+             MaterialButton(
+              child: Text("Sauvegarder les modifications"),
+              onPressed: (){
+                EditParcours();
+              },)
   ],),
         ),
       ),

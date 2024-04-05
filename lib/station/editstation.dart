@@ -60,7 +60,7 @@ EditStation() async{
   void initState() {
     super.initState();
     nomstation.text= widget.oldnomstation;
-    latitude.text= widget.oldlatitude;
+    latitude.text= widget.oldlatitude; 
     longtude.text= widget.oldlongtude;
     
 

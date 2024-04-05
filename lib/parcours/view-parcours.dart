@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
@@ -23,7 +24,7 @@ class _HomeParcoursState extends State<HomeParcours> {
 bool isLoading= true;
 getData() async{
   QuerySnapshot querySnapshot=
-  await FirebaseFirestore.instance.collection("parcours").where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  await FirebaseFirestore.instance.collection("parcours").get();
   
   data.addAll(querySnapshot.docs) ;
   isLoading= false;
@@ -38,6 +39,9 @@ getData() async{
   }
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    
+    String? email = user?.email;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor:  Color(0xFFFFCA20),
@@ -48,8 +52,15 @@ getData() async{
         child: Icon(Icons.add),
         ),
       appBar: AppBar(
-        title:  const Text('Liste Parcours', style: TextStyle(color: Colors.white),),
-        backgroundColor: Color.fromARGB(255, 50, 112, 173),
+        backgroundColor: Color(0xFF25243A),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon for returning to the previous component
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
+          },
+        ),
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Liste de Parcours',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
           children: [
@@ -73,7 +84,60 @@ getData() async{
             crossAxisCount: 1,
             mainAxisExtent:120 ),
           itemBuilder: (context, i) {
-            return  Card(
+            return 
+            InkWell(
+                onTap: () {
+                 // Navigator.of(context).push(MaterialPageRoute(
+                  //  builder: (context) =>
+                   // NoteView(categoryid: data[i].id)));
+                },
+                onLongPress: () {
+                  AwesomeDialog(
+               context: context,
+               dialogType: DialogType.info,
+               animType: AnimType.rightSlide,
+               title: 'Confirmation',
+               desc: 'Voulez-vous vraiment modifier ou supprimer ce bus?',
+               btnCancelText: "Supprimer" ,
+               btnOkText: "Modifier",
+               btnCancelOnPress: ()  async {
+               await FirebaseFirestore.instance.collection("parcours").doc(data [i].id).delete();
+               Navigator.of(context).pushReplacementNamed("/HomeParcours");
+               },
+               btnOkOnPress: () async {
+                Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => EditParcours(
+                  docid: data[i].id,
+                  oldnomparcours: data[i]['nomparcours'],
+                  olddepartparcours: data[i]["departparcours"],
+                  oldarriveparcours: data[i]["arriveparcours"],
+                  )));
+               }).show();
+                },
+             
+              child: Card(
+                  child: Container(
+                    padding:EdgeInsets.all(10),
+                    color: Color.fromARGB(255, 236, 236, 236),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+                      children: [
+                       Image.asset("images/308.png", height: 50,),
+                        SizedBox(width: 8), // Espace entre l'image et le texte
+                        Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
+                         children: [
+                        Text("Depart:${data[i]['departparcours']}",),
+                    Text("Arrivee:${data[i]['arriveparcours']}",),
+                            ],
+                         ),
+  ],
+),
+                  ),
+                ),
+            
+              );
+            /* child :Card(
               color: Color.fromARGB(255, 236, 229, 229),
               child: ListTile(
                 title: Text("Parcours: ${data[i]['nomparcours']}", style: TextStyle(fontSize: 20),),
@@ -111,6 +175,7 @@ getData() async{
                 ),
               ),
             );
+            */
             
               
           },
