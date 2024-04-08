@@ -97,7 +97,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) =>  LoginUser(),
         );
-        case  screen:
+        case  addBus:
         return MaterialPageRoute(
           builder: (_) =>  AddBus(),
         );
@@ -105,6 +105,8 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) =>  HomeBus(),
         );
+
+        
          case  addAdmin:
         return MaterialPageRoute(
           builder: (_) =>  AddAdmin(),

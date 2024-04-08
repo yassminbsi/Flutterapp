@@ -118,7 +118,8 @@ EditBus() async{
             ),
             ),
             MaterialButton(
-              child: Text("Sauvegarder les modifications"),
+              color: Color(0xFFFFCA20),
+                      child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A),)),
               onPressed: (){
                 EditBus();
               },)

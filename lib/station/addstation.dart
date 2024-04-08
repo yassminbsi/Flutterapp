@@ -65,17 +65,7 @@ AddStation() async{
         backgroundColor: Color(0xFF25243A),
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
         title:  const Text('Ajouter Station',  style: TextStyle(color: Color(0xFFffd400)),),
-        actions: [
-          Row(
-          children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
-            IconButton(onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-          ],
-        )
-        ],
+       
         ),
       body: Form(
         key: formState,
@@ -83,61 +73,118 @@ AddStation() async{
         : SingleChildScrollView(
           child: Column(children: [
             Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 65, vertical: 55),
+            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomLogoAuth(),
-                Center(
-          child: Text("Ajouter une station",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 25, 96, 167))),
-                ),
-                Container(height: 20,),
-                Text("Nom de station", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15 , color: Color(0xFF25243A),),
-              ),
+                
+              Center(
+                            child: Text("Informations Générales",
+                                style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold,
+                                    color:  Color(0xFF25243A))),
+                          ),
+                          SizedBox(
+                              height:
+                                  40), 
+               
                 TextFormField(
            
           controller: nomstation,
-          decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Nom Station')),
+         decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Nom Station',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
             }
           }, 
                 ),
-                SizedBox(height: 10),
-                Text("Latitude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,  color: Color(0xFF25243A),),
-              ), // Ajout d'un espace vertical entre les champs de texte
+                SizedBox(height: 30),
+                // Ajout d'un espace vertical entre les champs de texte
                 TextFormField(
           
           controller: latitude,
           decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Latitude')),
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Latitude',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
             }
           },
                 ),
-                SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-                Text("Longitude", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15, color: Color(0xFF25243A),),
-              ),
+                SizedBox(height: 30), // Ajout d'un espace vertical entre les champs de texte
+               
                 TextFormField(
           
           controller: longtude,
-           decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Longitude')),
+          decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Longitude',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
@@ -149,7 +196,13 @@ AddStation() async{
             ),
           ),
             MaterialButton(
-              child: Text("Sauvegarder Station"),
+               color: Color(0xFFFFCA20),
+               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        elevation: 5.0,
+        minWidth: 200.0,
+        height: 45,
+              
+                     child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A ),fontSize: 17.0, )),
               onPressed: (){
                 AddStation();
               },)
