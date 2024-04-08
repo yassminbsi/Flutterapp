@@ -31,7 +31,7 @@ class _LoginUserState extends State<LoginUser> {
             Container(
               color:  Color(0xFF25243A),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.70,
+              height: MediaQuery.of(context).size.height,
               child: Center(
                 child: Container(
                   margin: EdgeInsets.all(12),
@@ -162,7 +162,7 @@ class _LoginUserState extends State<LoginUser> {
                           color: Colors.white,
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 30,
                         ),
                         Visibility(
                             maintainSize: true,
@@ -173,6 +173,10 @@ class _LoginUserState extends State<LoginUser> {
                                 child: CircularProgressIndicator(
                               color: Colors.white,
                             ))),
+                             Image.asset(
+                                  "images/logo.png",
+                                 
+                                ),
                       ],
                     ),
                   ),

@@ -57,8 +57,9 @@ getData() async{
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Icon for returning to the previous component
           onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
-          },
+  Navigator.of(context).popAndPushNamed("/dashboard", arguments: 3); // Assuming HomeBus has index 3
+},
+
         ),
         
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
@@ -194,7 +195,7 @@ getData() async{
                     padding:EdgeInsets.all(10),
                     color: Color.fromARGB(255, 236, 236, 236),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                        Image.asset("images/308.png", height: 50,),
                         SizedBox(width: 8), // Espace entre l'image et le texte

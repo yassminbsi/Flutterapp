@@ -15,12 +15,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeParcours extends StatefulWidget {
+  
   const HomeParcours({super.key});
   State<HomeParcours> createState() => _HomeParcoursState();
 }
 
 class _HomeParcoursState extends State<HomeParcours> {
-  List<QueryDocumentSnapshot> data = [];
+List<QueryDocumentSnapshot> data = [];
 bool isLoading= true;
 getData() async{
   QuerySnapshot querySnapshot=
@@ -32,14 +33,14 @@ getData() async{
     
   });
 }
-  @override
+@override
   void initState() {
     getData();
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
+     User? user = FirebaseAuth.instance.currentUser;
     
     String? email = user?.email;
     return Scaffold(
@@ -51,30 +52,32 @@ getData() async{
         } ,
         child: Icon(Icons.add),
         ),
-      appBar: AppBar(
+     appBar: AppBar(
         backgroundColor: Color(0xFF25243A),
-        leading: IconButton(
+       leading: IconButton(
           icon: Icon(Icons.arrow_back), // Icon for returning to the previous component
           onPressed: () {
             Navigator.of(context).pushNamedAndRemoveUntil("/dashboard", (route) => false);
           },
         ),
+       
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
-        title:  const Text('Liste de Parcours',  style: TextStyle(color: Color(0xFFffd400)),),
+        title:  const Text('Liste parcours',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
-          children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
-            IconButton(onPressed: () async {
+           children: [
+              Text("Déconnexion", style: TextStyle(color: Color.fromARGB(255, 183, 178, 178)),),
+              IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-          ],
+                      }, icon: Icon(Icons.exit_to_app, color: const Color.fromARGB(255, 183, 178, 178),)),
+            ],
         )
         ],
         ),
-       
-       body:
+
+     
+      body:
       WillPopScope(
         child: isLoading== true ? Center(child: CircularProgressIndicator(),) 
         :GridView.builder(
@@ -84,8 +87,7 @@ getData() async{
             crossAxisCount: 1,
             mainAxisExtent:120 ),
           itemBuilder: (context, i) {
-            return 
-            InkWell(
+            return  InkWell(
                 onTap: () {
                  // Navigator.of(context).push(MaterialPageRoute(
                   //  builder: (context) =>
@@ -108,74 +110,40 @@ getData() async{
                 Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => EditParcours(
                   docid: data[i].id,
-                  oldnomparcours: data[i]['nomparcours'],
+                  oldnomparcours: data[i]["nomparcours"],
                   olddepartparcours: data[i]["departparcours"],
                   oldarriveparcours: data[i]["arriveparcours"],
+
+    
+                
                   )));
                }).show();
                 },
-             
-              child: Card(
+                child: Card(
                   child: Container(
                     padding:EdgeInsets.all(10),
                     color: Color.fromARGB(255, 236, 236, 236),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                     
+                      // Aligner les éléments en haut
                       children: [
                        Image.asset("images/308.png", height: 50,),
                         SizedBox(width: 8), // Espace entre l'image et le texte
                         Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
                          children: [
-                        Text("Depart:${data[i]['departparcours']}",),
-                    Text("Arrivee:${data[i]['arriveparcours']}",),
+                        
+                         Text("parcours: ${data[i]['nomparcours']}"),
+                          Text("Depart: ${data[i]['arriveparcours']}"),
+                          Text("Arrivée: ${data[i]['departparcours']}"),
                             ],
                          ),
   ],
 ),
                   ),
                 ),
-            
               );
-            /* child :Card(
-              color: Color.fromARGB(255, 236, 229, 229),
-              child: ListTile(
-                title: Text("Parcours: ${data[i]['nomparcours']}", style: TextStyle(fontSize: 20),),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Depart:${data[i]['departparcours']}",),
-                    Text("Arrivee:${data[i]['arriveparcours']}",),
-                  ],
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed:(){
-                        showDialog(
-                          context: context,
-                           builder: (context) => EditParcours(
-                  docid: data[i].id,
-                  nomparcours: data[i]['nomparcours'],
-                  departparcours: data[i]['departparcours'],
-                  arriveparcours: data[i]['arriveparcours'],
-                  ));
-                  },
-                  child: Icon(Icons.edit, size: 32,color: Colors.green,),
-                  ),
-                  TextButton(
-                  onPressed:(){
-                  FirebaseFirestore.instance.collection("parcours").doc(data [i].id).delete();
-               Navigator.of(context).pushReplacementNamed("/HomeParcours");
-               },
-               child: Icon(Icons.delete, size: 32,color: Colors.red,),
-                ),
-                  ],
-                ),
-              ),
-            );
-            */
             
               
           },
@@ -187,6 +155,6 @@ getData() async{
             return Future.value(false);
           },
       )
-    );
+       );
   }
 }

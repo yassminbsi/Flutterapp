@@ -25,7 +25,7 @@ List<QueryDocumentSnapshot> data = [];
 bool isLoading= true;
 getData() async{
   QuerySnapshot querySnapshot=
-  await FirebaseFirestore.instance.collection("station").where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
+  await FirebaseFirestore.instance.collection("station").get();
   
   data.addAll(querySnapshot.docs) ;
   isLoading= false;
@@ -65,13 +65,13 @@ getData() async{
         title:  const Text('Liste stations',  style: TextStyle(color: Color(0xFFffd400)),),
         actions: [
           Row(
-          children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
-            IconButton(onPressed: () async {
+           children: [
+              Text("Déconnexion", style: TextStyle(color: Color.fromARGB(255, 183, 178, 178)),),
+              IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-          ],
+                      }, icon: Icon(Icons.exit_to_app, color: const Color.fromARGB(255, 183, 178, 178),)),
+            ],
         )
         ],
         ),
@@ -103,8 +103,8 @@ getData() async{
                btnCancelText: "Supprimer" ,
                btnOkText: "Modifier",
                btnCancelOnPress: ()  async {
-               await FirebaseFirestore.instance.collection("bus").doc(data [i].id).delete();
-               Navigator.of(context).pushReplacementNamed("/HomeBus");
+               await FirebaseFirestore.instance.collection("station").doc(data [i].id).delete();
+               Navigator.of(context).pushReplacementNamed("/HomeStaion");
                },
                btnOkOnPress: () async {
                 Navigator.of(context)
@@ -124,15 +124,16 @@ getData() async{
                     padding:EdgeInsets.all(10),
                     color: Color.fromARGB(255, 236, 236, 236),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start, // Aligner les éléments en haut
+                      mainAxisAlignment: MainAxisAlignment.spaceAround, // Aligner les éléments en haut
                       children: [
                        Image.asset("images/308.png", height: 50,),
                         SizedBox(width: 8), // Espace entre l'image et le texte
                         Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // Aligner les textes à gauche
                          children: [
-                        Text("Bus: ${data[i]['nombus']}"),
-                         Text("Station: ${data[i]['station']}"),
+                        
+                         Text("Station: ${data[i]['nomstation']}"),
+                          Text("Station: ${data[i]['latitude']}"),
                             ],
                          ),
   ],

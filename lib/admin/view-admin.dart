@@ -70,25 +70,28 @@ class _AccueilAdminState extends State<AccueilAdmin> {
           ],
         ),
         drawer: Drawer(
+          
           backgroundColor: Color(0xFF25243a),
           child: ListView(
             children: [
-              DrawerHeader(
-                child: Column(
+             
+                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('E-Karhabty',
-                        style:
-                            TextStyle(color: Color(0xFFffd400), fontSize: 28)),
-                    Text('Nom Admin'),
-                    Text(
-                      'Email Admin',
-                      style: TextStyle(fontSize: 14),
-                    ),
+                   Image.asset(
+                                  "images/logo.png",
+                                 width: 400,
+                                ),
+                   
                   ],
                 ),
-              ),
+            
+
+              Divider(
+              color: Color.fromARGB(255, 190, 189, 188)
+            ),
+            SizedBox(height: 30),
               ListTile(
                 onTap: () {
                   Get.to(HomeAdmin());
@@ -100,52 +103,62 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                 title: Text(
                   'Menu',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 181, 181, 181), fontSize: 24),
+                      color: Color(0xFFffd400), fontSize: 24),
                 ),
                
               ),
               
-ListTile(
-                  onTap: () {Get.to(HomeAdmin());},
-                  leading: Icon(Icons.home, color: Colors.white,),
-                  title: Text('Home Admin', style: TextStyle(color: Colors.white, fontSize: 24 ),
-                  ),
-                  tileColor: Colors.black87,
-                ),
+
                
-                ListTile(
-                  onTap: (){ Get.to(HomeBus());},
-                  leading: Icon(Icons.list),
-                  title: Text('Gérer Bus',
-                  ),
-                ),
+               
                 
                
                 
                 ListTile(
-                  onTap: (){ Get.to(HomeStation());},
-                  leading: Icon(Icons.star_outline_sharp),
-                  title: Text('Gérer Stations'),
+                  onTap: (){ Navigator.of(context).pushNamedAndRemoveUntil("/HomeStation", (route) => false);},
+                  leading: Icon(Icons.mail, color:Color.fromARGB(255, 88, 88, 88)),
+                  
+                  title: Text('Notifications', style: TextStyle(
+                      color: Color.fromARGB(255, 240, 237, 237), fontSize: 17),),
                 ),
                
-                ListTile(
-                  onTap: (){ Get.to(HomeParcours());},
-                  leading: Icon(Icons.list),
-                  title: Text('Gérer Parcours'),
+                
+               ListTile(
+                  onTap: (){ Navigator.of(context).pushNamedAndRemoveUntil("/HomeParcours", (route) => false);},
+                 leading: Icon(Icons.share, color:Color.fromARGB(255, 88, 88, 88)),
+                  title: Text('Parlez-en à vos amis', style: TextStyle(
+                     color: Color.fromARGB(255, 240, 237, 237), fontSize: 17),),
                 ),
-              
+                 ListTile(
+                  onTap: (){ Navigator.of(context).pushNamedAndRemoveUntil("/HomeParcours", (route) => false);},
+leading: Icon(Icons.star, color:Color.fromARGB(255, 88, 88, 88)),
+                  title: Text('Notez-nous', style: TextStyle(
+                      color: Color.fromARGB(255, 240, 237, 237), fontSize: 17),),
+                ),
+                 ListTile(
+                  onTap: (){ Navigator.of(context).pushNamedAndRemoveUntil("/HomeParcours", (route) => false);},
+                leading: Icon(Icons.settings, color:Color.fromARGB(255, 88, 88, 88)),
+                  title: Text('Paramètres', style: TextStyle(
+                      color: Color.fromARGB(255, 240, 237, 237), fontSize: 17),),
+                ),
+                  ListTile(
+                  onTap: (){ Navigator.of(context).pushNamedAndRemoveUntil("/HomeParcours", (route) => false);},
+                 leading: Icon(Icons.help, color:Color.fromARGB(255, 88, 88, 88)),
+                  title: Text('Aide & Services Client', style: TextStyle(
+                      color: Color.fromARGB(255, 240, 237, 237), fontSize: 17),),
+                ),
               ListTile(
                 onTap: () {
                   Get.to(LoginPage());
                 },
                 leading: Icon(
                   Icons.exit_to_app,
-                  color: Color.fromARGB(255, 240, 240, 240),
+                  color:Color(0xFFffd400)
                 ),
                 title: Text(
                   'Déconnexion',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 181, 181, 181), fontSize: 18),
+                      color: Color(0xFFffd400), fontSize: 17),
                 ),
               ),
             ],
@@ -163,9 +176,7 @@ ListTile(
                   itemBuilder: (context, i) {
                     return InkWell(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                ConsultAdmin(adminid: data[i].id)));
+                       
                       },
                       onLongPress: () {
                         AwesomeDialog(
@@ -200,7 +211,7 @@ ListTile(
                       child: Card(
                         child: Container(
                           padding: EdgeInsets.all(10),
-                          color: Color.fromARGB(255, 236, 229, 229),
+                          color: Color.fromARGB(255, 236, 236, 236),
                           child: Container(
                             height: 120,
                             padding: EdgeInsets.all(10),
@@ -216,7 +227,7 @@ ListTile(
                                 SizedBox(width: 8),
                                 // Espace entre l'image et le texte
                                 Container(
-                                  padding: EdgeInsets.all(15),
+                                  
                                   child: Column(
                                     // Aligner les textes à gauche
                                     children: [

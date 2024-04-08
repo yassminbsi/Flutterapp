@@ -17,7 +17,7 @@ const Connecter = '/loginAdmin';
 const bus = '/dashboard';
 const Inscrire= '/signupAdmin';
 const AdAdmin ='/AddAdmin';
-const screen ="/AddBus";
+const addBus ="/AddBus";
 const Initial = "/register";
 const loginuser = "/loginbasedrole";
 const homeBus = "/HomeBus";
@@ -29,6 +29,9 @@ const addParcours ="/AddParcours";
 
 const addStation='/AddStation';
 const homeStation = "/HomeStation";
+
+
+
 
 
 

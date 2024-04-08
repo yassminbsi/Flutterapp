@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EditParcours extends StatefulWidget {
-   final String docid;
+  final String docid;
   final String oldnomparcours;
   final String olddepartparcours;
   final String oldarriveparcours;

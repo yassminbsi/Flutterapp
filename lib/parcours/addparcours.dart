@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/componenents/customlogoauth.dart';
 import 'package:flutter_app/componenents/textformfield.dart';
@@ -22,7 +23,7 @@ class _AddParcoursState extends State<AddParcours> {
  TextEditingController arriveparcours= TextEditingController();
 
  
- CollectionReference station = FirebaseFirestore.instance.collection('parcours');
+ CollectionReference parcours = FirebaseFirestore.instance.collection('parcours');
 bool isLoading= false;
 AddParcours() async{
   if (formState.currentState!.validate()){
@@ -31,7 +32,7 @@ AddParcours() async{
       setState(() {
         
       });
-    DocumentReference response = await station.add(
+    DocumentReference response = await parcours.add(
   {
     "Utilisateur": {
       "id": FirebaseAuth.instance.currentUser!.uid,
@@ -63,80 +64,158 @@ AddParcours() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.white),),
+     appBar: AppBar(
+        backgroundColor: Color(0xFF25243A),
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        title:  const Text('Ajouter Parcours',  style: TextStyle(color: Color(0xFFffd400)),),
+      
+        ),
      
-      actions: [
-        Row(
-          children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
-            IconButton(onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-          ],
-        )
-        ],),
+     
       body: Form(
         key: formState,
         child: isLoading ? Container(child: CircularProgressIndicator()) 
         : SingleChildScrollView(
           child: Column(children: [
             Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 65, vertical: 55),
+            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomLogoAuth(),
-                Center(
-          child: Text("Ajouter une parcours",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 25, 96, 167))),
-                ),
-                Container(height: 20,),
-                Text("Nom de parcours", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
-              ),
-                CustomTextForm(
-          hinttext: "Entrer nom de parcours ",
-          mycontroller: nomparcours,
+                
+              Center(
+                            child: Text("Informations Générales",
+                                style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.bold,
+                                    color:  Color(0xFF25243A))),
+                          ),
+                          SizedBox(
+                              height:
+                                  40),
+                
+                TextFormField(
+          
+          controller: nomparcours,
+           decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Nom Parcours',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
             }
           }, 
                 ),
-                SizedBox(height: 10),
-                Text("arrivee parcours", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
-              ), // Ajout d'un espace vertical entre les champs de texte
-                CustomTextForm(
-          hinttext: "arrivee parcours",
-          mycontroller: arriveparcours,
+                SizedBox(height: 30),
+                TextFormField(
+          
+          controller: departparcours,
+          decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Depart Parcours',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
             }
           },
                 ),
-                SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-                Text("depart", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
-              ),
-                CustomTextForm(
-          hinttext: "depart",
-          mycontroller: departparcours,
+                SizedBox(height: 30),
+               
+              
+               // Ajout d'un espace vertical entre les champs de texte
+                 TextFormField(
+          
+          controller: arriveparcours,
+          decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Arrivée Parcours',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";
             }
           },
                 ),
+                // Ajout d'un espace vertical entre les champs de texte
+                
+                 
                 
               ],
             ),
           ),
             MaterialButton(
-              child: Text("Sauvegarder Parcours"),
+              color: Color(0xFFFFCA20),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        elevation: 5.0,
+        minWidth: 200.0,
+        height: 45,
+              
+              child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A ),fontSize: 17.0, )),
               onPressed: (){
                 AddParcours();
               },)
+              
           
           ],),
         ),

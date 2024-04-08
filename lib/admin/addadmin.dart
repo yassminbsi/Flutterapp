@@ -66,17 +66,7 @@ class _AddAdminState extends State<AddAdmin> {
         backgroundColor: Color(0xFF25243A),
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
         title:  const Text('Ajouter Admin',  style: TextStyle(color: Color(0xFFffd400)),),
-        actions: [
-          Row(
-          children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.white),),
-            IconButton(onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-          ],
-        )
-        ],
+        
         ),
       body: Form(
         key: formState,
@@ -87,76 +77,130 @@ class _AddAdminState extends State<AddAdmin> {
                   children: [
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          EdgeInsets.symmetric(horizontal: 65, vertical: 95),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomLogoAuth(),
+                         
                           Center(
-                            child: Text("Ajouter un admin",
+                            child: Text("Informations Générales",
                                 style: TextStyle(
                                     fontSize: 23,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black54)),
+                                    color:  Color(0xFF25243A))),
                           ),
                           SizedBox(
                               height:
-                                  10), // Ajout d'un espace vertical entre les champs de texte
-                          TextFormField(
-                            validator: (val) {
-                              if (val == "") {
-                                return "Veuillez saisir id Admin";
-                              }
-                            },
-                            controller: nom,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Nom')),
-                          ),
-                          SizedBox(
-                              height:
-                                  10), // Ajout d'un espace vertical entre les champs de texte
+                                  40), // Ajout d'un espace vertical entre les champs de texte
                           TextFormField(
                             validator: (val) {
                               if (val == "") {
                                 return "Veuillez saisir votre nom";
                               }
                             },
-                            controller: prenom,
+                            controller: nom,
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Prénom')),
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Nom',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
                           ),
                           SizedBox(
                               height:
-                                  10), // Ajout d'un espace vertical entre les champs de texte
+                                  30), // Ajout d'un espace vertical entre les champs de texte
+                          TextFormField(
+                            validator: (val) {
+                              if (val == "") {
+                                return "Veuillez saisir votre prénom";
+                              }
+                            },
+                            controller: prenom,
+                           decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Prénom',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
+                          ),
+                          SizedBox(
+                              height:
+                                  30), // Ajout d'un espace vertical entre les champs de texte
                           TextFormField(
                             validator: (val) {
                               if (val!.isEmpty) {
-                                return "Veuillez saisir votre prénom";
+                                return "Veuillez saisir votre téléphone";
                               } else if (int.tryParse(val) == null) {
                                 return "Format invalide. Entrez un numéro de téléphone valide.";
                               }
                             },
                             controller: phone,
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Numéro de tél.')),
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Téléphone',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
                           ),
                           SizedBox(
                               height:
-                                  10), // Ajout d'un espace vertical entre les champs de texte
+                                  30), // Ajout d'un espace vertical entre les champs de texte
                           TextFormField(
                             validator: (val) {
                               if (val == "") {
-                                return "Veuillez saisir votre N° téléphone.";
+                                return "Veuillez saisir votre email.";
                               } else if (!RegExp(
                                       r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                   .hasMatch(val!)) {
@@ -164,75 +208,127 @@ class _AddAdminState extends State<AddAdmin> {
                               }
                             },
                             controller: email,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Email')),
+                           decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: ' Email',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
                           ),
                           SizedBox(
                               height:
-                                  10), // Ajout d'un espace vertical entre les champs de texte
+                                  30), // Ajout d'un espace vertical entre les champs de texte
                           TextFormField(
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Veuillez saisir votre e-mail.";
-                              }
-                            },
-                            obscureText: showpass,
-                            controller: password,
-                            decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        showpass = !showpass;
-                                      });
-                                    },
-                                    icon: showpass == true
-                                        ? Icon(Icons.visibility_off)
-                                        : Icon(Icons.visibility)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Mot de passe')),
-                          ),
-                          SizedBox(height: 10),
+  validator: (val) {
+    if (val!.isEmpty) {
+      return "Veuillez saisir votre mot de passe.";
+    } else if (val != password.text) {
+      return "Les mots de passe ne correspondent pas";
+    }
+  },
+  obscureText: showpass,
+  controller: confirmpassword,
+  decoration: InputDecoration(
+    border: OutlineInputBorder(),
+    labelText: 'Saisir votre mot de passe',
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelStyle: TextStyle(
+      color: Colors.grey,
+    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 14),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFFFCA20)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    suffixIcon: IconButton(
+      onPressed: () {
+        setState(() {
+          showpass = !showpass;
+        });
+      },
+      icon: showpass == true
+          ? Icon(Icons.visibility_off)
+          : Icon(Icons.visibility),
+    ),
+  ),
+)
+,
+                          SizedBox(height: 30),
                           // Ajout d'un espace vertical entre les champs de texte
 
                           TextFormField(
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return "Veuillez saisir votre mot de passe.";
-                              } else if (val != password.text) {
-                                return "Les mots de passe ne correspondent pas";
-                              }
-                            },
-                            obscureText: showpass,
-                            controller: confirmpassword,
-                            decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        showpass = !showpass;
-                                      });
-                                    },
-                                    icon: showpass == true
-                                        ? Icon(Icons.visibility_off)
-                                        : Icon(Icons.visibility)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                label: Text('Confirmer mot de passe')),
-                          ),
+  validator: (val) {
+    if (val!.isEmpty) {
+      return "Veuillez saisir votre mot de passe.";
+    } else if (val != password.text) {
+      return "Les mots de passe ne correspondent pas";
+    }
+  },
+  obscureText: showpass,
+  controller: confirmpassword,
+  decoration: InputDecoration(
+    labelText: 'Confirmer mot de passe',
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelStyle: TextStyle(
+      color: Colors.grey,
+    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 14),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFFFCA20)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    suffixIcon: IconButton(
+      onPressed: () {
+        setState(() {
+          showpass = !showpass;
+        });
+      },
+      icon: showpass == true
+          ? Icon(Icons.visibility_off)
+          : Icon(Icons.visibility),
+    ),
+  ),
+)
+,
                           SizedBox(
                               height:
-                                  5), // Ajout d'un espace vertical entre les champs de texte
+                                  10), // Ajout d'un espace vertical entre les champs de texte
                         ],
                       ),
                     ),
                     MaterialButton(
                       color: Color(0xFFFFCA20),
-                      child: Text("Ajouter",  style: TextStyle(color: Colors.black54)),
+                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        elevation: 5.0,
+        minWidth: 200.0,
+        height: 45,
+              
+              child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A ),fontSize: 17.0, )),
                       onPressed: () {
                         AddAdmin();
                       },
