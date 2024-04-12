@@ -15,25 +15,54 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildIntroTexts() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'What is your phone number?',
+          '',
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              color: Color.fromARGB(255, 164, 164, 164), fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        SizedBox(
-          height: 30,
-        ),
+    
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 2),
-          child: Text(
-            'Please enter yout phone number to verify your account.',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-            ),
-          ),
+          
+        child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: '      Make My',
+                                              style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                                color:   Color(0xFF25243A ),
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: ' Route\n \n',
+                                              style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                              color: Colors.orange[800],
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'No more Waiting',
+                                              style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                                color:  Color(0xFF25243A),
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: ' For Bus',
+                                              style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.orange[800],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
         ),
       ],
     );
@@ -45,37 +74,52 @@ class LoginScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
-              border: Border.all(color: MyColors.lightGrey),
-              borderRadius: BorderRadius.all(Radius.circular(6)),
+              border: Border.all( color: Color(0xFF25243A)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
             child: Text(
               generateCountryFlag() + ' +216',
-              style: TextStyle(fontSize: 18, letterSpacing: 2.0),
+              style: TextStyle(fontSize: 18, letterSpacing: 2.0, color: Color(0xFF25243A)),
             ),
           ),
         ),
-        SizedBox(
-          width: 16,
-        ),
+      SizedBox(width: 10,),
         Expanded(
           flex: 2,
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-            decoration: BoxDecoration(
-              border: Border.all(color: MyColors.blue),
-              borderRadius: BorderRadius.all(Radius.circular(6)),
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+           
             child: TextFormField(
+              
               autofocus: true,
               style: TextStyle(
                 fontSize: 18,
                 letterSpacing: 2.0,
               ),
-              decoration: InputDecoration(border: InputBorder.none),
-              cursorColor: Colors.black,
+              decoration: InputDecoration(border: OutlineInputBorder(),
+                                    labelText: ' Téléphone',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Color(0xFF25243A),
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xFF25243A)),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:  Color(0xFF25243A)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),),
+                
+              cursorColor: Colors.orange[800],
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -121,45 +165,75 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildNextButton(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight,
-      child: ElevatedButton(
+      alignment: Alignment.center,
+      child: MaterialButton(
+        
+        color: Colors.orange[800],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        elevation: 5.0,
+        minWidth: 435.0,
+        height: 50,
+        
         onPressed: () {
           showProgressIndicator(context);
 
           _register(context);
-        },
-        child: Text(
-          'Next',
-          style: TextStyle(color: const Color.fromARGB(255, 243, 107, 107), fontSize: 16),
-        ),
+        }, 
+        /*MaterialButton(
+              color: Color(0xFFFFCA20),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        elevation: 5.0,
+        minWidth: 200.0,
+        height: 45,
+              
+              child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A ),fontSize: 17.0, )),*/
+        child: Text("Get Your Otp",  style: TextStyle(color : Color.fromARGB(255, 247, 247, 248),fontSize: 18.0, )),
           
-        style: ElevatedButton.styleFrom(
-          minimumSize: Size(110, 50),
-          
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
-        ),
+        
       ),
 
          
     );
+    
   }
 
   Widget _buildOtherComponentButton(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
+      
       child: TextButton(
         onPressed: () {
           // Navigate to other component
           navigateToOtherComponent(context);
+          
         },
-        child: Text(
-          'Go to Other Component',
-          style: TextStyle(color: Colors.blue, fontSize: 16),
-        ),
+
+       child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'S\'inscrire  ? ',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color:  Color(0xFF25243A ),
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'se connecter',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.orange[800],
+                                              ),
+                                            ),
+                                           
+                                          ],
+                                        ),
+                                      ),
+                                      
       ),
+      
     );
+
   }
 
   void showProgressIndicator(BuildContext context) {
@@ -216,33 +290,45 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Form(
-          key: _phoneFormKey,
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildIntroTexts(),
-                SizedBox(
-                  height: 110,
-                ),
-                _buildPhoneFormField(),
-                SizedBox(
-                  height: 70,
-                ),
-                _buildNextButton(context),
-                _buildPhoneNumberSubmitedBloc(),
-                 _buildOtherComponentButton(context),
-              ],
-            ),
+   return SafeArea(
+  child: Scaffold(
+    backgroundColor: Color.fromARGB(255, 244, 244, 244),
+    body: SingleChildScrollView(
+      child: Form(
+        key: _phoneFormKey,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 72, vertical: 72),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildIntroTexts(),
+              SizedBox(
+                height: 75,
+              ),
+              _buildPhoneFormField(),
+              SizedBox(
+                height: 30,
+              ),
+              _buildNextButton(context),
+              SizedBox(
+                height: 30,
+              ),
+              _buildPhoneNumberSubmitedBloc(),
+              _buildOtherComponentButton(context),
+             
+              Image.asset(
+                "images/logoregister.png",
+                width: 200,
+                height: 350,
+              ),
+            ],
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
+
   }
 }
 

@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Color(0xFF25243A),
+      backgroundColor: Color(0xFF25243A),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -50,7 +50,7 @@ class _RegisterState extends State<Register> {
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.all(12),
+                  margin: EdgeInsets.all(52),
                   child: Form(
                     key: _formkey,
                     child: Column(
@@ -64,7 +64,7 @@ class _RegisterState extends State<Register> {
                           "Track My Bus",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color:  Colors.orange[800],
                             fontSize: 40,
                           ),
                         ),
@@ -76,22 +76,29 @@ class _RegisterState extends State<Register> {
                         ),
                         TextFormField(
                           controller: emailController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: 'Email',
-                            enabled: true,
-                            contentPadding: const EdgeInsets.only(
-                                left: 14.0, bottom: 8.0, top: 8.0),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                          ),
+                         decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'E-mail',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                    labelStyle: TextStyle(
+                                      color: Color.fromARGB(255, 225, 225, 225),
+                                    ),
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 14),
+                                    enabledBorder: OutlineInputBorder(
+                                     
+                                            borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(0xFFFFCA20)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                   
+                                    
+                                  ),
                           validator: (value) {
                             if (value!.length == 0) {
                               return "Email cannot be empty";
@@ -113,31 +120,33 @@ class _RegisterState extends State<Register> {
                         TextFormField(
                           obscureText: _isObscure,
                           controller: passwordController,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                icon: Icon(_isObscure
-                                    ? Icons.visibility_off
-                                    : Icons.visibility),
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscure = !_isObscure;
-                                  });
-                                }),
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: 'Password',
-                            enabled: true,
-                            contentPadding: const EdgeInsets.only(
-                                left: 14.0, bottom: 8.0, top: 15.0),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                          ),
+                           decoration: InputDecoration(
+    border: OutlineInputBorder(),
+    labelText: 'Saisir votre mot de passe',
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelStyle: TextStyle(
+      color: Colors.white,
+    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 14),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFFFFCA20)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    suffixIcon: IconButton(
+      onPressed: () {
+        setState(() {
+          _isObscure = !_isObscure;
+        });
+      },
+      icon: _isObscure == true
+          ? Icon(Icons.visibility_off)
+          : Icon(Icons.visibility),
+    ),
+  ),
                           validator: (value) {
                             RegExp regex = new RegExp(r'^.{6,}$');
                             if (value!.isEmpty) {
@@ -158,30 +167,32 @@ class _RegisterState extends State<Register> {
                           obscureText: _isObscure2,
                           controller: confirmpassController,
                           decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                icon: Icon(_isObscure2
-                                    ? Icons.visibility_off
-                                    : Icons.visibility),
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscure2 = !_isObscure2;
-                                  });
-                                }),
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: 'Confirm Password',
-                            enabled: true,
-                            contentPadding: const EdgeInsets.only(
-                                left: 14.0, bottom: 8.0, top: 15.0),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: new BorderRadius.circular(20),
-                            ),
-                          ),
+    labelText: 'Confirmer mot de passe',
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    labelStyle: TextStyle(
+      
+      color: Color.fromARGB(255, 233, 233, 233),
+    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 14),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    suffixIcon: IconButton(
+      onPressed: () {
+        setState(() {
+          _isObscure2 = !_isObscure2;
+        });
+      },
+      icon: _isObscure2 == true
+          ? Icon(Icons.visibility_off)
+          : Icon(Icons.visibility),
+    ),
+  ),
                           validator: (value) {
                             if (confirmpassController.text !=
                                 passwordController.text) {
@@ -212,6 +223,7 @@ class _RegisterState extends State<Register> {
                 });
               },
               activeColor: Colors.white,
+              
             ),
             Text(
               option,

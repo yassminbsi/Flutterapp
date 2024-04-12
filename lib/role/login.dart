@@ -209,7 +209,7 @@ class _LoginUserState extends State<LoginUser> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MapScreen(),
+              builder: (context) => DashboardScreen(),
             ),
           );
         }

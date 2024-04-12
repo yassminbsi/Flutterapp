@@ -58,7 +58,7 @@ void main() async {
       if (userRole == "Admin") {
         initialRoute = bus;
       } else {
-        initialRoute = mapScreen;
+        initialRoute = bus;
       }
     }
     runApp(
