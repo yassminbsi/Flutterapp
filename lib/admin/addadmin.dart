@@ -244,7 +244,7 @@ class _AddAdminState extends State<AddAdmin> {
     }
   },
   obscureText: showpass,
-  controller: confirmpassword,
+  controller: password,
   decoration: InputDecoration(
     border: OutlineInputBorder(),
     labelText: 'Saisir votre mot de passe',
