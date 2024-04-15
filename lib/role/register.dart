@@ -30,75 +30,88 @@ class _RegisterState extends State<Register> {
   bool _isObscure = true;
   bool _isObscure2 = true;
   File? file;
+
   var options = [
     'Admin',
     'SuperAdmin',
   ];
+  Color getRadioButtonColor(Set<MaterialState> states) {
+    // If the radio button is selected, return yellow, else return blue
+    if (states.contains(MaterialState.selected)) {
+      return Color.fromARGB(255, 255, 255, 255);
+    }
+    return Color.fromARGB(255, 253, 253, 253);
+  }
+
   var _currentItemSelected = "Admin";
   var rool = "Admin";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF25243A),
-      body: SingleChildScrollView(
+
+                               
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      body: Container(
+       
+        
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
+
             Container(
-              color:  Color(0xFF25243A),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
+              
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
+                color: Color(0xFFFF5722),
+                border: Border(
+                  left: BorderSide(
+                    width: 3,
+                  ),
+                ),
+              ),
+              child: Container(
                 child: Container(
-                  margin: EdgeInsets.all(52),
+                  margin: EdgeInsets.all(22),
                   child: Form(
                     key: _formkey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 80,
-                        ),
                         Text(
-                          "Track My Bus",
+                          "Get Started",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color:  Colors.orange[800],
+                            color: Color.fromARGB(192, 255, 255, 255),
                             fontSize: 40,
                           ),
                         ),
                         SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          height: 50,
+                          height: 30,
                         ),
                         TextFormField(
                           controller: emailController,
-                         decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'E-mail',
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    labelStyle: TextStyle(
-                                      color: Color.fromARGB(255, 225, 225, 225),
-                                    ),
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 14),
-                                    enabledBorder: OutlineInputBorder(
-                                     
-                                            borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Color(0xFFFFCA20)),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                   
-                                    
-                                  ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'E-mail',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelStyle: TextStyle(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 14),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFFFCA20)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
                           validator: (value) {
                             if (value!.length == 0) {
                               return "Email cannot be empty";
@@ -120,33 +133,35 @@ class _RegisterState extends State<Register> {
                         TextFormField(
                           obscureText: _isObscure,
                           controller: passwordController,
-                           decoration: InputDecoration(
-    border: OutlineInputBorder(),
-    labelText: 'Saisir votre mot de passe',
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    labelStyle: TextStyle(
-      color: Colors.white,
-    ),
-    contentPadding: EdgeInsets.symmetric(vertical: 14),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xFFFFCA20)),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    suffixIcon: IconButton(
-      onPressed: () {
-        setState(() {
-          _isObscure = !_isObscure;
-        });
-      },
-      icon: _isObscure == true
-          ? Icon(Icons.visibility_off)
-          : Icon(Icons.visibility),
-    ),
-  ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Saisir votre mot de passe',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 14),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 242, 242, 242)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFFFCA20)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            suffixIcon: IconButton(
+                              color: Color.fromARGB(255, 242, 242, 242),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                              icon: _isObscure == true
+                                  ? Icon(Icons.visibility_off)
+                                  : Icon(Icons.visibility),
+                            ),
+                          ),
                           validator: (value) {
                             RegExp regex = new RegExp(r'^.{6,}$');
                             if (value!.isEmpty) {
@@ -167,32 +182,34 @@ class _RegisterState extends State<Register> {
                           obscureText: _isObscure2,
                           controller: confirmpassController,
                           decoration: InputDecoration(
-    labelText: 'Confirmer mot de passe',
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    labelStyle: TextStyle(
-      
-      color: Color.fromARGB(255, 233, 233, 233),
-    ),
-    contentPadding: EdgeInsets.symmetric(vertical: 14),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 242, 242, 242)),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    suffixIcon: IconButton(
-      onPressed: () {
-        setState(() {
-          _isObscure2 = !_isObscure2;
-        });
-      },
-      icon: _isObscure2 == true
-          ? Icon(Icons.visibility_off)
-          : Icon(Icons.visibility),
-    ),
-  ),
+                            labelText: 'Confirmer mot de passe',
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 233, 233, 233),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 14),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 242, 242, 242)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 242, 242, 242)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            suffixIcon: IconButton(
+                              color: Color.fromARGB(255, 242, 242, 242),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure2 = !_isObscure2;
+                                });
+                              },
+                              icon: _isObscure2 == true
+                                  ? Icon(Icons.visibility_off)
+                                  : Icon(Icons.visibility),
+                            ),
+                          ),
                           validator: (value) {
                             if (confirmpassController.text !=
                                 passwordController.text) {
@@ -206,40 +223,39 @@ class _RegisterState extends State<Register> {
                         SizedBox(
                           height: 20,
                         ),
-                       Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    
-    Row(
-      children: options.map((String option) {
-        return Row(
-          children: [
-            Radio(
-              value: option,
-              groupValue: rool,
-              onChanged: (String? value) {
-                setState(() {
-                  rool = value!;
-                });
-              },
-              activeColor: Colors.white,
-              
-            ),
-            Text(
-              option,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-          ],
-        );
-      }).toList(),
-    ),
-  ],
-),
-
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: options.map((String option) {
+                                return Row(
+                                  children: [
+                                    Radio(
+                                      value: option,
+                                      groupValue: rool,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          rool = value!;
+                                        });
+                                      },
+                                      activeColor: Colors.white,
+                                      fillColor: MaterialStateColor.resolveWith(
+                                          getRadioButtonColor),
+                                    ),
+                                    Text(
+                                      option,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                         SizedBox(
                           height: 20,
                         ),
@@ -255,7 +271,8 @@ class _RegisterState extends State<Register> {
                               height: 40,
                               onPressed: () {
                                 CircularProgressIndicator();
-                                Navigator.of(context).pushNamed("/loginbasedrole");
+                                Navigator.of(context)
+                                    .pushNamed("/loginbasedrole");
                               },
                               child: Text(
                                 "Login",
@@ -288,25 +305,17 @@ class _RegisterState extends State<Register> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.yellowAccent[400],
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
+            )
+           
           ],
+          
         ),
+    
       ),
     );
   }
@@ -322,15 +331,13 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> postDetailsToFirestore(String email, String rool) async {
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  var user = _auth.currentUser;
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    var user = _auth.currentUser;
 
-  // Reference the "users" collection and add a document to it
-  CollectionReference ref = FirebaseFirestore.instance.collection('users');
-  ref.doc(user!.uid).set({'email': email, 'rool': rool});
-  
-  Navigator.of(context).pushNamed("/loginbasedrole");
+    // Reference the "users" collection and add a document to it
+    CollectionReference ref = FirebaseFirestore.instance.collection('users');
+    ref.doc(user!.uid).set({'email': email, 'rool': rool});
+
+    Navigator.of(context).pushNamed("/loginbasedrole");
+  }
 }
-}
-
-
