@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
                     Container(
                       height: 20,
                     ),
-                    CustomLogoAuth(),
+                   
                     Container(
                       height: 20,
                     ),
