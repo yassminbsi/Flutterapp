@@ -62,18 +62,8 @@ getData() async{
         ),
        
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
-        title:  const Text('Liste stations',  style: TextStyle(color: Color(0xFFffd400)),),
-        actions: [
-          Row(
-           children: [
-              Text("Déconnexion", style: TextStyle(color: Color.fromARGB(255, 183, 178, 178)),),
-              IconButton(onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                      }, icon: Icon(Icons.exit_to_app, color: const Color.fromARGB(255, 183, 178, 178),)),
-            ],
-        )
-        ],
+        title:  const Text('Liste stations',  style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),),
+     
         ),
 
      
@@ -89,7 +79,7 @@ getData() async{
           itemBuilder: (context, i) {
             return  InkWell(
                 onTap: () {
-                 // Navigator.of(context).push(MaterialPageRoute(
+                // Navigator.of(context).push(MaterialPageRoute(
                   //  builder: (context) =>
                    // NoteView(categoryid: data[i].id)));
                 },
@@ -134,6 +124,7 @@ getData() async{
                         
                          Text("Station: ${data[i]['nomstation']}"),
                           Text("Station: ${data[i]['latitude']}"),
+                          Text("Station: ${data[i]['longtude']}"),
                             ],
                          ),
   ],

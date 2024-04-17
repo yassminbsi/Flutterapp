@@ -1,4 +1,3 @@
-
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/Homepage.dart';
 import 'package:flutter_app/auth/logiin.dart';
@@ -15,30 +14,21 @@ const mapScreen = '/map-screen';
 const Login = '/login';
 const Connecter = '/loginAdmin';
 const bus = '/dashboard';
-const Inscrire= '/signupAdmin';
-const AdAdmin ='/AddAdmin';
-const addBus ="/AddBus";
+const Inscrire = '/signupAdmin';
+const AdAdmin = '/AddAdmin';
+const addBus = "/AddBus";
 const Initial = "/register";
 const loginuser = "/loginbasedrole";
 const homeBus = "/HomeBus";
-const addAdmin='/AddAdmin';
-const Accueil='/AccueilAdmin';
+const addAdmin = '/AddAdmin';
+const Accueil = '/AccueilAdmin';
 
-const homeParcours ="/HomeParcours";
-const addParcours ="/AddParcours";
+const homeParcours = "/HomeParcours";
+const addParcours = "/AddParcours";
 
-const addStation='/AddStation';
+const addStation = '/AddStation';
 const homeStation = "/HomeStation";
-
-
-
-
-
-
-
-
-
-
+const AttParcours = "/Attribuer";
 
 const googleAPIKey = 'AIzaSyC7ckSip1a_oVGM1y7nPSWGUdTEPbkANIA';
 const suggestionsBaseUrl =
@@ -47,4 +37,3 @@ const placeLocationBaseUrl =
     'https://maps.googleapis.com/maps/api/place/details/json';
 const directionsBaseUrl =
     'https://maps.googleapis.com/maps/api/directions/json';
-    
