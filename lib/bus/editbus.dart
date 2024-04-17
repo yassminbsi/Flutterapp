@@ -8,17 +8,18 @@ import 'package:flutter/material.dart';
 class EditBus extends StatefulWidget {
   final String docid;
   final String oldnombus;
-  final String oldstation;
-  const EditBus({super.key, required this.docid, required this.oldnombus, required this.oldstation, });
+  final String oldimmat;
+  const EditBus({super.key, required this.docid, required this.oldnombus, required this.oldimmat, });
 
   @override
   State<EditBus> createState() => _EditBusState();
 }
 
 class _EditBusState extends State<EditBus> {
+  
  GlobalKey<FormState> formState=  GlobalKey<FormState>();
  TextEditingController nombus= TextEditingController();
- TextEditingController station= TextEditingController();
+ TextEditingController immat= TextEditingController();
  CollectionReference bus = FirebaseFirestore.instance.collection('bus');
 bool isLoading= false;
 EditBus() async{
@@ -30,7 +31,7 @@ EditBus() async{
       });
     await bus.doc(widget.docid).update({
       "nombus": nombus.text,
-      "station":station.text,
+      "immat":immat.text,
 
     });
     Navigator.of(context).pushNamedAndRemoveUntil("/HomeBus", (route) => false);
@@ -43,18 +44,19 @@ EditBus() async{
     }
   }
 }
+
 @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
     nombus.dispose();
-    station.dispose();
+    immat.dispose();
   }
 @override
   void initState() {
     super.initState();
     nombus.text= widget.oldnombus;
-    station.text= widget.oldstation;
+    immat.text= widget.oldimmat;
   }
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ EditBus() async{
               ),
                 CustomTextForm(
           hinttext: "choisir station",
-          mycontroller: station,
+          mycontroller: immat,
           validator: (val) {
             if (val == "") {
               return "Ne peut pas être vide";

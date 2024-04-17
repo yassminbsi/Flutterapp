@@ -8,6 +8,7 @@ import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
+import 'package:flutter_app/parcours/Attribuer.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
 import 'package:flutter_app/role/home.dart';
@@ -143,6 +144,11 @@ class AppRouter {
          return MaterialPageRoute(
           builder: (_) =>  HomeParcours(),
         );
+       case AttParcours:
+         return MaterialPageRoute(
+          builder: (_) =>  Attribuer(),
+        );
+        
     }
   }
 }

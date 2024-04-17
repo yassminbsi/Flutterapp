@@ -21,8 +21,11 @@ class DashboardScreen extends StatelessWidget {
     return GetBuilder<DashboardController>(
       init: DashboardController(),
       builder: (controller) => Scaffold(
+        
         body: SafeArea(
+          
           child: IndexedStack(
+            
             index: controller.tabIndex ?? 0,
            children: [
             
@@ -48,6 +51,8 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: Container(
+          
+          
           decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
@@ -60,7 +65,7 @@ class DashboardScreen extends StatelessWidget {
           child: SnakeNavigationBar.color(
             behaviour: SnakeBarBehaviour.floating,
             snakeShape: SnakeShape.circle,
-            padding: const EdgeInsets.symmetric(vertical: 5),
+           height: 75,
             unselectedLabelStyle: const TextStyle(fontSize: 11),
             snakeViewColor: Theme.of(context).primaryColor,
             unselectedItemColor: Color(0xFF25243A),
@@ -72,11 +77,17 @@ class DashboardScreen extends StatelessWidget {
             },
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.account_circle
-                ), label: 'Admin Panel',),
+                ), label: 'Admin',),
               BottomNavigationBarItem(icon: Icon(Icons.chair_alt_outlined
                   ), label: 'Station'),
-              BottomNavigationBarItem(icon: Icon(Icons.route), label: 'Parcours'),
-              BottomNavigationBarItem(icon: Icon(Icons.bus_alert), label: 'Bus')
+              BottomNavigationBarItem(icon: Icon(Icons.route), label: 'Parcours',),
+            BottomNavigationBarItem(
+  icon: Icon(Icons.bus_alert, ),
+  label: 'Bus',
+  
+   // Adjust the font size as needed
+)
+
             ],
           ),
         ),
