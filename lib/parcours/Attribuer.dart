@@ -13,6 +13,7 @@ class _AttribuerState extends State<Attribuer> {
   bool isLoading = false;
   List<String> stationNames = [];
   String? selectedStation;
+List<String> stationIds = [];
 
   @override
   void initState() {
@@ -20,14 +21,14 @@ class _AttribuerState extends State<Attribuer> {
     fetchStationNames();
   }
 
-  void fetchStationNames() async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('station').get();
-    setState(() {
-      stationNames =
-          snapshot.docs.map((doc) => doc['nomstation'] as String).toList();
-    });
-  }
+ void fetchStationNames() async {
+  QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('station').get();
+  setState(() {
+    stationNames = snapshot.docs.map((doc) => "${doc['nomstation']} (ID: ${doc.id})").toList();
+  });
+}
+
+
 
   void addBus(String selectedStation) async {
     try {
@@ -35,7 +36,7 @@ class _AttribuerState extends State<Attribuer> {
         'nomstation': selectedStation,
         'nombus': 'Your Bus Name', // Add your bus name here
         'immat': 'Your Bus Immatriculation', // Add your bus immatriculation here
-        // Add other fields if needed
+        
       });
       setState(() {
         isLoading = false;
@@ -116,11 +117,14 @@ class _AttribuerState extends State<Attribuer> {
                               return null;
                             },
                             items: stationNames.toSet().map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+  // Split the value to get only the station name
+  String stationName = value.split('(ID:')[0].trim();
+  return DropdownMenuItem<String>(
+    value: value,
+    child: Text(stationName),
+  );
+}).toList(),
+
                           ),
                         ],
                       ),
