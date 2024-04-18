@@ -167,7 +167,7 @@ onPressed: () async {
                               children: [
                                 Text("Bus: ${data[i]['nombus']}"),
                                 Text("immat: ${data[i]['immat']}"),
-                                Text("station: ${data[i]['nomstation']}"),
+                               
                               ],
                             ),
                           ],
