@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/home_admin.dart';
@@ -9,8 +11,6 @@ import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
 import 'package:flutter_app/station/addstation.dart';
 import 'package:flutter_app/station/view-station.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ConsultAdmin extends StatefulWidget {

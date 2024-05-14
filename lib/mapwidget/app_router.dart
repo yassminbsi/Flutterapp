@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
-import 'package:flutter_app/auth/home_admin.dart';
-import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
-import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
+import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/mapligne.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/otp_screen.dart';
 import 'package:flutter_app/parcours/Attribuer.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
-import 'package:flutter_app/role/home.dart';
 import 'package:flutter_app/role/login.dart';
 import 'package:flutter_app/role/register.dart';
 import 'package:flutter_app/station/addstation.dart';
 import 'package:flutter_app/station/view-station.dart';
+import 'package:flutter_app/stationcurrentposition/addstationposition.dart';
+import 'package:flutter_app/stationcurrentposition/mapadmin.dart';
+import 'package:flutter_app/view/dashboard/controlepage.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
-import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
-import 'package:flutter_app/mapwidget/presentation/screens/otp_screen.dart';
-import '../auth/Homepage.dart';
+
 import 'business_logic/cubit/maps/maps_cubit.dart';
 import 'constnats/strings.dart';
 import 'data/repository/maps_repo.dart';
@@ -75,17 +75,25 @@ class AppRouter {
 
         case bus:
         return MaterialPageRoute(
-          builder: (_) =>  DashboardScreen(),
+          builder: (_) =>  DashboardScreen(initialTabIndex: 0,),
         );
-    
+        case controlepage:
+         return MaterialPageRoute(
+          builder: (_) =>  ControlePage(initialTabIndex: 0,),
+        );
 
          case  Inscrire:
         return MaterialPageRoute(
           builder: (_) =>  signupAdmin(),
         );
+        
+        case mapadmin:
+        return MaterialPageRoute(
+          builder: (_) => MapAdmin());
+        
+
+        
        
-        
-        
          case  Initial:
         return MaterialPageRoute(
           builder: (_) =>  Register(),
@@ -113,7 +121,11 @@ class AppRouter {
           builder: (_) =>  AddAdmin(),
         );
         
-      
+        case  mapStation:
+        return MaterialPageRoute(
+          builder: (_) =>  AddStationCurrentPosition(),
+        );
+        
 
          case  Accueil:
         return MaterialPageRoute(
@@ -132,7 +144,10 @@ class AppRouter {
           builder: (_) =>  AddStation(),
         );
 
-        
+        case mapligne:
+        return MaterialPageRoute(
+          builder: (_) => MapLigne(),
+          );
 
          case addParcours:
          return MaterialPageRoute(
@@ -148,6 +163,7 @@ class AppRouter {
          return MaterialPageRoute(
           builder: (_) =>  Attribuer(),
         );
+
         
     }
   }

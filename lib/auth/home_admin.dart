@@ -1,15 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/addadmin.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/auth/logiin.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
-import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
 import 'package:flutter_app/station/addstation.dart';
 import 'package:flutter_app/station/view-station.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeAdmin extends StatelessWidget {

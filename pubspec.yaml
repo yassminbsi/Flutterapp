@@ -70,6 +70,8 @@ dependencies:
   video_player: ^2.8.4
  
   material_floating_search_bar_2: ^0.5.0
+  curved_navigation_bar: ^1.0.3
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -101,7 +103,10 @@ flutter:
     - images/logo.png
     - images/logoregister.png
     - images/otp.png
-
+    - images/buss.png
+    - images/Font_Accueil.jpg
+    - images/user.png
+    - images/msg.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

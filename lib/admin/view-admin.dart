@@ -1,25 +1,14 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/admin/addadmin.dart';
-import 'package:flutter_app/admin/consulteradmin.dart';
-import 'package:flutter_app/admin/editadmin.dart';
-import 'package:flutter_app/auth/home_admin.dart';
-import 'package:flutter_app/auth/logiin.dart';
-import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/viewbus.dart';
-import 'package:flutter_app/parcours/addparcours.dart';
-import 'package:flutter_app/parcours/view-parcours.dart';
-import 'package:flutter_app/station/addstation.dart';
-import 'package:flutter_app/station/view-station.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_app/admin/editadmin.dart';
+import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 
 class AccueilAdmin extends StatefulWidget {
   const AccueilAdmin({super.key});
   State<AccueilAdmin> createState() => _AccueilAdminState();
 }
-
 class _AccueilAdminState extends State<AccueilAdmin> {
   List<QueryDocumentSnapshot> data = [];
   bool isLoading = true;
@@ -42,35 +31,31 @@ class _AccueilAdminState extends State<AccueilAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFFFFCA20),
+          backgroundColor: Color(0xFFffd400),
           foregroundColor: Colors.black54,
           onPressed: () {
             Navigator.of(context).pushNamed("/AddAdmin");
           },
           child: Icon(Icons.add),
         ),
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Color(0xFFffd400)),
-          backgroundColor: Color(0xFF25243A),
-          title: const Text(
-            'Liste Admin',
-            
-            style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
-          ),
-          actions: [
-            Row(
-                /*  children: [
-              Text("Déconnexion", style: TextStyle(color: Colors.white),),
-              IconButton(onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                      }, icon: Icon(Icons.exit_to_app, color: Colors.white,)),
-            ],
-            */
-                )
-          ],
+      appBar: AppBar(
+        
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        backgroundColor: Color(0xFF25243A),
+        title: const Text(
+          'Liste Admins',
+          style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
         ),
-      
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil("/loginbasedrole", (route) => false);
+            },
+            icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400)),
+          ),
+        ],
+      ),
         body: WillPopScope(
           child: isLoading == true
               ? Center(
@@ -96,12 +81,12 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                             btnCancelText: "Supprimer",
                             btnOkText: "Modifier",
                             btnCancelOnPress: () async {
-                              await FirebaseFirestore.instance
-                                  .collection("admin")
-                                  .doc(data[i].id)
-                                  .delete();
-                              Navigator.of(context)
-                                  .pushReplacementNamed("/AccueilAdmin");
+                              await FirebaseFirestore.instance.collection("admin").doc(data[i].id).delete();
+                              Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                              builder: (context) => DashboardScreen(initialTabIndex: 1,)// 1 est l'index de l'onglet "AccueilAdmin"
+                              ),
+                             );
                             },
                             btnOkOnPress: () async {
                               Navigator.of(context).push(MaterialPageRoute(
@@ -152,8 +137,11 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                   },
                 ),
           onWillPop: () {
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil("/HomeAdmin", (route) => false);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                builder: (context) => DashboardScreen(initialTabIndex: 0,) // 1 est l'index de l'onglet "AccueilAdmin"
+                ),
+                );
             return Future.value(false);
           },
         ));

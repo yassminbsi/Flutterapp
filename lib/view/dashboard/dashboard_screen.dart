@@ -1,97 +1,165 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/view-admin.dart';
 import 'package:flutter_app/bus/viewbus.dart';
-import 'package:flutter_app/controller/dashboard_controller.dart';
+import 'package:flutter_app/view/dashboard/homeadminY.dart';
 
-
-import 'package:flutter/material.dart';
-import 'package:flutter_app/parcours/view-parcours.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:get/get.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-
-import '../../auth/home_admin.dart';
 import '../../station/view-station.dart';
 
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+class DashboardScreen extends StatefulWidget {
+  final int initialTabIndex;
+  const DashboardScreen({Key? key, required this.initialTabIndex}) : super(key: key);
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 4,
+      vsync: this,
+      initialIndex: widget.initialTabIndex,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DashboardController>(
-      init: DashboardController(),
-      builder: (controller) => Scaffold(
-        
-        body: SafeArea(
-          
-          child: IndexedStack(
-            
-            index: controller.tabIndex ?? 0,
-           children: [
-            
-            Container(
-              color: Colors.red,
-              child:
-                  AccueilAdmin(), // Add HomeAdmin() as the child of the first Container
-            ),
-            Container(
-              color: Colors.blue,
-              child: HomeStation(),
-            ),
-            Container(
-              color: Colors.orange,
-               child: HomeParcours(),
-            ),
-            Container(
-              color: Colors.orange,
-              child: HomeBus(),
-            ),
-          ]
+    User? user = FirebaseAuth.instance.currentUser;
+    String? email = user?.email;
 
-          ),
+    return Scaffold(
+    /*  appBar: AppBar(
+        
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        backgroundColor: Color(0xFF25243A),
+        title: const Text(
+          'Bienvenue',
+          style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
         ),
-        bottomNavigationBar: Container(
-          
-          
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                  top: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 0.7
-                  )
-              )
-          ),
-          child: SnakeNavigationBar.color(
-            behaviour: SnakeBarBehaviour.floating,
-            snakeShape: SnakeShape.circle,
-           height: 75,
-            unselectedLabelStyle: const TextStyle(fontSize: 11),
-            snakeViewColor: Theme.of(context).primaryColor,
-            unselectedItemColor: Color(0xFF25243A),
-            selectedItemColor:Color(0xFFffd400),
-            showUnselectedLabels: true,
-            currentIndex: controller.tabIndex,
-            onTap: (val){
-              controller.updateIndex(val);
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil("/loginbasedrole", (route) => false);
             },
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.account_circle
-                ), label: 'Admin',),
-              BottomNavigationBarItem(icon: Icon(Icons.chair_alt_outlined
-                  ), label: 'Station'),
-              BottomNavigationBarItem(icon: Icon(Icons.route), label: 'Parcours',),
-            BottomNavigationBarItem(
-  icon: Icon(Icons.bus_alert, ),
-  label: 'Bus',
-  
-   // Adjust the font size as needed
+            icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400)),
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    child: Image.asset('images/icon_user.png'),
+                  ),
+                  Text('Compte admin:'),
+                  Text(email ?? 'user@example.com', style: TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home, color: Color(0xFFffd400)),
+              title: Text(
+                'Home Admin',
+                style: TextStyle(color: Color(0xFFffd400), fontSize: 24),
+              ),
+              tileColor: Color(0xFF25243A),
+            ),
+            ListTile(
+              onTap: () { Navigator.of(context).pushNamed("/AddBus"); },
+              leading: Icon(Icons.add),
+              title: Text('Ajouter Bus'),
+            ),
+            ListTile(
+              onTap: () { Navigator.of(context).pushNamed("/AddAdmin"); },
+              leading: Icon(Icons.add),
+              title: Text('Ajouter Admin'),
+            ),
+            ListTile(
+              onTap: () { Navigator.of(context).pushNamed("/AddStation"); },
+              leading: Icon(Icons.add),
+              title: Text('Ajouter Station'),
+            ),
+            ListTile(
+              onTap: () { Navigator.of(context).pushNamed("/loginbasedrole"); },
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Déconnexion'),
+            ),
+          ],
+        ),
+      ),*/
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Container(
+            color: Colors.red,
+            child: HomeAdmin(),
+          ),
+          Container(
+            color: Colors.blue,
+            child: HomeBus(),
+          ),
+          Container(
+            color: Colors.orange,
+            child: AccueilAdmin(),
+          ),
+          Container(
+            color: Colors.orange,
+            child: HomeStation(),
+          ),
+        ],
+      ),
+  bottomNavigationBar: BottomNavigationBar(
+  type: BottomNavigationBarType.shifting, // Set type to circular
+  currentIndex: _tabController.index,
+  onTap: (index) {
+    setState(() {
+      _tabController.animateTo(index);
+    });
+  },
+  items: const [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Accueil',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.bus_alert),
+      label: 'Ligne',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.account_circle),
+      label: 'Admin',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.chair_alt_outlined),
+      label: 'Station',
+    ),
+  ],
+  selectedItemColor: Color(0xFFffd400),
+  unselectedItemColor: Color(0xFF25243A),
+  backgroundColor: Color(0xFF25243A),
+  showUnselectedLabels: true,
+  selectedFontSize: 14,
+  unselectedFontSize: 12,
+  selectedIconTheme: IconThemeData(color: Color(0xFFffd400)),
+  unselectedIconTheme: IconThemeData(color: Color(0xFF25243A)),
+  selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+  unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
 )
 
-            ],
-          ),
-        ),
-      ),
+
+
+
     );
   }
 }

@@ -3,21 +3,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/componenents/custombuttonauth.dart';
 import 'package:flutter_app/componenents/customlogoauth.dart';
+import 'package:flutter_app/view/dashboard/controlepage.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 
-class AddStation extends StatefulWidget {
-  const AddStation({super.key});
+class AddStationCurrentPosition extends StatefulWidget {
+  const AddStationCurrentPosition({super.key});
   @override
-  State<AddStation> createState() => _AddStationState();
+  State<AddStationCurrentPosition> createState() => _AddStationCurrentPositionState();
 }
-class _AddStationState extends State<AddStation> {
+class _AddStationCurrentPositionState extends State<AddStationCurrentPosition> {
  GlobalKey<FormState> formState=  GlobalKey<FormState>();
  TextEditingController nomstation= TextEditingController();
- TextEditingController latitude= TextEditingController();
- TextEditingController longtude= TextEditingController();
+ TextEditingController currentposition= TextEditingController();
  CollectionReference station = FirebaseFirestore.instance.collection('station');
  bool isLoading= false;
- AddStation() async{
+ AddStationCurrentPosition() async{
   if (formState.currentState!.validate()){
     try {
       isLoading= true;
@@ -27,20 +27,19 @@ class _AddStationState extends State<AddStation> {
   {
     "id" : FirebaseAuth.instance.currentUser!.uid,
     "nomstation": nomstation.text,
-    "latitude": latitude.text,
-    "longtude": longtude.text,
-    // Ajoutez d'autres champs du bus au besoin
+    "latitude": currentposition.text,
   },
 );
     //Navigator.of(context).pushNamedAndRemoveUntil("/ControlePage", (route) => false);
     Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                builder: (context) => DashboardScreen(initialTabIndex: 3,), // 3 est l'index de l'onglet "AccueilAdmin"
+                builder: (context) => DashboardScreen(initialTabIndex: 3), // 3 est l'index de l'onglet "AccueilAdmin"
                 ),
                 );
     } catch(e) {
       isLoading= false;
-      setState(() {  
+      setState(() {
+        
       });
       print("Error $e");
     }
@@ -55,20 +54,17 @@ class _AddStationState extends State<AddStation> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Color(0xFFffd400)),
-        backgroundColor: Color(0xFF25243A),
-        title: const Text(
-        'Ajout Station', style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
-         ),
-      actions: [
+      appBar: AppBar(title: Text("Ajout parcours", style: TextStyle(fontSize: 18,color: Color(0xFFffd400)),),
+      backgroundColor: Color(0xFF25243A),
+      iconTheme: IconThemeData(color: Color(0xFFffd400)),
+      actions:[
         Row(
-          children: [
+          children:[
             Text("", style: TextStyle(color: Color(0xFFffd400)),),
             IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/loginbasedrole", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400),)),
+              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+            }, icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400))),
           ],
         )
         ],),
@@ -78,9 +74,9 @@ class _AddStationState extends State<AddStation> {
         : SingleChildScrollView(
           child: Column(children: [
             Container(
-            decoration: BoxDecoration(
+           /* decoration: BoxDecoration(
                     image: DecorationImage(image: AssetImage("images/font.jpg"),
-                    fit: BoxFit.cover,)),  
+                    fit: BoxFit.cover,)),*/  
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               children: [
@@ -97,42 +93,26 @@ class _AddStationState extends State<AddStation> {
            ),
                 ),
           Container(height: 20,),
-          
           TextFormField(
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)),
-                              enabledBorder: OutlineInputBorder(
+                        decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF6750A4)),
+                        borderRadius: BorderRadius.circular(40)),
+                        enabledBorder: OutlineInputBorder(
                               
-                                borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)), 
-                              prefixIcon: Icon(Icons.directions_bus,color: Color(0xFF6750A4),),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                               label: Text("Nom de station"),
-                               labelStyle: TextStyle(color: Color(0xFF6750A4)),),
-                            controller: nomstation,
-                            validator: (val) {
-                              if (val == "") {
-                                return "Ne peut pas être vide";
-                              }
-                            },
-                          ),
-          SizedBox(height: 10),
-            TextFormField(
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)),
-                              enabledBorder: OutlineInputBorder(
-                              
-                                borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)), 
+                        borderSide: BorderSide(color: Color(0xFF6750A4)),
+                        borderRadius: BorderRadius.circular(40)), 
                               prefixIcon:Icon(Icons.my_location, color: Color(0xFF6750A4)),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                               label: Text("Latitude"),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed("/Selectcurrentposition");
+                                },
+                                icon: Icon(Icons.place,
+                              ) ,),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(40),),
+                               label: Text("Current location"),
                                labelStyle: TextStyle(color: Color(0xFF6750A4)),),
-                            controller: latitude,
+                            controller: currentposition,
                             validator: (val) {
                               if (val == "") {
                                 return "Ne peut pas être vide";
@@ -144,22 +124,22 @@ class _AddStationState extends State<AddStation> {
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)),
+                                borderRadius: BorderRadius.circular(40)),
                               enabledBorder: OutlineInputBorder(
                               
                                 borderSide: BorderSide(color: Color(0xFF6750A4)),
-                                borderRadius: BorderRadius.circular(30)), 
-                              prefixIcon: Icon(Icons.my_location_outlined,color: Color(0xFF6750A4)),
-                            //  border: OutlineInputBorder(borderRadius: BorderRadius.circular(40),),
-                               label: Text("Longitude"),
+                                borderRadius: BorderRadius.circular(40)), 
+                              prefixIcon: Icon(Icons.directions_bus,color: Color(0xFF6750A4),),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(40),),
+                               label: Text("Nom de station"),
                                labelStyle: TextStyle(color: Color(0xFF6750A4)),),
-                            controller: longtude,
+                            controller: nomstation,
                             validator: (val) {
                               if (val == "") {
                                 return "Ne peut pas être vide";
                               }
                             },
-                          ),  
+                          ),                            
             SizedBox(height: 20,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +147,7 @@ class _AddStationState extends State<AddStation> {
                 CustomButtonAuth(
                   title: "Sauvegarder Station",
                   onPressed: (){
-                    AddStation();
+                    AddStationCurrentPosition();
                     ScaffoldMessenger.of(context).showSnackBar(
                                SnackBar(
                                content: Text('La station a été ajoutée avec succès', style: TextStyle(color: Colors.black), 

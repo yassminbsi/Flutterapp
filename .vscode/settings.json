@@ -1,4 +1,9 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
-  "cSpell.words": ["hinttext"]
+  "cSpell.words": [
+    "Attribuer",
+    "docidbus",
+    "hinttext",
+    "nombus"
+  ]
 }

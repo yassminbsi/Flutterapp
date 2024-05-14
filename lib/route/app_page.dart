@@ -1,4 +1,4 @@
-import 'package:flutter_app/view/dashboard/dashboard_binding.dart';
+/*import 'package:flutter_app/view/dashboard/dashboard_binding.dart';
 import 'package:get/get.dart';
 import 'package:flutter_app/route/app_route.dart';
 import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
@@ -54,4 +54,5 @@ class AppPage {
     GetPage(name: "/AddParcours", page: () => AddParcours()),
   ];
 }
+*/
 */
