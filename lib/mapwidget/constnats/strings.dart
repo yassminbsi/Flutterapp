@@ -1,12 +1,4 @@
-import 'package:flutter_app/admin/view-admin.dart';
-import 'package:flutter_app/auth/Homepage.dart';
-import 'package:flutter_app/auth/logiin.dart';
-import 'package:flutter_app/auth/login_admin.dart';
-import 'package:flutter_app/auth/signup_admin.dart';
-import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/viewbus.dart';
-import 'package:flutter_app/parcours/view-parcours.dart';
-import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
+
 
 const loginScreen = '/login-screen';
 const otpScreen = '/otp-screen';
@@ -29,6 +21,10 @@ const addParcours = "/AddParcours";
 const addStation = '/AddStation';
 const homeStation = "/HomeStation";
 const AttParcours = "/Attribuer";
+const controlepage = "/ControlePage";
+const mapStation= "/AddStationCurrentPosition";
+const mapadmin= "/MapAdmin";
+const mapligne="/MapLigne";
 
 const googleAPIKey = 'AIzaSyC7ckSip1a_oVGM1y7nPSWGUdTEPbkANIA';
 const suggestionsBaseUrl =

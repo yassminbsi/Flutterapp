@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
-import 'package:flutter_app/mapwidget/constnats/my_colors.dart';
 import 'package:flutter_app/mapwidget/constnats/strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -35,11 +34,11 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: ' sans perdre de temps\n \n',
+                  text: ' sans perdre de temps ',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange[800],
+                    color: Color(0xFFffd400),
                   ),
                 ),
                 TextSpan(
@@ -55,7 +54,7 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange[800],
+                    color: Color(0xFFffd400),
                                               ),
                                             ),
                                           ],
@@ -79,7 +78,7 @@ class LoginScreen extends StatelessWidget {
             ),
             child: Text(
               generateCountryFlag() + ' +216',
-              style: TextStyle(fontSize: 18, letterSpacing: 2.0, color: Color(0xFF25243A)),
+              style: TextStyle(fontSize: 16, letterSpacing: 2.0, color: Color(0xFF25243A)),
             ),
           ),
         ),
@@ -91,10 +90,9 @@ class LoginScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
            
             child: TextFormField(
-              
               autofocus: true,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 letterSpacing: 2.0,
               ),
               decoration: InputDecoration(border: OutlineInputBorder(),
@@ -117,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(5),
                                     ),),
                 
-              cursorColor: Colors.orange[800],
+              cursorColor: Color(0xFFffd400),
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -158,7 +156,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void navigateToOtherComponent(BuildContext context) {
-    Navigator.pushNamed(context, '/register');
+    Navigator.pushNamed(context, '/loginbasedrole');
   }
 
   Widget _buildNextButton(BuildContext context) {
@@ -166,7 +164,7 @@ class LoginScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: MaterialButton(
         
-        color: Colors.orange[800],
+        color: Color.fromARGB(255, 43, 26, 92),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15.0))),
         elevation: 5.0,
         minWidth: 435.0,
@@ -185,7 +183,7 @@ class LoginScreen extends StatelessWidget {
         height: 45,
               
               child: Text("Sauvegarder",  style: TextStyle(color : Color(0xFF25243A ),fontSize: 17.0, )),*/
-        child: Text("Envoyer un code",  style: TextStyle(color : Color.fromARGB(255, 247, 247, 248),fontSize: 18.0, )),
+        child: Text("Envoyer un code",  style: TextStyle(color : Color(0xFFffd400),fontSize: 18.0, )),
           
         
       ),
@@ -224,7 +222,7 @@ class LoginScreen extends StatelessWidget {
                                                   text: ' qu\'administrateur ? ',
                                                   style: TextStyle(
                                                     fontSize: 16,
-                                                    color: Colors.orange[800],
+                                                    color: Color(0xFFffd400),
                                                   ),
                                                 ),
                                                

@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/componenents/custombuttonauth.dart';
-import 'package:flutter_app/componenents/customlogoauth.dart';
-import 'package:flutter_app/componenents/customtextfieldadd.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/componenents/custombuttonauth.dart';
+import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 
 class EditAdmin extends StatefulWidget {
   final String docid;
@@ -29,6 +28,7 @@ class _EditAdminState extends State<EditAdmin> {
  TextEditingController password= TextEditingController();
  TextEditingController confirmpassword= TextEditingController();
  CollectionReference admin = FirebaseFirestore.instance.collection('admin');
+ bool showpass = true;
 bool isLoading= false;
 EditAdmin() async{
   if (formState.currentState!.validate()){
@@ -44,10 +44,13 @@ EditAdmin() async{
       "email":email.text,
       "password":password.text,
       "confirmpassword":confirmpassword.text,
-       
-
     });
-    Navigator.of(context).pushNamedAndRemoveUntil("/AccueilAdmin", (route) => false);
+    //Navigator.of(context).pushNamedAndRemoveUntil("/AccueilAdmin", (route) => false);
+    Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                builder: (context) => DashboardScreen(initialTabIndex: 2,),// 2 est l'index de l'onglet "AccueilAdmin"
+                ),
+                );
     } catch(e) {
       isLoading= false;
       setState(() {
@@ -83,132 +86,184 @@ EditAdmin() async{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("", style: TextStyle(color: Colors.black54),),
-      
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+        backgroundColor: Color(0xFF25243A),
+        title: const Text(
+        'Modifier Admin', style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
+         ),
       actions: [
         Row(
           children: [
-            Text("Déconnexion", style: TextStyle(color: Colors.black54),),
+            Text("", style: TextStyle(color: Color(0xFFffd400)),),
             IconButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-            }, icon: Icon(Icons.exit_to_app, color: Colors.black54,)),
+              Navigator.of(context).pushNamedAndRemoveUntil("/loginbasedrole", (route) => false);
+            }, icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400),)),
           ],
         )
-        ],
-        ),
+        ],),
       body: Form(
         key: formState,
         child: isLoading ? Center(child: CircularProgressIndicator()) 
         : SingleChildScrollView(
           child: Column(children: [
             Container(
+              decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage("images/font.jpg"),
+            fit: BoxFit.cover,)),
               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
               child: Column(
                crossAxisAlignment: CrossAxisAlignment.start, 
                mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomLogoAuth(),
+                //CustomLogoAuth(),
                 Center(
-          child: Text("Modifier admin",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black54)),
-                ),
-                Container(height: 10,),
-                Text("Nom", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                child: Container(
+                 alignment: Alignment.topCenter,
+                 width: 100,
+                 height: 100,
+                 padding: EdgeInsets.all(10),
+                 decoration:  BoxDecoration(
+                   
+                   borderRadius: BorderRadius.circular(70)
+                  ),
+                 child: Image.asset("images/user.png",
+                 height: 100,),
+                 ),
               ),
-                CustomTextFormAdd(
-          hinttext: "Entrer nom ",
-          mycontroller: nom,
-          validator: (val) {
-            if (val == "") {
-              return "Veuillez saisir votre nom";
-            }
-          }, 
-          
-                ),
-                SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-                Text("Prénom", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
-              ),
-                CustomTextFormAdd(
-          hinttext: "Entrer prénom",
-          mycontroller: prenom,
-          validator: (val) {
-            if (val == "") {
-              return "Veuillez saisir votre prénom";
-            }
-          },
+                Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.edit , color:Color(0xFF6750A4),size: 27,),
+              Text("Modifier admin",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
+                    color: Color(0xFF6750A4),)),
+            ],
           ),
-SizedBox(height: 10),
-Text(
-  "Numéro de tél.",
-  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+  TextFormField(
+   validator: (val) {
+       if (val == "") {
+        return "Ne peut pas être vide";
+      }
+     }, 
+ controller: nom,
+  decoration: InputDecoration(
+  //border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+ label: Text('Nom')
+ ),
 ),
-CustomTextFormAdd(
-  hinttext: "Entrer numéro de tél.",
-  mycontroller: phone,
+
+
+SizedBox(height: 10),            // Ajout d'un espace vertical entre les champs de texte
+TextFormField(
+      validator: (val) {
+        if (val == "") {
+         return "Ne peut pas être vide";
+       }
+      }, 
+  controller: prenom,
+  decoration: InputDecoration(
+    //border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+    label: Text('Prénom')
+  ),
+),
+ SizedBox(height: 10),            // Ajout d'un espace vertical entre les champs de texte
+TextFormField(
   validator: (val) {
     if (val!.isEmpty) {
-      return "Veuillez saisir votre N° de téléphone";
+      return "Ne peut pas être vide";
     } else if (int.tryParse(val) == null) {
       return "Format invalide. Entrez un numéro de téléphone valide.";
     }
-  },
-),      
-SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-          Text("Email", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+  }, 
+  controller: phone,
+  decoration: InputDecoration(
+   // border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+    label: Text('Numéro de tél.')
+  ),
 ),
-CustomTextFormAdd(
-  hinttext: "Entrer email",
-  mycontroller: email,
+ SizedBox(height: 10),            // Ajout d'un espace vertical entre les champs de texte
+TextFormField(
   validator: (val) {
     if (val == "") {
-      return "Veuillez saisir votre e-mail";
+      return "Ne peut pas être vide";
     } else if (!RegExp(r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(val!)) {
       return "Format invalide (ex: exemple@gmail.com)";
     }
   },
+  controller: email,
+  decoration: InputDecoration(
+  //  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+    label: Text('Email')
+  ),
 ),
-
-                SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-                Text(
-  "Mot de passe",
-  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-),
-CustomTextFormAdd(
-  hinttext: "Entrer mot de passe",
-  mycontroller: password,
-  validator: (val) {
-    if (val!.isEmpty) {
-      return "Veuillez saisir votre mot de passe";
+ SizedBox(height: 10),// Ajout d'un espace vertical entre les champs de texte  
+TextFormField(
+  validator: (val){
+     if (val!.isEmpty) {
+      return "Ne peut pas être vide";
     }
   },
+  obscureText: showpass,
+  controller: password,
+  decoration: InputDecoration(
+    suffixIcon: IconButton(
+      onPressed: (){
+        setState(() {
+          showpass=! showpass;
+        });
+      },icon: showpass== true? Icon(Icons.visibility_off):Icon(Icons.visibility)),
+   // border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+    label: Text('Mot de passe')
+  ),
 ),
-SizedBox(height: 10), // Ajout d'un espace vertical entre les champs de texte
-Text(
-  "Confirmer mot de passe",
-  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-),
-CustomTextFormAdd(
-  hinttext: "Confirmer mot de passe",
-  mycontroller: confirmpassword,
-  validator: (val) {
+  SizedBox(height: 10),
+                 // Ajout d'un espace vertical entre les champs de texte
+   
+TextFormField(
+    validator: (val) {
     if (val!.isEmpty) {
-      return "Veuillez saisir votre mot de passe";
+      return "Ne peut pas être vide";
     } else if (val != password.text) {
       return "Les mots de passe ne correspondent pas";
     }
-  },
+  }, 
+  obscureText: showpass,
+  controller: confirmpassword,
+  decoration: InputDecoration(
+    suffixIcon: IconButton(
+      onPressed: (){
+        setState(() {
+          showpass=! showpass;
+        });
+      },icon: showpass== true? Icon(Icons.visibility_off):Icon(Icons.visibility)),
+    //border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), ),
+    label: Text('Confirmer mot de passe')
+  ),
 ),
-
-              ],
+SizedBox(height: 15),              
+Center(
+              child: CustomButtonAuth(
+                title: "Enregistrer les modifications",
+                onPressed: (){
+                  EditAdmin();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(
+                             content: Text("L'admin a été modifié avec succès", style: TextStyle(color: Colors.black), 
+                             ),
+                             backgroundColor: const Color.fromARGB(255, 197, 197, 197),
+                             duration: Duration(seconds: 2),
+                  ),
+                );
+                },),
+            ),
+              SizedBox(height: 10,)
+           ],
             ),
             ),
-            MaterialButton(
-              child: Text("Sauvegarder") ,
-              onPressed: (){
-                EditAdmin();
-              },)
-          
           ],),
         ),
       ),

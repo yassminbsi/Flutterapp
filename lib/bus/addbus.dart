@@ -1,16 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_app/componenents/custombuttonauth.dart';
-import 'package:flutter_app/componenents/customlogoauth.dart';
-import 'package:flutter_app/componenents/textformfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/componenents/custombuttonauth.dart';
+import 'package:flutter_app/componenents/customlogoauth.dart';
+import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
 
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-
-class AddBus extends StatefulWidget {
+/*class AddBus extends StatefulWidget {
   const AddBus({Key? key}) : super(key: key);
 
   @override
@@ -42,7 +37,11 @@ AddBus() async{
    "nomstation": selectedStation,
   },
 );
-    Navigator.of(context).pushNamedAndRemoveUntil("/HomeBus", (route) => false);
+    Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                builder: (context) => ControlePage(initialTabIndex: 1), // 1 est l'index de l'onglet "AccueilAdmin"
+                ),
+                );
     } catch(e) {
       isLoading= false;
       setState(() {
@@ -220,6 +219,209 @@ AddBus() async{
                   ],
                 ),
               ),
+      ),
+    );
+  }
+}
+*/
+class AddBus extends StatefulWidget {
+  const AddBus({Key? key}) : super(key: key);
+
+  @override
+  State<AddBus> createState() => _AddBusState();
+}
+
+class _AddBusState extends State<AddBus> {
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
+  TextEditingController immatriculation = TextEditingController();
+  TextEditingController nomBus = TextEditingController();
+  String? selectedStation;
+  List<String> stations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStations();
+  }
+
+  Future<void> fetchStations() async {
+    try {
+      QuerySnapshot stationSnapshot =
+          await FirebaseFirestore.instance.collection('station').get();
+      List<String> fetchedStations = [];
+      stationSnapshot.docs.forEach((doc) {
+        fetchedStations.add(doc['nomstation']);
+      });
+      setState(() {
+        stations = fetchedStations;
+      });
+    } catch (e) {
+      print("Error fetching stations: $e");
+    }
+  }
+    CollectionReference bus = FirebaseFirestore.instance.collection('bus');
+  bool isLoading = false;
+  AddBus() async{
+  if (formState.currentState!.validate()){
+    try {
+      isLoading= true;
+      setState(() {
+        
+      });
+   
+    DocumentReference response = await bus.add(
+  {
+    "immat": immatriculation.text,
+        "Utilisateur": {"id": FirebaseAuth.instance.currentUser!.uid},
+        "nombus": nomBus.text,
+        "nomstation": selectedStation,
+         
+  },
+);
+    
+    Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                builder: (context) => DashboardScreen(initialTabIndex: 1,), // 1 est l'index de l'onglet "AccueilAdmin"
+                ),
+                );
+    } catch(e) {
+      isLoading= false;
+      setState(() {
+      });
+      print("Error $e");
+    }
+  }
+}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Color(0xFFffd400)),
+          backgroundColor: Color(0xFF25243A),
+          title: const Text('Ajout Ligne',style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
+          ),
+        actions: [
+          Row(
+            children: [
+              Text(
+                "",
+                style: TextStyle(color: Color(0xFFffd400)),
+              ),
+              IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/loginbasedrole", (route) => false);
+                },
+                icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400)),
+              ),
+            ],
+          )
+        ],
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+                        image: DecorationImage(image: AssetImage("images/font.jpg"),
+                        fit: BoxFit.cover,)),
+        child: Form(
+          key: formState,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Container(
+                        
+                        padding:EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          children:[
+                            CustomLogoAuth(),
+                            Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add , color:Color(0xFF6750A4),size: 27,),
+                              Text(
+                                "Ajouter Ligne",
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF6750A4),),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30)),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30)), 
+                            prefixIcon: Icon(Icons.confirmation_number ,color: Color(0xFF6750A4),),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+                             label: Text("Immatriculation"),
+                             labelStyle: TextStyle(color: Color(0xFF6750A4)),),
+                          controller: immatriculation,
+                          validator: (val) {
+                            if (val == "") {
+                              return "Ne peut pas être vide";
+                            }
+                          },
+                        ),
+                        SizedBox(height: 9),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30)),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30)), 
+                            prefixIcon: Icon(Icons.directions_bus,color: Color(0xFF6750A4),),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+                             label: Text("nom de bus"),
+                             labelStyle: TextStyle(color: Color(0xFF6750A4)),),
+                          controller: nomBus,
+                          validator: (val) {
+                            if (val == "") {
+                              return "Ne peut pas être vide";
+                            }
+                          },
+                        ),
+                        SizedBox(height: 9),
+                  SizedBox(height: 35),
+                   Center(
+                        child: CustomButtonAuth(
+                        title: "Sauvegarder bus",
+                         onPressed: () {
+                        AddBus();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                           SnackBar(
+                           content: Text('Le bus a été ajouté avec succès', style: TextStyle(color: Colors.black), 
+               ),
+             backgroundColor: const Color.fromARGB(255, 197, 197, 197),
+              duration: Duration(seconds: 2),
+             ),
+             );
+                                                },
+              ),
+              ),
+              SizedBox(height: 10),
+                ],
+              ),
+             )
+             ],
+            ),
+              ),
+            ),
+        ),
       ),
     );
   }

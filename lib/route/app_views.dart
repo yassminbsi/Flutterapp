@@ -1,4 +1,4 @@
-import 'package:flutter_app/mapwidget/constnats/strings.dart';
+/*import 'package:flutter_app/mapwidget/constnats/strings.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
 import 'package:flutter_app/userwidget/map-user.dart';
 import 'package:flutter_app/view/dashboard/dashboard_binding.dart';
@@ -48,4 +48,5 @@ class AppPageList {
     GetPage(name: "/AddParcours", page: () => AddParcours()),
   ];
 }
+*/
 */

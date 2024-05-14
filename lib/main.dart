@@ -1,41 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_app/auth/login.dart';
-import 'package:flutter_app/auth/signup.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_app/mapwidget/business_logic/cubit/maps/maps_cubit.dart';
 import 'package:flutter_app/mapwidget/constnats/strings.dart';
-import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
-import 'package:flutter_app/role/home.dart';
-import 'package:flutter_app/route/app_views.dart';
-import 'package:flutter_app/view/dashboard/dashboard_screen.dart';
-import 'package:flutter_app/views/add.dart';
-import 'package:flutter_app/bus/addbus.dart';
-import 'package:flutter_app/bus/viewbus.dart';
-import 'package:flutter_app/route/app_page.dart';
-import 'package:flutter_app/route/app_route.dart';
-
-import 'package:flutter_app/auth/signup_admin.dart';
-import 'package:flutter_app/parcours/addparcours.dart';
-import 'package:flutter_app/parcours/view-parcours.dart';
-import 'package:flutter_app/station/addstation.dart';
-import 'package:flutter_app/station/view-station.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_app/admin/addadmin.dart';
-import 'package:flutter_app/admin/view-admin.dart';
-import 'package:flutter_app/auth/home_admin.dart';
-
-import 'package:flutter_app/auth/Homepage.dart';
-import 'package:flutter_app/auth/logiin.dart';
-import 'package:flutter_app/auth/login_admin.dart';
-import 'package:flutter_app/auth/search_bus.dart';
-import 'package:flutter_app/auth/signup_admin.dart';
-import 'package:get/get.dart';
-import 'mapwidget/constnats/strings.dart';
-import 'mapwidget/app_router.dart';
+import 'package:flutter_app/mapwidget/data/repository/maps_repo.dart';
+import 'package:flutter_app/mapwidget/data/webservices/places_webservices.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'mapwidget/app_router.dart';
 
 late String initialRoute;
 
@@ -62,7 +38,7 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
       currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser != null && currentUser.phoneNumber != null) {
-        initialRoute = loginScreen;
+        initialRoute = mapScreen;
         prefs.setString('userId', user.uid);
       } else {
         String userRole = await getUserRole(user.uid);
@@ -76,11 +52,17 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
     }
 
   runApp(
-    MyApp(
-      appRouter: AppRouter(),
-      initialRoute: initialRoute,
-    ),
-  );
+      ChangeNotifierProvider(
+        create: (context) => SelectedBusDocumentIdProvider(),
+        child: BlocProvider(
+        create: (context) => MapsCubit(MapsRepository(PlacesWebservices())), // Provide your MapsCubit
+        child: MyApp(
+          appRouter: AppRouter(),
+          initialRoute: initialRoute,
+        ),
+      ),
+      )
+    );
 });
 
 }

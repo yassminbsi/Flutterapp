@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:provider/provider.dart';
 
 class Attribuer extends StatefulWidget {
+
+
   const Attribuer({Key? key}) : super(key: key);
 
   @override
@@ -9,17 +14,28 @@ class Attribuer extends StatefulWidget {
 }
 
 class _AttribuerState extends State<Attribuer> {
+  List<QueryDocumentSnapshot> data = [];
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   bool isLoading = false;
   List<String> stationNames = [];
   List<String> selectedStations = [];
   List<String> stationIds = [];
-
+  
   @override
   void initState() {
     super.initState();
     fetchStationNames();
+ 
   }
+  
+
+ /* void fetchBusNames() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('bus').get();
+    setState(() {
+      stationNames = snapshot.docs.map((doc) => "${doc['nombus']} ").toList();
+    });
+  }*/
 
   void fetchStationNames() async {
     QuerySnapshot snapshot =
@@ -35,15 +51,12 @@ class _AttribuerState extends State<Attribuer> {
     try {
       await FirebaseFirestore.instance.collection('bus').add({
         'nomstations': selectedStations,
-        'nombus': 'Your Bus Name', // Add your bus name here
-        'immat':
-            'Your Bus Immatriculation', // Add your bus immatriculation here
+        'immat': 'Your Bus Immatriculation',
       });
       setState(() {
         isLoading = false;
       });
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil("/HomeBus", (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil("/HomeBus", (route) => false);
     } catch (e) {
       print("Error $e");
       setState(() {
@@ -51,17 +64,61 @@ class _AttribuerState extends State<Attribuer> {
       });
     }
   }
+  Widget MyBus(String selectedBusDocumentId) {
+  return FutureBuilder<DocumentSnapshot>(
+    future: FirebaseFirestore.instance.collection('bus').doc(selectedBusDocumentId).get(),
+    builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (!snapshot.hasData || !snapshot.data!.exists) {
+        return Text('Document does not exist');
+      } else {
+        String? nombus = snapshot.data!.get('nombus');
+        return Text(
+               "Ajouter parcours au bus : ${nombus ?? ''}",
+                style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF6750A4),
+                ),
+              );
+      }
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
+     final selectedBusProvider = Provider.of<SelectedBusDocumentIdProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF25243A),
-        iconTheme: IconThemeData(color: Color(0xFFffd400)),
-        title: const Text(
-          'Ajouter Bus',
-          style: TextStyle(color: Color(0xFFffd400)),
-        ),
+       appBar: AppBar(
+      iconTheme: IconThemeData(color: Color(0xFFffd400)),
+      backgroundColor: Color(0xFF25243A),
+      title: Text(
+       "Ajouter Parcours",
+        style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
+      ),
+      
+        actions: [
+          Row(
+            children: [
+              Text(
+                "",
+                style: TextStyle(color: Color(0xFFffd400)),
+              ),
+              IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil("/login", (route) => false);
+                },
+                icon: Icon(Icons.exit_to_app, color: Color(0xFFffd400)),
+              ),
+            ],
+          )
+        ],
       ),
       body: Form(
         key: formState,
@@ -77,16 +134,10 @@ class _AttribuerState extends State<Attribuer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Text(
-                              "Informations Générales",
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF25243A),
-                              ),
-                            ),
-                          ),
+                         Center(
+  child: MyBus( selectedBusProvider.selectedBusDocumentId)
+),
+
                           SizedBox(height: 40),
                           DropdownButtonFormField<String>(
                             decoration: InputDecoration(
@@ -95,17 +146,17 @@ class _AttribuerState extends State<Attribuer> {
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
                               labelStyle: TextStyle(
-                                color: Colors.grey,
+                                color: Color(0xFF6750A4),
                               ),
                               contentPadding:
                                   EdgeInsets.symmetric(vertical: 14),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
+                                borderSide: BorderSide(color: Color(0xFF6750A4),),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Color(0xFFFFCA20)),
+                                    BorderSide(color: Color(0xFF6750A4),),
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
@@ -132,7 +183,6 @@ class _AttribuerState extends State<Attribuer> {
                             iconSize: 24,
                             elevation: 16,
                             dropdownColor: Colors.white,
-                            // Clear selected station after it's selected
                             onSaved: (value) {
                               selectedStations.add(value!);
                             },
@@ -159,15 +209,15 @@ class _AttribuerState extends State<Attribuer> {
                       ),
                     ),
                     MaterialButton(
-                      color: Color(0xFFFFCA20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      ),
+                      height: 50,
+                      shape: 
+                     RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                     color: Color(0xFF6750A4),
                       elevation: 5.0,
                       child: Text(
                         "Sauvegarder",
                         style:
-                            TextStyle(color: Color(0xFF25243A), fontSize: 17.0),
+                            TextStyle(color: Color(0xFFffd400), fontSize: 17.0),
                       ),
                       onPressed: () {
                         if (formState.currentState!.validate()) {

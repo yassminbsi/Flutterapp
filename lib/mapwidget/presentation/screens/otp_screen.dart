@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
-import 'package:flutter_app/mapwidget/constnats/my_colors.dart';
-import 'package:flutter_app/mapwidget/constnats/strings.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 // ignore: must_be_immutable
@@ -19,7 +17,7 @@ class OtpScreen extends StatelessWidget {
       children: [
        
          Image.asset(
-                               "images/otp.png",
+                               "images/msg.png",
                                 width: 100,
                               ),
         
@@ -36,7 +34,7 @@ class OtpScreen extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   text: '$phoneNumber',
-                  style: TextStyle(color:Colors.orange[800]),
+                  style: TextStyle(color:Color(0xFFffd400),),
                 ),
               ],
             ),
@@ -72,7 +70,7 @@ class OtpScreen extends StatelessWidget {
       child: PinCodeTextField(
         appContext: context,
         autoFocus: true,
-        cursorColor: Colors.orange[800],
+        cursorColor: Color.fromARGB(255, 43, 26, 92),
         keyboardType: TextInputType.number,
         length: 6,
         obscureText: false,
@@ -83,11 +81,11 @@ class OtpScreen extends StatelessWidget {
           fieldHeight: 50,
           fieldWidth: 40,
           borderWidth: 1,
-          activeColor: Colors.orange[800],
-          inactiveColor:  Color.fromARGB(255, 248, 80, 2),
+          activeColor: Color(0xFFffd400),
+          inactiveColor:  Color(0xFFffd400),
           inactiveFillColor: Colors.white,
-          activeFillColor: Color.fromARGB(255, 243, 213, 194),
-          selectedColor: Colors.orange[800],
+          activeFillColor: Color.fromARGB(255, 245, 235, 183),
+          selectedColor: Color(0xFFffd400),
           selectedFillColor: Colors.white,
         ),
         animationDuration: Duration(milliseconds: 300),
@@ -112,7 +110,7 @@ class OtpScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: MaterialButton(
-        color: Colors.orange[800],
+        color: Color.fromARGB(255, 43, 26, 92),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0))),
         elevation: 5.0,
@@ -125,7 +123,7 @@ class OtpScreen extends StatelessWidget {
         },
         child: Text("Continuer",
             style: TextStyle(
-              color: Color.fromARGB(255, 247, 247, 248),
+              color: Color(0xFFffd400),
               fontSize: 24.0,
             )),
       ),
@@ -168,21 +166,24 @@ class OtpScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),
-          child: Column(
-            children: [
-              _buildIntroTexts(),
-              SizedBox(
-                height: 20,
-              ),
-              _buildPinCodeFields(context),
-              SizedBox(
-                height: 20,
-              ),
-              _buildVrifyButton(context),
-              _buildPhoneVerificationBloc(),
-            ],
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),
+            child: Column(
+              children: [
+                _buildIntroTexts(),
+                SizedBox(
+                  height: 20,
+                ),
+                _buildPinCodeFields(context),
+                SizedBox(
+                  height: 20,
+                ),
+                _buildVrifyButton(context),
+                SizedBox(height: 10,),
+                _buildPhoneVerificationBloc(),
+              ],
+            ),
           ),
         ),
       ),
