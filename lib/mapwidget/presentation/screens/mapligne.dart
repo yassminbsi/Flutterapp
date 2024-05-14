@@ -379,6 +379,7 @@ void selectStation(String selectedStationId) {
             filled: true,
             fillColor: Color.fromARGB(255, 226, 222, 222),
             border: OutlineInputBorder(
+              
               borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(color: Color.fromARGB(255, 92, 226, 74)),
             ),
