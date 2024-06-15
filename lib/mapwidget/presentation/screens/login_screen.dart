@@ -64,7 +64,6 @@ class LoginScreen extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildPhoneFormField() {
     return Row(
       children: [
@@ -134,7 +133,6 @@ class LoginScreen extends StatelessWidget {
       ],
     );
   }
-
   String generateCountryFlag() {
     String countryCode = 'tn';
 
@@ -143,7 +141,6 @@ class LoginScreen extends StatelessWidget {
 
     return flag;
   }
-
   Future<void> _register(BuildContext context) async {
     if (!_phoneFormKey.currentState!.validate()) {
       Navigator.pop(context);
@@ -154,7 +151,6 @@ class LoginScreen extends StatelessWidget {
       BlocProvider.of<PhoneAuthCubit>(context).submitPhoneNumber(phoneNumber);
     }
   }
-
   void navigateToOtherComponent(BuildContext context) {
     Navigator.pushNamed(context, '/loginbasedrole');
   }

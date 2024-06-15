@@ -72,6 +72,7 @@ dependencies:
   material_floating_search_bar_2: ^0.5.0
   curved_navigation_bar: ^1.0.3
   provider: ^6.1.2
+  firebase_app_check: ^0.2.2+7
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +108,7 @@ flutter:
     - images/Font_Accueil.jpg
     - images/user.png
     - images/msg.png
+    - images/imageuser.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

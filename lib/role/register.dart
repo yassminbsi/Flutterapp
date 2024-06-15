@@ -353,7 +353,6 @@ Color textColor = Color(0xFFffd400);
       ),
     );
   }
-
   void signUp(String email, String password, String rool) async {
     CircularProgressIndicator();
     if (_formkey.currentState!.validate()) {

@@ -3,7 +3,9 @@
   "cSpell.words": [
     "Attribuer",
     "docidbus",
+    "Geolocator",
     "hinttext",
     "nombus"
-  ]
+  ],
+  "commentTranslate.hover.enabled": true
 }

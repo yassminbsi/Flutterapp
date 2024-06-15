@@ -235,8 +235,11 @@ class _AddBusState extends State<AddBus> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   TextEditingController immatriculation = TextEditingController();
   TextEditingController nomBus = TextEditingController();
+  TextEditingController firstdepart = TextEditingController();
   String? selectedStation;
   List<String> stations = [];
+  CollectionReference bus = FirebaseFirestore.instance.collection('bus');
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -248,10 +251,9 @@ class _AddBusState extends State<AddBus> {
     try {
       QuerySnapshot stationSnapshot =
           await FirebaseFirestore.instance.collection('station').get();
-      List<String> fetchedStations = [];
-      stationSnapshot.docs.forEach((doc) {
-        fetchedStations.add(doc['nomstation']);
-      });
+      List<String> fetchedStations = stationSnapshot.docs
+          .map((doc) => doc['nomstation'] as String)
+          .toList();
       setState(() {
         stations = fetchedStations;
       });
@@ -259,47 +261,56 @@ class _AddBusState extends State<AddBus> {
       print("Error fetching stations: $e");
     }
   }
-    CollectionReference bus = FirebaseFirestore.instance.collection('bus');
-  bool isLoading = false;
-  AddBus() async{
-  if (formState.currentState!.validate()){
-    try {
-      isLoading= true;
-      setState(() {
-        
-      });
-   
-    DocumentReference response = await bus.add(
-  {
-    "immat": immatriculation.text,
-        "Utilisateur": {"id": FirebaseAuth.instance.currentUser!.uid},
-        "nombus": nomBus.text,
-        "nomstation": selectedStation,
-         
-  },
-);
-    
-    Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                builder: (context) => DashboardScreen(initialTabIndex: 1,), // 1 est l'index de l'onglet "AccueilAdmin"
-                ),
-                );
-    } catch(e) {
-      isLoading= false;
-      setState(() {
-      });
-      print("Error $e");
+
+  Future<void> addBus() async {
+    if (formState.currentState!.validate()) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        await bus.add({
+          "immat": immatriculation.text,
+          "Utilisateur": {"id": FirebaseAuth.instance.currentUser!.uid},
+          "nombus": nomBus.text,
+          "nomstation": selectedStation,
+          "firstdepart": firstdepart.text,
+        });
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => DashboardScreen(initialTabIndex: 1),
+          ),
+        );
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        print("Error $e");
+      }
     }
   }
-}
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        firstdepart.text = picked.format(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Color(0xFFffd400)),
-          backgroundColor: Color(0xFF25243A),
-          title: const Text('Ajout Ligne',style: TextStyle(color: Color(0xFFffd400), fontSize: 17,),
-          ),
+        backgroundColor: Color(0xFF25243A),
+        title: const Text(
+          'Ajout Ligne',
+          style: TextStyle(color: Color(0xFFffd400), fontSize: 17),
+        ),
         actions: [
           Row(
             children: [
@@ -321,8 +332,11 @@ class _AddBusState extends State<AddBus> {
       ),
       body: Container(
         decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage("images/font.jpg"),
-                        fit: BoxFit.cover,)),
+          image: DecorationImage(
+            image: AssetImage("images/font.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Form(
           key: formState,
           child: SingleChildScrollView(
@@ -332,25 +346,29 @@ class _AddBusState extends State<AddBus> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Container(
-                        
-                        padding:EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                          children:[
-                            CustomLogoAuth(),
-                            Center(
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomLogoAuth(),
+                        Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add , color:Color(0xFF6750A4),size: 27,),
+                              Icon(
+                                Icons.add,
+                                color: Color(0xFF6750A4),
+                                size: 27,
+                              ),
                               Text(
                                 "Ajouter Ligne",
                                 style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF6750A4),),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF6750A4),
+                                ),
                               ),
                             ],
                           ),
@@ -360,14 +378,22 @@ class _AddBusState extends State<AddBus> {
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFF6750A4)),
-                              borderRadius: BorderRadius.circular(30)),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFF6750A4)),
-                              borderRadius: BorderRadius.circular(30)), 
-                            prefixIcon: Icon(Icons.confirmation_number ,color: Color(0xFF6750A4),),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                             label: Text("Immatriculation"),
-                             labelStyle: TextStyle(color: Color(0xFF6750A4)),),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.confirmation_number,
+                              color: Color(0xFF6750A4),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            label: Text("Immatriculation"),
+                            labelStyle: TextStyle(color: Color(0xFF6750A4)),
+                          ),
                           controller: immatriculation,
                           validator: (val) {
                             if (val == "") {
@@ -380,14 +406,22 @@ class _AddBusState extends State<AddBus> {
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFF6750A4)),
-                              borderRadius: BorderRadius.circular(30)),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFF6750A4)),
-                              borderRadius: BorderRadius.circular(30)), 
-                            prefixIcon: Icon(Icons.directions_bus,color: Color(0xFF6750A4),),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                             label: Text("nom de bus"),
-                             labelStyle: TextStyle(color: Color(0xFF6750A4)),),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.directions_bus,
+                              color: Color(0xFF6750A4),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            label: Text("Nom de bus"),
+                            labelStyle: TextStyle(color: Color(0xFF6750A4)),
+                          ),
                           controller: nomBus,
                           validator: (val) {
                             if (val == "") {
@@ -396,31 +430,65 @@ class _AddBusState extends State<AddBus> {
                           },
                         ),
                         SizedBox(height: 9),
-                  SizedBox(height: 35),
-                   Center(
-                        child: CustomButtonAuth(
-                        title: "Sauvegarder bus",
-                         onPressed: () {
-                        AddBus();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
-                           content: Text('Le bus a été ajouté avec succès', style: TextStyle(color: Colors.black), 
-               ),
-             backgroundColor: const Color.fromARGB(255, 197, 197, 197),
-              duration: Duration(seconds: 2),
-             ),
-             );
-                                                },
-              ),
-              ),
-              SizedBox(height: 10),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF6750A4)),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            prefixIcon: Icon(
+                              Icons.access_time,
+                              color: Color(0xFF6750A4),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            label: Text("Premier Départ"),
+                            labelStyle: TextStyle(color: Color(0xFF6750A4)),
+                          ),
+                          controller: firstdepart,
+                          validator: (val) {
+                            if (val == "") {
+                              return "Ne peut pas être vide";
+                            }
+                          },
+                          readOnly: true,
+                          onTap: () {
+                            _selectTime(context);
+                          },
+                        ),
+                        SizedBox(height: 35),
+                        Center(
+                          child: CustomButtonAuth(
+                            title: "Sauvegarder bus",
+                            onPressed: () {
+                              addBus();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Le bus a été ajouté avec succès',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 197, 197, 197),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
+                  )
                 ],
               ),
-             )
-             ],
             ),
-              ),
-            ),
+          ),
         ),
       ),
     );

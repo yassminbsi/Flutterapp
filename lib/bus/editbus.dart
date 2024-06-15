@@ -142,11 +142,12 @@ class EditBus extends StatefulWidget {
   final String docid;
   final String oldimmatriculation;
   final String oldnombus;
+  final String oldfirstdepart;
   //final String oldstation;
   const EditBus(
       {Key? key,
       required this.docid,
-       required this.oldimmatriculation, required this.oldnombus})
+       required this.oldimmatriculation, required this.oldnombus, required this.oldfirstdepart})
       : super(key: key);
 
   @override
@@ -157,6 +158,7 @@ class _EditBusState extends State<EditBus> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   TextEditingController immatriculation = TextEditingController();
   TextEditingController nomBus = TextEditingController();
+  TextEditingController firstdepart = TextEditingController();
   String? selectedStation;
   // Liste des options de stations
   List<String> stations = [];
@@ -184,7 +186,19 @@ class _EditBusState extends State<EditBus> {
     super.initState();
     immatriculation.text = widget.oldimmatriculation;
     nomBus.text = widget.oldnombus;
+    firstdepart.text= widget.oldfirstdepart;
     
+  }
+   Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        firstdepart.text = picked.format(context);
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -287,6 +301,31 @@ class _EditBusState extends State<EditBus> {
                           }
                         },
                       ),
+                       SizedBox(height: 8),
+                       TextFormField(
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF6750A4)),
+                            borderRadius: BorderRadius.circular(30)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF6750A4)),
+                            borderRadius: BorderRadius.circular(30)), 
+                          prefixIcon: Icon(Icons.confirmation_number,color: Color(0xFF6750A4),),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
+                           label: Text("Premier départ"),
+                           labelStyle: TextStyle(color: Color(0xFF6750A4)),),
+                        controller: firstdepart,
+                        validator: (val) {
+                        if (val == "") {
+                       return "Ne peut pas être vide";
+                       }
+                      return null;
+                     },
+                readOnly: true,
+                onTap: () {
+                  _selectTime(context);
+                },
+                ),
                     SizedBox(height: 30),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +354,7 @@ class _EditBusState extends State<EditBus> {
                            // Navigator.of(context).pushReplacementNamed("/ControlePage");
                            Navigator.of(context).pushReplacement(
                            MaterialPageRoute(
-                           builder: (context) => DashboardScreen(initialTabIndex: 2,), // 1 est l'index de l'onglet "AccueilAdmin"
+                           builder: (context) => DashboardScreen(initialTabIndex: 1,), // 1 est l'index de l'onglet "AccueilAdmin"
                 ),
                 );
                           },
@@ -344,11 +383,12 @@ class _EditBusState extends State<EditBus> {
           "nombus": nomBus.text,
           "immatriculation": immatriculation.text,
           "station": selectedStation,
+          "firstdepart": firstdepart,
         });
         //Navigator.of(context).pushNamedAndRemoveUntil("/ControlePage", (route) => false);
         Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                builder: (context) => DashboardScreen(initialTabIndex: 2,), // 1 est l'index de l'onglet "AccueilAdmin"
+                builder: (context) => DashboardScreen(initialTabIndex: 1,), // 1 est l'index de l'onglet "AccueilAdmin"
                 ),
                 );
       } catch (e) {

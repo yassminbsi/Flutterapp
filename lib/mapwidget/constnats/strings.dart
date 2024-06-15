@@ -25,11 +25,14 @@ const controlepage = "/ControlePage";
 const mapStation= "/AddStationCurrentPosition";
 const mapadmin= "/MapAdmin";
 const mapligne="/MapLigne";
+const ligneofstation="/ViewLigneOfStation";
 
-const googleAPIKey = 'AIzaSyC7ckSip1a_oVGM1y7nPSWGUdTEPbkANIA';
+const googleAPIKey =  'AIzaSyBq0BhOTqB2jW6wW2ZHNxQRYFzDaEZRL7o';
+//const googleAPIKey = 'AIzaSyCFynJpxjv1XdWMhYPooJETpkrcofGQ7TM';
 const suggestionsBaseUrl =
     'https://maps.googleapis.com/maps/api/place/autocomplete/json';
 const placeLocationBaseUrl =
     'https://maps.googleapis.com/maps/api/place/details/json';
 const directionsBaseUrl =
     'https://maps.googleapis.com/maps/api/directions/json';
+const  distancematrixBaseUrl ='https://maps.googleapis.com/maps/api/distancematrix/json';
