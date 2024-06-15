@@ -75,7 +75,7 @@ class _HomeBusState extends State<HomeBus> {
             itemCount: data.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
-              mainAxisExtent: 100,
+              mainAxisExtent: 120,
             ),
             itemBuilder: (context, i) {
               return InkWell(
@@ -85,8 +85,8 @@ class _HomeBusState extends State<HomeBus> {
                     context: context,
                     dialogType: DialogType.info,
                     animType: AnimType.rightSlide,
-                    title: 'Confirmation',
-                    desc: 'Voulez-vous vraiment modifier ou supprimer ce bus?',
+                    title: '',
+                    desc: 'Voulez-vous vraiment modifier ou supprimer cette ligne ?',
                     btnCancelText: "Supprimer",
                     btnOkText: "Modifier",
                     btnCancelOnPress: () async {
@@ -103,6 +103,8 @@ class _HomeBusState extends State<HomeBus> {
                           docid: data[i].id,
                           oldnombus: data[i]["nombus"],
                           oldimmatriculation: data[i]["immat"],
+                          oldfirstdepart: data[i]["firstdepart"],
+
                         ),
                       ));
                     },
@@ -124,6 +126,7 @@ class _HomeBusState extends State<HomeBus> {
                           children: [
                             Text("Ligne ${i + 1}: ${data[i]['nombus']}"),
                             Text("immat: ${data[i]['immat']}"),
+                           Text("Premier départ: ${data[i]['firstdepart']}"),
                           ],
                         ),
                         MaterialButton(
@@ -139,8 +142,6 @@ class _HomeBusState extends State<HomeBus> {
                               await FirebaseFirestore.instance.collection("bus").doc(data[i].id).update({
                                 'nomstation': FieldValue.arrayUnion(newStations),
                               });
-
-                              // Afficher un message SnackBar
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Nomstations added: $newStations'),

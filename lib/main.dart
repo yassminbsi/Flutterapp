@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,9 @@ import 'package:flutter_app/mapwidget/business_logic/cubit/maps/maps_cubit.dart'
 import 'package:flutter_app/mapwidget/constnats/strings.dart';
 import 'package:flutter_app/mapwidget/data/repository/maps_repo.dart';
 import 'package:flutter_app/mapwidget/data/webservices/places_webservices.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedstation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,12 +21,22 @@ late String initialRoute;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+   /* options: FirebaseOptions(
       apiKey: "AIzaSyAtrv9RvhCFSzO9QA3VbCsg0SSuN8yy_EM",
       appId: "1:478912769142:android:3b8d047fbbd19072c94357",
       messagingSenderId: "478912769142",
       projectId: "flutterapp-6a28d",
+    ),*/
+    options: FirebaseOptions(
+      apiKey: "AIzaSyAIH0q5wR8AwqlrA-rgLHSXdgO6f4cvNqI",
+      appId: "1:929487220061:android:1c0e896bba6ab7514d8cb4",
+      messagingSenderId: "929487220061",
+      projectId: "flutterelkarhabty",
     ),
+  );
+ await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+      
   );
 SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userId = prefs.getString('userId');
@@ -51,7 +64,8 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
       }
     }
 
-  runApp(
+/*runApp(
+    
       ChangeNotifierProvider(
         create: (context) => SelectedBusDocumentIdProvider(),
         child: BlocProvider(
@@ -62,10 +76,32 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
         ),
       ),
       )
-    );
-});
-
+    );*/
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SelectedStationsProvider()),
+      ],
+    
+    child:  ChangeNotifierProvider(
+      create: (context) => SelectedStationDocumentIdProvider(),
+      child: ChangeNotifierProvider(
+          create: (context) => SelectedBusDocumentIdProvider(),
+          child: BlocProvider(
+            create: (context) => MapsCubit(MapsRepository(PlacesWebservices())), // Provide your MapsCubit
+            child: MyApp(
+              appRouter: AppRouter(),
+              initialRoute: initialRoute,
+            ),
+          ),
+        ),
+    ),
+    )  );
+  }  );
 }
+
+
 
 Future<String> getUserRole(String userId) async {
   String role = "user";

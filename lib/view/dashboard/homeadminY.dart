@@ -37,10 +37,12 @@ class HomeAdmin extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    child: Image.asset('images/icon_user.png'),
+                  Center(
+                    child: CircleAvatar(
+                      child: Image.asset('images/imageuser.png'),
+                    ),
                   ),
-                  Text('Compte admin:'),
+                  Center(child: Text('Compte admin:')),
                   Text(email ?? 'user@example.com', style: TextStyle(fontSize: 14)),
                 ],
               ),
@@ -56,7 +58,7 @@ class HomeAdmin extends StatelessWidget {
             ListTile(
               onTap: () { Navigator.of(context).pushNamed("/AddBus"); },
               leading: Icon(Icons.add),
-              title: Text('Ajouter Bus'),
+              title: Text('Ajouter Ligne'),
             ),
             ListTile(
               onTap: () { Navigator.of(context).pushNamed("/AddAdmin"); },

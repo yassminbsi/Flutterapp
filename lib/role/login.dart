@@ -9,7 +9,7 @@ class LoginUser extends StatefulWidget {
 }
 
 class _LoginUserState extends State<LoginUser> {
-  bool _isObscure3 = false;
+  bool _isObscure3 = true;
   bool visible = false;
   final _formkey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
@@ -139,8 +139,8 @@ class _LoginUserState extends State<LoginUser> {
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: Icon(_isObscure3
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
+                                  ? Icons.visibility_off
+                                  : Icons.visibility),
                               onPressed: () {
                                 setState(() {
                                   _isObscure3 = !_isObscure3;

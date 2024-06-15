@@ -75,9 +75,8 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                             context: context,
                             dialogType: DialogType.info,
                             animType: AnimType.rightSlide,
-                            title: 'Confirmation',
-                            desc:
-                                'Voulez-vous vraiment modifier ou supprimer cet admin?',
+                            title: '',
+                            desc: 'Voulez-vous vraiment modifier ou supprimer cet admin?',
                             btnCancelText: "Supprimer",
                             btnOkText: "Modifier",
                             btnCancelOnPress: () async {
@@ -108,20 +107,19 @@ class _AccueilAdminState extends State<AccueilAdmin> {
                             height: 120,
                             
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .center, // Aligner les éléments en haut
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center, // Aligner les éléments en haut
                               children: [
                                 Image.asset(
                                   "images/308.png",
                                   width: 50,
                                 ),
-                                SizedBox(width: 8),
-                                // Espace entre l'image et le texte
+                                SizedBox(width: 30),
+                                
                                 Container(
-                                  
+        
                                   child: Column(
-                                    // Aligner les textes à gauche
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text("Nom: ${data[i]['nom']}"),
                                       Text("Prénom: ${data[i]['prenom']}"),

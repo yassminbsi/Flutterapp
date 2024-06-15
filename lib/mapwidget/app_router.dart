@@ -15,6 +15,7 @@ import 'package:flutter_app/parcours/view-parcours.dart';
 import 'package:flutter_app/role/login.dart';
 import 'package:flutter_app/role/register.dart';
 import 'package:flutter_app/station/addstation.dart';
+import 'package:flutter_app/station/view-ligne-of-station.dart';
 import 'package:flutter_app/station/view-station.dart';
 import 'package:flutter_app/stationcurrentposition/addstationposition.dart';
 import 'package:flutter_app/stationcurrentposition/mapadmin.dart';
@@ -162,6 +163,10 @@ class AppRouter {
        case AttParcours:
          return MaterialPageRoute(
           builder: (_) =>  Attribuer(),
+        );
+        case ligneofstation:
+         return MaterialPageRoute(
+          builder: (_) => ViewLigneOfStation(),
         );
 
         

@@ -19,6 +19,29 @@ import 'package:material_floating_search_bar_2/material_floating_search_bar_2.da
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+class SelectedStationsProvider with ChangeNotifier {
+  String? station1Id;
+  
+  String _station1Name = "";
+ 
+
+  String get station1Name => _station1Name;
+ 
+
+  void setStation1(String id, String name) {
+    station1Id = id;
+    _station1Name = name;
+    notifyListeners();
+  }
+
+ 
+
+  void setStations(String id1, String name1,) {
+    station1Id = id1;
+    _station1Name = name1;
+    
+  }
+}
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -39,7 +62,10 @@ class _MapScreenState extends State<MapScreen> {
     tilt: 0.0,
     zoom: 17,
   );
-  
+ 
+   String? station1Id;
+   String station1Name="";
+
   Set<Marker> markers = Set();
   late PlaceSuggestion placeSuggestion;
   late Place selectedPlace;
@@ -57,6 +83,8 @@ double? _documentLongitude;
   FocusNode destinationLocationFocusNode = FocusNode();
   List<QueryDocumentSnapshot> data = [];
   bool isLoading = true;
+  LatLng? selectedStation1;
+  LatLng? selectedStation2;
   String selectedBusDocumentId = "";
   Future<void> getData() async {
     QuerySnapshot querySnapshot =
@@ -68,38 +96,28 @@ double? _documentLongitude;
   }
 
 
-
-// Inside _MapScreenState class
-
-// Function to calculate the distance between two coordinates
 double calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
   return Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 }
 
 void findNearestStation() async {
   try {
-    // Get user's current location
     Position userLocation = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     double userLatitude = userLocation.latitude;
     double userLongitude = userLocation.longitude;
 
-    // Query Firestore to get all stations
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('station').get();
     List<DocumentSnapshot> documents = querySnapshot.docs;
 
-    // Initialize variables for the nearest station
     String nearestStationId = '';
     double minDistance = double.infinity;
 
-    // Loop through all stations to find the nearest one
     for (DocumentSnapshot document in documents) {
       double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
       double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
 
-      // Calculate distance between user's location and the station
       double distance = calculateDistance(userLatitude, userLongitude, stationLatitude, stationLongitude);
 
-      // Update nearest station if the current station is closer
       if (distance < minDistance) {
         minDistance = distance;
         nearestStationId = document.id;
@@ -109,11 +127,9 @@ void findNearestStation() async {
       }
     }
 
-    // Fetch the document for the nearest station
     DocumentSnapshot nearestStationSnapshot = await FirebaseFirestore.instance.collection('station').doc(nearestStationId).get();
     String nearestStationName = nearestStationSnapshot.get('nomstation');
 
-    // Set the search bar query to the nearest station's name
     setState(() {
       controller.query = nearestStationName;
       
@@ -147,7 +163,7 @@ void findNearestStation() async {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("L${i+1}: ${data[i]['nombus']}",
-                          style: TextStyle(fontSize: 11)),
+                          style: TextStyle(fontSize: 10)),
                       ],
                     ),
                     MaterialButton(
@@ -166,9 +182,7 @@ void findNearestStation() async {
       },
     );
   }
-
-    
-
+  
   void buildCameraNewPosition() {
     goToSearchedForPlace = CameraPosition(
       bearing: 0.0,
@@ -206,7 +220,7 @@ void findNearestStation() async {
   String? selectedLocationId; 
   double? selectedDocumentLatitude; 
   double? selectedDocumentLongitude;
- 
+
   @override
   void initState() {
     super.initState();
@@ -216,7 +230,7 @@ void findNearestStation() async {
     findNearestStation();
     
   }
-
+  
   Future<void> getMyCurrentLocation() async {
     position = await LocationHelper.getCurrentLocation().whenComplete(() {
       setState(() {});
@@ -228,29 +242,40 @@ void selectStation(String selectedStationId) {
     });
   }
 
-  Widget buildMap() {
-    return GoogleMap(
-      mapType: MapType.normal,
-      myLocationEnabled: true,
-      zoomControlsEnabled: false,
-      myLocationButtonEnabled: false,
-      markers: markers,
-      initialCameraPosition: _myCurrentLocationCameraPosition,
-      onMapCreated: (GoogleMapController controller) {
-        _mapController.complete(controller);
-      },
-      polylines: placeDirections != null
-          ? {
-          Polyline(
-                polylineId: const PolylineId('my_polyline'),
-                color: Colors.black,
-                width: 2,
-                points: polylinePoints,
-              ),
-            }
-          : {},
-    );
+ Widget buildMap() {
+  Set<Marker> selectedMarkers = {};
+
+  if (selectedStation1 != null) {
+    selectedMarkers.add(Marker(
+      markerId: MarkerId('station1'),
+      position: selectedStation1!,
+    ));
   }
+
+  
+
+  return GoogleMap(
+    mapType: MapType.normal,
+    myLocationEnabled: true,
+    zoomControlsEnabled: false,
+    myLocationButtonEnabled: false,
+    markers: selectedMarkers,
+    initialCameraPosition: _myCurrentLocationCameraPosition,
+    onMapCreated: (GoogleMapController controller) {
+      _mapController.complete(controller);
+    },
+    polylines: placeDirections != null
+        ? {
+            Polyline(
+              polylineId: const PolylineId('my_polyline'),
+              color: MyColors.blue,
+              width: 8,
+              points: polylinePoints,
+            ),
+          }
+        : {},
+  );
+}
 
   Future<void> _goToMyCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -298,7 +323,7 @@ void selectStation(String selectedStationId) {
     });
   }
 
- Widget buildFloatingSearchBar() {
+ Widget buildFloatingSearchBar(SelectedStationsProvider selectedStationsProvider) {
   final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
   return FloatingSearchBar(
     controller: controller,
@@ -375,22 +400,39 @@ void selectStation(String selectedStationId) {
                         ),
                         Expanded(
                           child: ListView.builder(
+                            
                             shrinkWrap: true,
                             itemCount: documents.length,
                             itemBuilder: (BuildContext context, int index) {
                               DocumentSnapshot document = documents[index];
                               String nomstation = document.get('nomstation');
+                              
                               return ListTile(
                                 title: Text(nomstation),
-                                onTap: () {
+                               /* onTap: () {
                                   double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
                                   double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
                                   controller.query = nomstation;
                                   markLocationOnMap(document.id);
+                                  selectedStationsProvider.setStation1(document.id, nomstation);
                                   addMarker(stationLatitude, stationLongitude);
                                   drawPolylineBetweenLocationAndDocument(stationLatitude, stationLongitude);
-                                  Navigator.of(context).pop(); // Close the dialog
-                                },
+                                  Navigator.of(context).pop(); 
+                                },*/
+                                onTap: () {
+  double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+  double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+  controller.query = nomstation;
+  markLocationOnMap(document.id);
+  selectedStationsProvider.setStation1(document.id, nomstation);
+
+  // Update the selected station
+  updateSelectedStations(
+    LatLng(stationLatitude, stationLongitude),
+    selectedStation1 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
+  );
+  Navigator.of(context).pop();
+},
                               );
                             },
                           ),
@@ -405,7 +447,7 @@ void selectStation(String selectedStationId) {
         ),
       ),
     ],
-builder: (context, transition) {
+builder: (context, Transition) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Column(
@@ -416,7 +458,8 @@ builder: (context, transition) {
               buildSelectedPlaceLocationBloc(),
               buildDiretionsBloc(),
               SizedBox(height: 10),
-              TextField(
+              
+           /*   TextField(
                 controller: locationController,
                 focusNode: locationFocusNode,
                 decoration: InputDecoration(
@@ -448,107 +491,160 @@ builder: (context, transition) {
                           child: Text(doc['nomstation']),
                           value: doc.id,
                         ));
+                       
+                          station2Name = doc['nomstation'];
+                        
                       });
-                      return DropdownButtonFormField(
-                        items: items,
-                        onChanged: (value) {
-                          markStationOnMap(value);
-                          displayBusCards(controller.query, locationController.text);
-                          
-                        },
-                      );
-                    },
+                return DropdownButtonFormField(
+                  items: items,
+                  /*onChanged: (value) async {
+                    markStationOnMap(value);
+                    selectedStationsProvider.setStation2(value, station2Name);
+
+                  },*/
+  onChanged: (value) async {
+  // Get the station details from the selected value
+  var document = snapshot.data!.docs.firstWhere((doc) => doc.id == value);
+  double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+  double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+  markStationOnMap(value);
+  selectedStationsProvider.setStation2(value, station2Name);
+
+  // Update the selected station
+updateSelectedStations(
+  selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing first station or a default value
+  LatLng(stationLatitude, stationLongitude),
+   );
+},
+
+                  
+                );
+              },
+            ),
+          ),
+        ), */
+ 
+   
+      ],
+    ),
+  );
+},
+);
+}
+Future<List<Map<String, dynamic>>> fetchBusDocumentsWithStations(String station1Id) async {
+  try {
+    DocumentSnapshot stationSnapshot = await FirebaseFirestore.instance.collection('station').doc(station1Id).get();
+    String stationName = stationSnapshot['nomstation'] as String;
+
+    QuerySnapshot busSnapshot = await FirebaseFirestore.instance.collection('bus').get();
+
+    List<Map<String, dynamic>> busDocs = [];
+    for (var doc in busSnapshot.docs) {
+      List<dynamic> stations = doc['nomstation'];
+      bool station1Exists = stations.any((station) => station.contains("ID: $station1Id"));
+      
+      if (station1Exists) {
+        busDocs.add({
+          'doc': doc,
+          'nomstation': stationName,
+        });
+      }
+    }
+    return busDocs;
+  } catch (e) {
+    print('Error fetching bus documents: $e');
+    return [];
+  }
+}
+
+
+Widget displayBusDocuments(String stationId) {
+  return FutureBuilder<List<Map<String, dynamic>>>(
+    future: fetchBusDocumentsWithStations(stationId),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (snapshot.hasData) {
+        List<Map<String, dynamic>> busDocs = snapshot.data!;
+        if (busDocs.isNotEmpty) {
+          List<String> busNames = busDocs.map((map) => map['doc']['nombus'] as String).toList();
+          String stationName = busDocs.first['nomstation'] as String;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Center(
+                  child: Text(
+                    'Liste des lignes passant par la station $stationName:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
-              /*TextField(
-                controller: locationController,
-                focusNode: locationFocusNode,
-                decoration: InputDecoration(
-                  hintText: 'Select a station For Current Position',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                  contentPadding: EdgeInsets.only(left: 25.0,bottom: 8.0,top: 15.0,),
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 226, 222, 222),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Color.fromARGB(255, 92, 226, 74)),
+              Expanded(
+                child:  Consumer<SelectedBusDocumentIdProvider>(
+                builder: (context, provider, _) {
+              return  GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 60,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  suffixIcon: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('station')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
-                      }
-                      List<DropdownMenuItem> items = [];
-                      snapshot.data!.docs.forEach((doc) {
-                        items.add(DropdownMenuItem(
-                          child: Text(doc['nomstation']),
-                          value: doc.id,
-                        ));
-                      });
-                      return DropdownButtonFormField(
-                        items: items,
-                        onChanged: (value) {
-                          markStationOnMapForCurrentPosition(value);
-                          
+                  itemCount: busNames.length,
+                  itemBuilder: (context, index) {
+                    final busName = busNames[index];
+                    return Card(
+                      child: InkWell(
+                        onTap: () {
+                          // Handle bus line tap action
+                          print('Selected bus line: $busName');
                         },
-                      );
-                    },
-                  ),
-                ),
-              ),*/
-              
-          
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-Widget displayBusCards(String sourceStation, String destinationStation) {
-  if (sourceStation.isNotEmpty && destinationStation.isNotEmpty) {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('bus')
-            .where('nomstation', arrayContains: sourceStation)
-            .where('nomstation', arrayContains: destinationStation)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          }
-
-          // Extract nombus from documents and display bus cards
-          List<Widget> busCards = snapshot.data!.docs.map((DocumentSnapshot document) {
-            String nombus = document.get('nombus');
-            return Card(
-              child: Text(nombus),
-            );
-          }).toList();
-
-          return ListView(
-            children: busCards,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          color: Color.fromARGB(255, 235, 235, 235),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "L${index + 1}: $busName",
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                ],
+                              ),
+                              MaterialButton(
+                                child: Icon(Icons.directions, color: MyColors.blue, size: 30),
+                                onPressed: () {
+                                   provider.selectedBusDocumentId = data[index].id;
+                                   Navigator.of(context).pushNamed("/MapLigne");
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+          }  ),
+             )   ],
           );
-        },
-      ),
-    );
-  } else {
-    return Container(); // Return an empty container if either sourceStation or destinationStation is empty
-  }
+        } else {
+          return Center(child: Text('Aucun bus trouvé.'));
+        }
+      } else {
+        return Container();
+      }
+    },
+  );
 }
+
 
 void markLocationOnMap(String stationId) async {
   try {
@@ -612,8 +708,10 @@ void markStationOnMap(String stationId) async {
 
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
-
-        addMarker(latitude, longitude);
+        setState(() {
+          addMarker(latitude, longitude);
+        });
+        
 
        drawPolylineBetweenLocationAndDocument(latitude, longitude);
       }
@@ -667,7 +765,7 @@ void markStationOnMap(String stationId) async {
 
           setState(() {
            // markers.clear();
-            markers.last;
+            
             addMarker(position!.latitude,
                 position!.longitude); // Add current position marker
           });
@@ -678,15 +776,37 @@ void markStationOnMap(String stationId) async {
       child: Container(),
     );
   }
-  void addMarker(double lat, double lng) {
+  /*void addMarker(double lat, double lng) {
     Marker marker = Marker(
       markerId: MarkerId('$lat-$lng'),
       position: LatLng(lat, lng),
       infoWindow: InfoWindow(title: 'Station'),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
     addMarkerToMarkersAndUpdateUI(marker);
+  } */
+    void addMarker(double latitude, double longitude) {
+    markers.add(
+      Marker(
+        markerId: MarkerId(latitude.toString() + longitude.toString()),
+        position: LatLng(latitude, longitude),
+      ),
+    );
   }
+
+  // Method to update the selected station locations and add markers
+  void updateSelectedStations(LatLng station1, LatLng station2) {
+    setState(() {
+      selectedStation1 = station1;
+      selectedStation2 = station2;
+
+      // Clear existing markers and add only selected station markers
+      markers.clear();
+      addMarker(station1.latitude, station1.longitude);
+      addMarker(station2.latitude, station2.longitude);
+    });
+  }
+
 
   void getPolylinePoints() {
     polylinePoints = placeDirections!.polylinePoints
@@ -753,7 +873,6 @@ void markStationOnMap(String stationId) async {
     );
     addMarkerToMarkersAndUpdateUI(currentLocationMarker);
   }
-
   void addMarkerToMarkersAndUpdateUI(Marker marker) {
     setState(() {
       markers.add(marker);
@@ -816,8 +935,9 @@ void markStationOnMap(String stationId) async {
         .emitPlaceLocation(placeSuggestion.placeId, sessionToken);
   }
 
-  @override
+@override
 Widget build(BuildContext context) {
+  final selectedStationsProvider = Provider.of<SelectedStationsProvider>(context);
   return Scaffold(
     drawer: MyDrawer(),
     body: Stack(
@@ -832,19 +952,13 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
-        buildFloatingSearchBar(),
+        buildFloatingSearchBar(selectedStationsProvider),
         isSearchedPlaceMarkerClicked
             ? DistanceAndTime(
                 isTimeAndDistanceVisible: isTimeAndDistanceVisible,
                 placeDirections: placeDirections,
               )
             : Container(),
-          Positioned(
-          bottom: 100,
-          left: 50,
-          right:50,
-          child: displayBusCards(controller.query, locationController.text),
-        ),
       ],
     ),
     floatingActionButton: Container(
@@ -855,11 +969,14 @@ Widget build(BuildContext context) {
         child: Icon(Icons.place, color: Colors.white),
       ),
     ),
-  bottomNavigationBar: SizedBox(
-  height:150,
-  width: 50,
-  child:  listBus(),
-),  
-);
+    bottomNavigationBar: SizedBox(
+      height: 200,
+      width: 50,
+      child: selectedStationsProvider.station1Id != null
+          ? displayBusDocuments(selectedStationsProvider.station1Id!)
+          : listBus(),
+    ),
+  );
 }
+
 }
