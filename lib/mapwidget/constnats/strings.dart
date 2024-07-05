@@ -26,7 +26,7 @@ const mapStation= "/AddStationCurrentPosition";
 const mapadmin= "/MapAdmin";
 const mapligne="/MapLigne";
 
-const googleAPIKey = 'AIzaSyC7ckSip1a_oVGM1y7nPSWGUdTEPbkANIA';
+const googleAPIKey = 'AIzaSyDI1prEDeGy0UImJM0ZDPikd0lYZOEp6PQ';
 const suggestionsBaseUrl =
     'https://maps.googleapis.com/maps/api/place/autocomplete/json';
 const placeLocationBaseUrl =

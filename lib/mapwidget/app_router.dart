@@ -9,6 +9,7 @@ import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth
 import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/mapligne.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/otp_screen.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/signInScreen.dart';
 import 'package:flutter_app/parcours/Attribuer.dart';
 import 'package:flutter_app/parcours/addparcours.dart';
 import 'package:flutter_app/parcours/view-parcours.dart';
@@ -91,7 +92,8 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MapAdmin());
         
-
+        case loginScreen:
+        return MaterialPageRoute(builder: (_) => SignInScreen());
         
        
          case  Initial:

@@ -15,12 +15,10 @@ class AppTheme {
   static final lightTheme = ThemeData(
       brightness: Brightness.light,
       primaryColor: lightPrimaryColor,
-      backgroundColor: lightBackgroundColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       appBarTheme: AppBarTheme(backgroundColor: lightPrimaryColor),
-      colorScheme: ColorScheme.light(secondary: lightSecondaryColor),
       textButtonTheme: TextButtonThemeData(
-          ));
+          ), colorScheme: ColorScheme.light(secondary: lightSecondaryColor).copyWith(background: lightBackgroundColor));
 
   static Brightness get currentSystemBrightness =>
       SchedulerBinding.instance!.window.platformBrightness;
@@ -34,4 +32,4 @@ class AppTheme {
       systemNavigationBarDividerColor: Colors.transparent,
     ));
   }
-}
+} 

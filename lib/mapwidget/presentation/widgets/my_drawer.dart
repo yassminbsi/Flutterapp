@@ -24,7 +24,7 @@ class MyDrawer extends StatelessWidget {
          
         ),
         Text(
-          'Mariem Hayder',
+          '',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(
