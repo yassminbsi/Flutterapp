@@ -10,6 +10,7 @@ import 'package:flutter_app/mapwidget/data/models/place.dart';
 import 'package:flutter_app/mapwidget/data/models/place_directions.dart';
 import 'package:flutter_app/mapwidget/helpers/location_helper.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedstationname.dart';
 import 'package:flutter_app/mapwidget/presentation/widgets/distance_and_time.dart';
 import 'package:flutter_app/mapwidget/presentation/widgets/my_drawer.dart';
 import 'package:flutter_app/mapwidget/presentation/widgets/place_item.dart';
@@ -422,7 +423,8 @@ Widget buildFloatingSearchBar(SelectedStationsProvider selectedStationsProvider)
                                       controller.query = nomstation;
                                       markLocationOnMap(document.id);
                                       selectedStationsProvider.setStation1(document.id, nomstation);
-
+                                      final selectedStationNameProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
+                                      selectedStationNameProvider.setSelectedStation(nomstation, document.id);
                                       // Update the selected station
                                       updateSelectedStations(
                                         LatLng(stationLatitude, stationLongitude),
@@ -588,13 +590,13 @@ Widget displayBusDocuments(String stationId) {
                                     style: TextStyle(fontSize: 9, color:Color(0xFFffd400) ),
                                   ),
                               )
-                                ],
+                              ],
                               ),
                               Spacer(),
                               MaterialButton(
                                 child: Icon(Icons.directions, color: Color(0xFFffd400), size: 30),
                                 onPressed: () {
-                                   provider.selectedBusDocumentId = data[index].id;
+                                    provider.selectedBusDocumentId = busDocs[index]['doc'].id;
                                    Navigator.of(context).pushNamed("/MapLigne");
                                 },
                               )

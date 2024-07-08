@@ -10,6 +10,7 @@ import 'package:flutter_app/mapwidget/data/models/place_directions.dart';
 import 'package:flutter_app/mapwidget/helpers/location_helper.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/custombloclistener.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedstationname.dart';
 import 'package:flutter_app/mapwidget/presentation/widgets/distance_and_time.dart';
 import 'package:flutter_app/mapwidget/presentation/widgets/place_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -425,7 +426,8 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
   String? selectedLocationId; 
   double? selectedDocumentLatitude; 
   double? selectedDocumentLongitude;
- 
+  
+
   @override
   void initState() {
     super.initState();
@@ -434,7 +436,135 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
     getData();  
      markLocationOnMap;
     drawPolylineBetweenLocationAndDocument();
+    final selectedBusProvider = Provider.of<SelectedBusDocumentIdProvider>(context, listen: false); 
+    _performInitialActions(selectedBusProvider.selectedBusDocumentId);
+
+    
   }
+Future<void> _performInitialActions(String selectedBusDocumentId) async {
+    final selectedStationProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
+    final selectedStationsProvider = Provider.of<SelectedStationssProvider>(context, listen: false);
+    String? selectedStationName = selectedStationProvider.selectedStationName;
+    String? stationId = selectedStationProvider.selectedStationId;
+      // Fetch the selected bus document
+    DocumentSnapshot busSnapshot = await FirebaseFirestore.instance
+        .collection('bus')
+        .doc(selectedBusDocumentId)
+        .get();
+    if (!busSnapshot.exists) {
+      print("Selected bus document not found.");
+      return;
+    }
+
+    Map<String, dynamic> busData = busSnapshot.data() as Map<String, dynamic>;
+
+    if (busData['nomstation'] == null) {
+      print("No stations found in the selected bus document.");
+      return;
+    }
+    if (selectedStationName != null && stationId != null) {
+      // Fetch station document and update end station coordinates
+      QuerySnapshot stationSnapshot = await FirebaseFirestore.instance
+          .collection('station')
+          .where('nomstation', isEqualTo: selectedStationName)
+          .get();
+      if (stationSnapshot.docs.isNotEmpty) {
+        DocumentSnapshot stationDoc = stationSnapshot.docs.first;
+        setState(() {
+          startStationLatitude = double.tryParse(stationDoc['latitude'] ?? '');
+          startStationLongitude = double.tryParse(stationDoc['longtude'] ?? '');
+          selectedStation = selectedStationName;
+        });
+
+        if (startStationLatitude != null && startStationLongitude != null) {
+          markLocationOnMap(stationId);
+          drawPolylineBetweenLocationAndDocument();
+          selectedStationsProvider.setStation1(stationId, selectedStationName);
+          updateSelectedStations(
+            LatLng(startStationLatitude!, startStationLongitude!),
+            selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
+          );
+
+          // Calculate the duration
+          try {DocumentSnapshot busSnapshot = await FirebaseFirestore.instance
+        .collection('bus')
+        .doc(selectedBusDocumentId)
+        .get();
+
+            if (busSnapshot.exists) {
+              DateTime currentTime = DateTime.now();
+              DateTime firstDeparture = _parseTime(busSnapshot['firstdepart']);
+              double totalDurationMinutes = double.parse(busSnapshot['route_details']['total_duration'].replaceAll(' min', ''));
+
+              int minutesSinceDeparture = currentTime.difference(firstDeparture).inMinutes;
+              int currentTripMinutes = minutesSinceDeparture % totalDurationMinutes.toInt();
+              List stations = busSnapshot['route_details']['stations'];
+              int currentCycle = minutesSinceDeparture ~/ totalDurationMinutes.toInt();
+              bool isGoDirection = currentCycle % 2 == 0;
+
+              int selectedIndex = stations.indexWhere((station) => station['name'] == selectedStationName);
+
+              if (selectedIndex != -1) {
+                double timeToStation = 0.0;
+
+                if (isGoDirection) {
+                  double durationToSelectedStation = 0.0;
+                  for (int i = 0; i <= selectedIndex; i++) {
+                    durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                  }
+                  if (currentTripMinutes <= durationToSelectedStation) {
+                    timeToStation = durationToSelectedStation - currentTripMinutes;
+                  } else {
+                    double remainingDuration = 0.0;
+                    for (int i = selectedIndex; i < stations.length; i++) {
+                      remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                    }
+                    double returnRouteDuration = 0.0;
+                    for (int i = stations.length - 2; i >= selectedIndex; i--) {
+                      returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                    }
+                    timeToStation = remainingDuration + returnRouteDuration - currentTripMinutes;
+                  }
+                } else {
+                  double durationToSelectedStation = 0.0;
+                  for (int i = stations.length - 2; i >= selectedIndex; i--) {
+                    durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                  }
+                  if (currentTripMinutes <= durationToSelectedStation) {
+                    timeToStation = durationToSelectedStation - currentTripMinutes;
+                  } else {
+                    double remainingDuration = 0.0;
+                    for (int i = selectedIndex - 1; i >= 0; i--) {
+                      remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                    }
+                    double goRouteDuration = 0.0;
+                    for (int i = 0; i < selectedIndex; i++) {
+                      goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+                    }
+                    timeToStation = remainingDuration + goRouteDuration - currentTripMinutes;
+                  }
+                }
+
+                setState(() {
+                  estimatedTimeToStation = '${timeToStation.toStringAsFixed(2)} minutes';
+                });
+              } else {
+                setState(() {
+                  estimatedTimeToStation = 'Station not found';
+                });
+              }
+            }
+          } catch (e) {
+            print('Error calculating time to arrival: $e');
+            setState(() {
+              estimatedTimeToStation = 'Error calculating time';
+            });
+          }
+        }
+      }
+    }
+  }
+
 double calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
   return Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 }
@@ -719,6 +849,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
     final selectedBusProvider = Provider.of<SelectedBusDocumentIdProvider>(context);
     final selectedStationsProvider = Provider.of<SelectedStationssProvider>(context);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    
     return Stack(
       children: [
         FloatingSearchBar(
@@ -726,7 +857,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
           elevation: 6,
           hintStyle: TextStyle(fontSize: 15, color: Colors.black),
           queryStyle: TextStyle(fontSize: 15),
-          hint: selectedStation,
+          hint:  selectedStation,
           borderRadius: BorderRadius.circular(24),
           margins: EdgeInsets.fromLTRB(20, 70, 20, 0),
           padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
@@ -831,7 +962,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
                                           Navigator.of(context).pop();
                                           
                                           setState(() {
-                                            selectedStation = stationName;
+                                            selectedStation =  stationName;
                                           });
                               String stationId = snapshot.data!['route_details']['stations'][index]['id'];
   
@@ -839,7 +970,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
   // Fetch station document and update end station coordinates
   QuerySnapshot stationSnapshot = await FirebaseFirestore.instance
     .collection('station')
-    .where('nomstation', isEqualTo: stationName)
+    .where('nomstation', isEqualTo: selectedStation)
     .get();
   
   if (stationSnapshot.docs.isNotEmpty) {
@@ -850,11 +981,10 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
     });
     markLocationOnMap(stationId);
     drawPolylineBetweenLocationAndDocument();
-    selectedStationsProvider.setStation1(stationId, stationName);
-    // Update the selected station
-                                              updateSelectedStations(
-                                                LatLng(startStationLatitude!, startStationLongitude!),
-                                                selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
+    selectedStationsProvider.setStation1(stationId, selectedStation);
+     updateSelectedStations(
+             LatLng(startStationLatitude!, startStationLongitude!),
+                 selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
                                               );
    
   }
@@ -871,7 +1001,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
                                             int currentCycle = minutesSinceDeparture ~/ totalDurationMinutes.toInt();
                                             bool isGoDirection = currentCycle % 2 == 0;
                                   
-                                            int selectedIndex = stations.indexWhere((station) => station['name'] == stationName);
+                                            int selectedIndex = stations.indexWhere((station) => station['name'] == selectedStation);
                                   
                                             if (selectedIndex != -1) {
                                               double timeToStation = 0.0;

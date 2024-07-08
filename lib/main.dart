@@ -184,6 +184,7 @@ void main() async {
       }
     }
 
+
     runApp(
       MultiProvider(
         providers: [
@@ -251,5 +252,5 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: appRouter.generateRoute,
       initialRoute: initialRoute,
     );
-  }
+  } 
 }
