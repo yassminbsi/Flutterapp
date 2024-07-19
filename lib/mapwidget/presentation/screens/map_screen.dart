@@ -23,25 +23,30 @@ import 'package:uuid/uuid.dart';
 
 class SelectedStationsProvider with ChangeNotifier {
   String? station1Id;
-  
+  String? station2Id;
   String _station1Name = "";
- 
+  String _station2Name = "";
 
   String get station1Name => _station1Name;
- 
+  String get station2Name =>  _station2Name;
 
   void setStation1(String id, String name) {
     station1Id = id;
     _station1Name = name;
     notifyListeners();
   }
-
+  void setStation2(String id, String name) {
+    station2Id = id;
+    _station2Name = name;
+    notifyListeners();
+  } 
  
 
-  void setStations(String id1, String name1,) {
+  void setStations(String id1, String name1, String id2, String name2) {
     station1Id = id1;
     _station1Name = name1;
-    
+    station2Id = id2;
+    _station2Name = name2;
   }
 }
 class MapScreen extends StatefulWidget {
@@ -55,19 +60,21 @@ class _MapScreenState extends State<MapScreen> {
   List<PlaceSuggestion> places = [];
   FloatingSearchBarController controller = FloatingSearchBarController();
   static Position? position;
-  static Position? positionStation;
   Completer<GoogleMapController> _mapController = Completer();
 
   static final CameraPosition _myCurrentLocationCameraPosition = CameraPosition(
     bearing: 0.0,
     target: LatLng(position!.latitude, position!.longitude),
     tilt: 0.0,
-    zoom: 17,
+    zoom: 11,
   );
  
    String? station1Id;
    String station1Name="";
-
+List<DocumentSnapshot> filteredStationList = [];
+  bool showFilteredListForSearchBar = false;
+  bool showFilteredListForTextField = false;
+ 
   Set<Marker> markers = Set();
   late PlaceSuggestion placeSuggestion;
   late Place selectedPlace;
@@ -77,10 +84,16 @@ class _MapScreenState extends State<MapScreen> {
   late final Timer _debounce;
   String? selectedStation1Id;
 String? selectedStation2Id;
+ bool showFilteredList = false;
 double? _documentLatitude;
 double? _documentLongitude;
   String selectedStation = '';
   String selectedStationName = 'Sélectionner une station...';
+  String selectedstationn = 'station destination';
+  double? startStationLatitude;
+  double? startStationLongitude;
+  double? endStationLatitude;
+  double? endStationLongitude;
   List<String> stationNames = [];
   final FocusNode locationFocusNode = FocusNode();
   FocusNode destinationLocationFocusNode = FocusNode();
@@ -124,9 +137,9 @@ void findNearestStation() async {
       if (distance < minDistance) {
         minDistance = distance;
         nearestStationId = document.id;
-        markLocationOnMap(document.id);
+        //markLocationOnMap(document.id);
         addMarker(stationLatitude, stationLongitude);
-       drawPolylineBetweenLocationAndDocument(stationLatitude, stationLongitude);
+        //drawPolylineBetweenLocationAndDocument();
       }
     }
 
@@ -146,73 +159,83 @@ void findNearestStation() async {
 
   
 Widget listBus() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Center(
-                  child: Text(
-                     'Liste de toutes les lignes',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(0xFF25243A)
+  return Material(
+          clipBehavior: Clip.antiAlias,
+          shape: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Color(0xFFffd400), width:2.0),
+          ),
+          child: Container(
+    color: Color.fromARGB(255, 43, 26, 92),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                   padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                       'Liste de toutes les lignes',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Color(0xFFffd400)
+                      ),
                     ),
                   ),
                 ),
-              ),
-    Expanded(
-    child: Consumer<SelectedBusDocumentIdProvider>(
-     builder: (context, provider, _) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisExtent: 60,
-        ),
-        itemCount: data.length,
-        itemBuilder: (context, i) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(15), // Circular border radius
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 43, 26, 92),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Color(0xFFffd400), width: 2), // Border color and width
-              ),
-              margin: EdgeInsets.all(5),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10), // Padding inside the card
-                        child: Text(
-                          "L${i + 1}: ${data[i]['nombus']}",
-                          style: TextStyle(fontSize: 9, color: Color(0xFFffd400)),
+      Expanded(
+      child: Consumer<SelectedBusDocumentIdProvider>(
+       builder: (context, provider, _) {
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: 60,
+          ),
+          itemCount: data.length,
+          itemBuilder: (context, i) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(15), // Circular border radius
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFffd400),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Color(0xFFffd400), width: 2), // Border color and width
+                ),
+                margin: EdgeInsets.all(5),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10), // Padding inside the card
+                          child: Text(
+                            "L${i + 1}: ${data[i]['nombus']}",
+                            style: TextStyle(fontSize: 9,fontWeight: FontWeight.bold, color: Color.fromARGB(255, 43, 26, 92)),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Spacer(), // Pushes the MaterialButton to the right
-                  MaterialButton(
-                    child: Icon(Icons.directions, color: Color(0xFFffd400), size: 30),
-                    onPressed: () async {
-                      provider.selectedBusDocumentId = data[i].id;
-                      Navigator.of(context).pushNamed("/MapLigne");
-                    },
-                  ),
-                ],
+                      ],
+                    ),
+                    Spacer(), // Pushes the MaterialButton to the right
+                    MaterialButton(
+                      child: Icon(Icons.directions, color: Color.fromARGB(255, 43, 26, 92), size: 30),
+                      onPressed: () async {
+                        provider.selectedBusDocumentId = data[i].id;
+                        Navigator.of(context).pushNamed("/MapLigne");
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  ),
+            );
+          },
+        );
+      },
     ),
-]  );
+      ),
+    ]  ),
+  )
+  );
 }
   
   void buildCameraNewPosition() {
@@ -223,7 +246,7 @@ Widget listBus() {
         selectedPlace.result.geometry.location.lat,
         selectedPlace.result.geometry.location.lng,
       ),
-      zoom: 13,
+      zoom: 15,
     );
   }
 
@@ -252,17 +275,21 @@ Widget listBus() {
   String? selectedLocationId; 
   double? selectedDocumentLatitude; 
   double? selectedDocumentLongitude;
+   List<DocumentSnapshot> allStations = [];
+  List<DocumentSnapshot> filteredStations = [];
 
   @override
   void initState() {
     super.initState();
     getMyCurrentLocation();
-    _goToMyCurrentLocation();
+   // _goToMyCurrentLocation();
     getData();
-    findNearestStation();
+    controller = FloatingSearchBarController();
+    
+   
     
   }
-  
+
   Future<void> getMyCurrentLocation() async {
     position = await LocationHelper.getCurrentLocation().whenComplete(() {
       setState(() {});
@@ -272,20 +299,46 @@ void selectStation(String selectedStationId) {
     setState(() {
       stationId = selectedStationId;
     });
+    
   }
+ void centerCameraBetweenStations() async {
+    if (selectedStation1 != null && selectedStation2 != null) {
+      // Calculate the midpoint between the two selected stations
+      LatLng midPoint = LatLng(
+        selectedStation1!.latitude  ,
+        selectedStation1!.longitude ,
+      );
 
+      // Calculate the zoom level
+      double zoomLevel = 14; // Adjust zoom level as needed
+
+      // Get GoogleMapController from the Completer
+      GoogleMapController controller = await _mapController.future;
+
+      // Animate camera to the midpoint with the calculated zoom level
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: midPoint, zoom: zoomLevel),
+        ),
+      );
+    }
+  }
  Widget buildMap() {
-  Set<Marker> selectedMarkers = {};
+ Set<Marker> selectedMarkers = {};
 
-  if (selectedStation1 != null) {
-    selectedMarkers.add(Marker(
-      markerId: MarkerId('station1'),
-      position: selectedStation1!,
-    ));
-  }
+    if (selectedStation1 != null) {
+      selectedMarkers.add(Marker(
+        markerId: MarkerId('station1'),
+        position: selectedStation1!,
+      ));
+    }
 
-  
-
+    if (selectedStation2 != null) {
+      selectedMarkers.add(Marker(
+        markerId: MarkerId('station2'),
+        position: selectedStation2!,
+      ));
+    }
   return GoogleMap(
     mapType: MapType.normal,
     myLocationEnabled: true,
@@ -295,13 +348,16 @@ void selectStation(String selectedStationId) {
     initialCameraPosition: _myCurrentLocationCameraPosition,
     onMapCreated: (GoogleMapController controller) {
       _mapController.complete(controller);
+       if (selectedStation1 != null ) {
+          centerCameraBetweenStations();
+        }
     },
     polylines: placeDirections != null
         ? {
             Polyline(
               polylineId: const PolylineId('my_polyline'),
               color: MyColors.blue,
-              width: 8,
+              width: 5,
               points: polylinePoints,
             ),
           }
@@ -354,10 +410,11 @@ void selectStation(String selectedStationId) {
       showStationTextField = showStation;
     });
   }
-
-Widget buildFloatingSearchBar(SelectedStationsProvider selectedStationsProvider) {
+Widget buildFloatingSearchBar(BuildContext context, SelectedStationsProvider selectedStationsProvider) {
   final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-  return FloatingSearchBar(
+  return Stack(
+    children: [
+      FloatingSearchBar(
         controller: controller,
         elevation: 6,
         hintStyle: TextStyle(fontSize: 15),
@@ -377,110 +434,251 @@ Widget buildFloatingSearchBar(SelectedStationsProvider selectedStationsProvider)
         openAxisAlignment: 0.0,
         width: isPortrait ? 600 : 500,
         debounceDelay: const Duration(milliseconds: 500),
-        progress: progressIndicator,
-        onFocusChanged: (isFocused) {
-          setState(() {
-            isTimeAndDistanceVisible = false;
-          });
+        onFocusChanged: (isFocused) async {
           if (isFocused) {
-            hideOtherTextField();
-          } else {
-            toggleTextFieldVisibility(showList: true, showStation: true);
+            await fetchStations();
+            setState(() {
+              showFilteredListForSearchBar = true;
+              showFilteredListForTextField = false;
+            });
           }
         },
-        transition: CircularFloatingSearchBarTransition(),
-        actions: [
-          FloatingSearchBarAction(
-            showIfOpened: false,
-            child: CircularButton(
-              icon: Icon(Icons.arrow_drop_down, size: 40, color: Color.fromARGB(255, 43, 26, 92)),
-              onPressed: () async {
-                QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('station').get();
-                List<DocumentSnapshot> documents = querySnapshot.docs;
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Center(child: Text('Liste des stations')),
-                      content: Container(
-                        width: double.maxFinite,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                  
-                            Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: documents.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DocumentSnapshot document = documents[index];
-                                  String nomstation = document.get('nomstation');
-                                  return ListTile(
-                                    title: Text(nomstation),
-                                    onTap: () {
-                                      double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
-                                      double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
-                                      controller.query = nomstation;
-                                      markLocationOnMap(document.id);
-                                      selectedStationsProvider.setStation1(document.id, nomstation);
-                                      final selectedStationNameProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
-                                      selectedStationNameProvider.setSelectedStation(nomstation, document.id);
-                                      // Update the selected station
-                                      updateSelectedStations(
-                                        LatLng(stationLatitude, stationLongitude),
-                                        selectedStation1 ?? LatLng(0.0, 0.0),
-                                      );
-                                      setState(() {
-                                        selectedStationName = nomstation;
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+              /* actions: [
+            FloatingSearchBarAction(
+              showIfOpened: false,
+              child: CircularButton(
+                icon: Icon(Icons.arrow_drop_down, size: 40, color: Color.fromARGB(255, 43, 26, 92)),
+                onPressed: () async {
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('station').get();
+                  List<DocumentSnapshot> documents = querySnapshot.docs;
+                  showMenu(
+                    surfaceTintColor: Color.fromARGB(255, 226, 222, 222),
+                    context: context,
+                    position: RelativeRect.fromLTRB(30, 120, 30, 30),
+                    items: documents.map((document) {
+                      String nomstation = document.get('nomstation');
+                      return PopupMenuItem<String>(
+                        value: document.id,
+                        child: Text(nomstation),
+                      );
+                    }).toList(),
+                  ).then((selectedStationId) {
+                    if (selectedStationId != null) {
+                      DocumentSnapshot document = documents.firstWhere((doc) => doc.id == selectedStationId);
+                      String nomstation = document.get('nomstation');
+                      double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+                      double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+                      controller.query = nomstation;
+                      markLocationOnMap(document.id);
+                      selectedStationsProvider.setStation1(document.id, nomstation);
+                      final selectedStationNameProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
+                      selectedStationNameProvider.setSelectedStation(nomstation, document.id);
+                      updateSelectedStations(
+                        LatLng(stationLatitude, stationLongitude),
+                        selectedStation1 ?? LatLng(0.0, 0.0),
+                      );
+                      setState(() {
+                        selectedStationName = nomstation;
+                        isStationListVisible = false; // Hide the list after selection
+                      });
+                    }
+                  });
+                },
+              ),
             ),
-          ),
-        ],
-        builder: (context, transition) {
+          ], */
+           builder: (context, transition) {
           return ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildSuggestionsBloc(),
-                buildSelectedPlaceLocationBloc(),
-                buildDiretionsBloc(),
-                SizedBox(height: 10),
-              ],
+            child: Material(
+              color: Color.fromARGB(255, 226, 222, 222),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showFilteredListForSearchBar)
+                   Container(
+                 color: Colors.white,
+                 height: 300,
+                 child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: filteredStationList.length,
+                  itemBuilder: (context, index) {
+                    String stationName = filteredStationList[index].get('nomstation');
+                    return ListTile(
+                      title: Text(stationName),
+                      onTap: () async {
+                        String station1Id = filteredStationList[index].id;
+                        DocumentSnapshot document = filteredStationList[index];
+                        String nomstation = document.get('nomstation');
+                       // double startStationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+                       // double startStationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+                        setState(() {
+                          selectedStationName = nomstation;
+                          showFilteredListForTextField = false;
+                          controller.close();
+                        });
+                     /*   selectedStationsProvider.setStation1(station1Id, selectedstationn);
+                        markLocationOnMap(station1Id);
+                        
+                        drawPolylineBetweenLocationAndDocument();
+                        final selectedStationNameProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
+                        selectedStationNameProvider.setSelectedStation(selectedStationName, station1Id);
+                        updateSelectedStations(
+                          LatLng(startStationLatitude, startStationLongitude),
+                          selectedStation1 ?? LatLng(0.0, 0.0),
+                        ); */
+                        // Fetch station document and update end station coordinates
+
+    setState(() {
+       startStationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+       startStationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+    });
+    markLocationOnMap(station1Id);
+    final selectedStationNameProvider = Provider.of<SelectedStationNameProvider>(context, listen: false);
+    selectedStationNameProvider.setSelectedStation(selectedStationName, station1Id);
+    drawPolylineBetweenLocationAndDocument();
+   selectedStationsProvider.setStation1(station1Id, selectedStationName);
+     updateSelectedStations(
+             LatLng(startStationLatitude!, startStationLongitude!),
+                 selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
+                                              );
+   
+  
+                      },
+                    );
+                  },
+                ),
+              ),
+                ],
+              ),
             ),
           );
         },
-        onQueryChanged: (value) async {
-          var document = await FirebaseFirestore.instance.collection('station').doc(value).get();
-          double stationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
-          double stationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
-          markStationOnMap(value);
-          selectedStationsProvider.setStation1(value, document.get('nomstation'));
-
-          // Update the selected station
-          updateSelectedStations(
-            selectedStation2 ?? LatLng(0.0, 0.0),
-            LatLng(stationLatitude, stationLongitude),
-          );
+        onQueryChanged: (query) async {
+          if (query.isEmpty) {
+            setState(() {
+              showFilteredListForSearchBar = false;
+            });
+            return;
+          }
+          List<DocumentSnapshot> filteredStations = filteredStationList.where((doc) {
+            String nomstation = doc.get('nomstation');
+            return nomstation.toLowerCase().startsWith(query.toLowerCase());
+          }).toList();
           setState(() {
-            selectedStationName = document.get('nomstation');
+            filteredStationList = filteredStations;
+            showFilteredListForSearchBar = true;
           });
- });
+        },
+      ),
+      Positioned(
+        top: 140,
+        left: 20,
+        right: 20,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            buildSuggestionsBloc(),
+            buildSelectedPlaceLocationBloc(),
+            buildDiretionsBloc(),
+            TextField(
+              controller: locationController,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 20.0, bottom: 8.0),
+                hintText: selectedstationn,
+                hintStyle: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal),
+                labelStyle: TextStyle(fontSize: 15, color: Colors.black),
+                filled: true,
+                fillColor: Color.fromARGB(255, 226, 222, 222),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                prefixIcon: Icon(Icons.directions_bus, color: Color.fromARGB(255, 43, 26, 92)),
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.arrow_drop_down, size: 40, color: Color.fromARGB(255, 43, 26, 92)),
+                  onPressed: () async {
+                    await fetchStations();
+                    setState(() {
+                      showFilteredListForTextField = !showFilteredListForTextField;
+                      showFilteredListForSearchBar = false;
+                    });
+                  },
+                ),
+              ),
+              onTap: () async {
+                await fetchStations();
+                setState(() {
+                  showFilteredListForTextField = true;
+                //  showFilteredListForSearchBar = false;
+                });
+              },
+            ),
+            if (showFilteredListForTextField)
+              Container(
+                color: Colors.white,
+                height: 300,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: filteredStationList.length,
+                  itemBuilder: (context, index) {
+                    String stationName = filteredStationList[index].get('nomstation');
+                    return ListTile(
+                      title: Text(stationName),
+                      onTap: () async {
+                        String station2Id = filteredStationList[index].id;
+                        DocumentSnapshot document = filteredStationList[index];
+                        String nomstation = document.get('nomstation');
+                       // double endStationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+                     //   double endStationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+                        setState(() {
+                          selectedstationn = nomstation;
+                          showFilteredListForTextField = false;
+                          locationController.clear();
+                        });
+                     /*   selectedStationsProvider.setStation2(station2Id, selectedstationn);
+                        markLocationOnMap(station2Id);
+                        
+                        drawPolylineBetweenLocationAndDocument();
+                        updateSelectedStations(
+                          LatLng(endStationLatitude, endStationLongitude),
+                          selectedStation2 ?? LatLng(0.0, 0.0),
+                        );*/
+                         // Fetch station document and update end station coordinates
+  
+    setState(() {
+      endStationLatitude = double.tryParse(document['latitude'] ?? '') ?? 0.0;
+      endStationLongitude = double.tryParse(document['longtude'] ?? '') ?? 0.0;
+    });
+   // markLocationOnMap(station2Id);
+    drawPolylineBetweenLocationAndDocument();
+   // Update the selected station
+     updateSelectedStations(selectedStation1 ?? LatLng(0.0, 0.0), // Pass the existing first station or a default value
+                                              LatLng(endStationLatitude!, endStationLongitude!),
+                                            );
+  
+                      },
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
+ Future<void> fetchStations() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('station').get();
+    setState(() {
+      filteredStationList = querySnapshot.docs;
+    });
+  }
+
 Future<List<Map<String, dynamic>>> fetchBusDocumentsWithStations(String station1Id) async {
   try {
     DocumentSnapshot stationSnapshot = await FirebaseFirestore.instance.collection('station').doc(station1Id).get();
@@ -507,7 +705,6 @@ Future<List<Map<String, dynamic>>> fetchBusDocumentsWithStations(String station1
   }
 }
 
-
 Widget displayBusDocuments(String stationId) {
   return FutureBuilder<List<Map<String, dynamic>>>(
     future: fetchBusDocumentsWithStations(stationId),
@@ -521,94 +718,106 @@ Widget displayBusDocuments(String stationId) {
         if (busDocs.isNotEmpty) {
           List<String> busNames = busDocs.map((map) => map['doc']['nombus'] as String).toList();
           String stationName = busDocs.first['nomstation'] as String;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Center(
-                  child: RichText(
-                    textAlign: TextAlign.center, // Center-align the text within the RichText
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Liste des lignes passant par la station',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Color(0xFF25243A),
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' $stationName ',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFffd400),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child:  Consumer<SelectedBusDocumentIdProvider>(
-                builder: (context, provider, _) {
-              return  GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 60,
-                  ),
-                  itemCount: busNames.length,
-                  itemBuilder: (context, index) {
-                    final busName = busNames[index];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(15), // Circular border radius
-                      child: InkWell(
-                        onTap: () {
-                          // Handle bus line tap action
-                          print('Selected bus line: $busName');
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                color: Color.fromARGB(255, 43, 26, 92),
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Color(0xFFffd400), width: 2), // Border color and width
-              ),
-              margin: EdgeInsets.all(5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                 Padding(
-                             padding: EdgeInsets.all(10), // Padding inside the card
-                              child: Text(
-                                    "L${index + 1}: $busName",
-                                    style: TextStyle(fontSize: 9, color:Color(0xFFffd400) ),
-                                  ),
-                              )
-                              ],
+          return Material(
+             clipBehavior: Clip.antiAlias,
+          shape: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Color.fromARGB(255, 43, 26, 92), width:2.0),
+          ),
+          child: Container(
+            color: Color(0xFFffd400),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                     padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: RichText(
+                        textAlign: TextAlign.center, // Center-align the text within the RichText
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Liste des lignes passant par la station',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color(0xFF25243A),
                               ),
-                              Spacer(),
-                              MaterialButton(
-                                child: Icon(Icons.directions, color: Color(0xFFffd400), size: 30),
-                                onPressed: () {
-                                    provider.selectedBusDocumentId = busDocs[index]['doc'].id;
-                                   Navigator.of(context).pushNamed("/MapLigne");
-                                },
-                              )
-                            ],
-                          ),
+                            ),
+                            TextSpan(
+                              text: ' $stationName ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF25243A),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
+                  ),
+                  Expanded(
+                    child:  Consumer<SelectedBusDocumentIdProvider>(
+                    builder: (context, provider, _) {
+                  return  GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisExtent: 60,
+                      ),
+                      itemCount: busNames.length,
+                      itemBuilder: (context, index) {
+                        final busName = busNames[index];
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(15), // Circular border radius
+                          child: InkWell(
+                            onTap: () {
+                              // Handle bus line tap action
+                              print('Selected bus line: $busName');
+                            },
+                            child: Container(
+                            decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 43, 26, 92),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Color(0xFFffd400), width: 2), // Border color and width
+                  ),
+                  margin: EdgeInsets.all(5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                     Padding(
+                                 padding: EdgeInsets.all(10), // Padding inside the card
+                                  child: Text(
+                                        "L${index + 1}: $busName",
+                                        style: TextStyle(fontSize: 9, color:Color(0xFFffd400) ),
+                                      ),
+                                  )
+                                  ],
+                                  ),
+                                  Spacer(),
+                                  MaterialButton(
+                                    child: Icon(Icons.directions, color: Color(0xFFffd400), size: 30),
+                                    onPressed: () {
+                                        provider.selectedBusDocumentId = busDocs[index]['doc'].id;
+                                       Navigator.of(context).pushNamed("/MapLigne");
+                                    },
+                                  )
+                                ],
+                              ),
+                    
+                            ),
+                            
+                          ),
+                        );
+                      },
                     );
-                  },
-                );
-          }  ),
-             )   ],
+              }  ),
+                 )   ],
+              ),
+            ),
           );
         } else {
           return Center(child: Text('Aucun bus trouvé.'));
@@ -621,8 +830,6 @@ Widget displayBusDocuments(String stationId) {
 }
 
 
-
-
 void markLocationOnMap(String stationId) async {
   try {
     DocumentSnapshot stationDoc = await FirebaseFirestore.instance
@@ -633,25 +840,30 @@ void markLocationOnMap(String stationId) async {
     if (!stationDoc.exists) {
       return;
     }
-    _documentLatitude = double.tryParse(stationDoc['latitude'] ?? '');
-    _documentLongitude = double.tryParse(stationDoc['longtude'] ?? '');
 
-    if (_documentLatitude != null && _documentLongitude != null) {
-      LatLng stationLatLng = LatLng(_documentLatitude!, _documentLongitude!);  
+    double? latitude = double.tryParse(stationDoc['latitude'] ?? '');
+    double? longitude = double.tryParse(stationDoc['longtude'] ?? '');
+
+    if (latitude != null && longitude != null) {
+      addMarker(latitude, longitude);
     }
   } catch (error) {
     print("Error fetching station location: $error");
   }
 }
- void drawPolylineBetweenLocationAndDocument(
-    double locationLatitude, double locationLongitude) async {
+
+void drawPolylineBetweenLocationAndDocument(
+ ) async {
   try {
-    if (_documentLatitude != null && _documentLongitude != null) {
-      LatLng locationLatLng = LatLng(locationLatitude, locationLongitude);
-      LatLng documentLatLng = LatLng(_documentLatitude!, _documentLongitude!);
+    if (startStationLatitude != null &&
+      startStationLongitude != null &&
+      endStationLatitude != null &&
+      endStationLongitude != null) {
+      LatLng selectedStation1 = LatLng(startStationLatitude!, startStationLongitude!);
+      LatLng selectedStation2 = LatLng(endStationLatitude!, endStationLongitude!);
       BlocProvider.of<MapsCubit>(context).emitPlaceDirections(
-        locationLatLng,
-        documentLatLng,
+        selectedStation1,
+        selectedStation2,
       );
     }
   } catch (error) {
@@ -690,7 +902,7 @@ void markStationOnMap(String stationId) async {
         });
         
 
-       drawPolylineBetweenLocationAndDocument(latitude, longitude);
+     //  drawPolylineBetweenLocationAndDocument();
       }
     } catch (error) {
       print("Error fetching destination location: $error");
@@ -762,26 +974,39 @@ void markStationOnMap(String stationId) async {
     );
     addMarkerToMarkersAndUpdateUI(marker);
   } */
-    void addMarker(double latitude, double longitude) {
-    markers.add(
-      Marker(
-        markerId: MarkerId(latitude.toString() + longitude.toString()),
-        position: LatLng(latitude, longitude),
-      ),
+   void addMarker(double lat, double lng) {
+    Marker marker = Marker(
+      markerId: MarkerId('$lat-$lng'),
+      position: LatLng(lat, lng),
+      infoWindow: InfoWindow(title: 'Station'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
+   addMarkerToMarkersAndUpdateUI(marker);
+    setState(() {
+    markers.add(marker);
+  });
   }
 
-  // Method to update the selected station locations and add markers
-  void updateSelectedStations(LatLng station1, LatLng station2) {
+   void updateSelectedStations(LatLng station1, LatLng station2) {
     setState(() {
       selectedStation1 = station1;
       selectedStation2 = station2;
 
       // Clear existing markers and add only selected station markers
       markers.clear();
-      addMarker(station1.latitude, station1.longitude);
-      addMarker(station2.latitude, station2.longitude);
+      markers.add(Marker(
+        markerId: MarkerId('station1'),
+        position: station1,
+      ));
+      markers.add(Marker(
+        markerId: MarkerId('station2'),
+        position: station2,
+      ));
     });
+     if (selectedStation1 != null && selectedStation2 != null) {
+    // Update camera position to center between both markers
+    centerCameraBetweenStations();
+     } 
   }
 
 
@@ -911,7 +1136,143 @@ void markStationOnMap(String stationId) async {
     BlocProvider.of<MapsCubit>(context)
         .emitPlaceLocation(placeSuggestion.placeId, sessionToken);
   }
+Widget MyCard() {
+  return FutureBuilder<QuerySnapshot>(
+    future: FirebaseFirestore.instance.collection('favoris').where('isDefault', isEqualTo: true).get(),
+    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return Text('No default favorite found');
+      } else {
+        DocumentSnapshot doc = snapshot.data!.docs.first;
+        String? nomLigne = doc.get('nomLigne');
+        String? stationSource = doc.get('stationSource');
+        String? stationDestination = doc.get('stationDestination');
 
+        return Material(
+          clipBehavior: Clip.antiAlias,
+          shape: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: Color.fromARGB(255, 43, 26, 92), width:2.0),
+          ),
+          child: Container(
+            color: Color(0xFFffd400),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                    
+                        Center(
+                          child: Text(
+                            "Favoris par défaut",
+                            style: TextStyle( fontSize: 18, fontWeight: FontWeight.bold , color: Color.fromARGB(255, 43, 26, 92)),
+                          ),
+                          
+                        ),
+                        
+//Icon(Icons.star, size: 50, color: Color.fromARGB(242, 255, 226, 61),),
+                                        
+                                      
+                      
+                    
+                  
+                 
+                  SizedBox(height: 5.0),
+                 Row(
+  children: [
+    Expanded(
+      child: Material(
+        clipBehavior: Clip.antiAlias,
+        shape: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Color(0xFFffd400), width: 2.0),
+        ),
+        child: Container(
+          color: Color.fromARGB(255, 43, 26, 92),
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Départ",
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFffd400)),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "${stationSource}",
+                  style: TextStyle(fontSize: 10, color: Color(0xFFffd400)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+    
+    Container(child: Icon(Icons.arrow_circle_right_rounded, size: 30,color: Color.fromARGB(255, 43, 26, 92),)),
+   // Space between the two materials
+    Expanded(
+      child: Material(
+        clipBehavior: Clip.antiAlias,
+        shape: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Color(0xFFffd400), width: 2.0),
+        ),
+        child: Container(
+          color: Color.fromARGB(255, 43, 26, 92),
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Destination",
+                  style: TextStyle(fontSize: 10,fontWeight:FontWeight.bold , color: Color(0xFFffd400)),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "${stationDestination}",
+                  style: TextStyle(fontSize: 10, color: Color(0xFFffd400)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  ],
+),
+
+                  SizedBox(height: 5.0),
+                  Center(
+                    child: Text(
+                      "Ligne : ${nomLigne ?? ''}",
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color : Color.fromARGB(255, 43, 26, 92), ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Temps d'arrivée de bus : 12min",
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color : Color.fromARGB(255, 43, 26, 92), ),
+                    ),
+                  ),
+                 
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    },
+  );
+}
 @override
 Widget build(BuildContext context) {
   final selectedStationsProvider = Provider.of<SelectedStationsProvider>(context);
@@ -929,7 +1290,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
-        buildFloatingSearchBar(selectedStationsProvider),
+        buildFloatingSearchBar(context, selectedStationsProvider),
         isSearchedPlaceMarkerClicked
             ? DistanceAndTime(
                 isTimeAndDistanceVisible: isTimeAndDistanceVisible,
@@ -941,18 +1302,26 @@ Widget build(BuildContext context) {
     floatingActionButton: Container(
       margin: EdgeInsets.fromLTRB(0, 0, 8, 30),
       child: FloatingActionButton(
-        backgroundColor: MyColors.blue,
+        backgroundColor: Color.fromARGB(255, 43, 26, 92),
         onPressed: _goToMyCurrentLocation,
-        child: Icon(Icons.place, color: Colors.white),
+        child: Icon(Icons.place, color: Color(0xFFffd400)),
       ),
     ),
     bottomNavigationBar: SizedBox(
-      height: 200,
-      width: 50,
-      child: selectedStationsProvider.station1Id != null
-          ? displayBusDocuments(selectedStationsProvider.station1Id!)
-          : listBus(),
-    ),
+      
+        height: 360,
+        child: Column(
+          children: [
+            Expanded(
+              child: selectedStationsProvider.station1Id != null
+                  ? displayBusDocuments(selectedStationsProvider.station1Id!)
+                  : listBus(),
+            ),
+            SizedBox(height: 5,),
+            MyCard(), // Add your MyCard widget here
+          ],
+        ),
+      ),
   );
 }
 

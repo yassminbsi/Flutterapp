@@ -5,6 +5,7 @@ import 'package:flutter_app/auth/login_admin.dart';
 import 'package:flutter_app/auth/signup_admin.dart';
 import 'package:flutter_app/bus/addbus.dart';
 import 'package:flutter_app/bus/viewbus.dart';
+import 'package:flutter_app/favoris/viewfavoris.dart';
 import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/mapligne.dart';
@@ -165,6 +166,10 @@ class AppRouter {
          return MaterialPageRoute(
           builder: (_) =>  Attribuer(),
         );
+       case homefavoris:
+       return MaterialPageRoute(
+        builder: (_) =>  HomeFavoris(),
+        ); 
 
         
     }

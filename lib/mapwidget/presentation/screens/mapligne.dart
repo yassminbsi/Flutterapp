@@ -70,7 +70,8 @@ List<PlaceSuggestion> places = [];
     bearing: 0.0,
     target: LatLng(position!.latitude, position!.longitude),
     tilt: 0.0,
-    zoom: 20,
+    zoom: 17,
+    
   );
 
   // these variables for getPlaceLocation
@@ -91,14 +92,17 @@ double? endStationLatitude;
 double? endStationLongitude;
   LatLng? selectedStation1;
   LatLng? selectedStation2;
-  String selectedStation =  'Station Départ';
+  String selectedStation =  ' Station Départ...';
   String estimatedTimeToStation='';
+  String estimatedTimeToStationA = ''; // Define here
+  String estimatedTimeToStationB = ''; 
   List<String> stationNames = [];
   final FocusNode locationFocusNode = FocusNode();
   FocusNode destinationLocationFocusNode = FocusNode();
   List<QueryDocumentSnapshot> data = [];
   bool isLoading = true;
-  String  selectedstationn= 'Station Destination';
+  String  selectedstationn= ' Station Destination...';
+  String nomBus= '';
   Future<void> getData() async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection("bus").get();
@@ -246,7 +250,79 @@ String durationToNext = '';
     },
   );
 } */
-Widget MyCard(String selectedBusDocumentId, String selectedStation, String estimatedTimeToStation) {
+/*Widget MyCard(String selectedBusDocumentId, String selectedStation, String estimatedTimeToStationA, String estimatedTimeToStationB) {
+  return FutureBuilder<DocumentSnapshot>(
+    future: FirebaseFirestore.instance.collection('bus').doc(selectedBusDocumentId).get(),
+    builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        return Text('Erreur: ${snapshot.error}');
+      } else if (!snapshot.hasData || !snapshot.data!.exists) {
+        return Text('Le document n\'existe pas');
+      } else {
+        try {
+          String nomBus = snapshot.data!.get('nombus');
+          String? firstDeparture = snapshot.data!.get('firstdepart');
+          String? totalDuration = snapshot.data!.get('route_details.total_duration');
+          String instantaneousTime = DateTime.now().toIso8601String();
+
+          if (firstDeparture == null || totalDuration == null) {
+            throw Exception('Données requises manquantes pour le calcul');
+          }
+
+          DateTime departureTime = _parseTime(firstDeparture);
+          double totalDurationMinutes = double.parse(totalDuration.replaceAll(' min', ''));
+          int minutesSinceDeparture = DateTime.parse(instantaneousTime).difference(departureTime).inMinutes;
+          int R = minutesSinceDeparture ~/ totalDurationMinutes.toInt();
+          String busDirection = (R % 2 == 0) ? 'Aller' : 'Retour';
+
+          return Material(
+            clipBehavior: Clip.antiAlias,
+            shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Color(0xFFffd400), width: 2.0),
+            ),
+            child: Container(
+              color: Color.fromARGB(255, 43, 26, 92),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      "Bus $nomBus",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFffd400)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Center(
+                    child: Text(
+                      "Temps d'arrivée du bus A au station $selectedStation: $estimatedTimeToStationA",
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 5.0),
+                  Center(
+                    child: Text(
+                      "Temps d'arrivée du bus B au station $selectedStation: $estimatedTimeToStationB",
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } catch (e) {
+          return Text('Erreur de calcul de la durée: $e');
+        }
+      }
+    },
+  );
+}*/
+Widget MyCard(String selectedBusDocumentId, String selectedStation,  String estimatedTimeToStationA, String estimatedTimeToStationB) {
   return FutureBuilder<DocumentSnapshot>(
     future: FirebaseFirestore.instance.collection('bus').doc(selectedBusDocumentId).get(),
     builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -284,7 +360,7 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
 
           // Définir le widget à afficher en fonction de selectedStation
           Widget contentWidget;
-          if (selectedStation == "Station Départ") {
+          if (selectedStation == ' Station Départ...') {
             contentWidget = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -310,23 +386,49 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
                     textAlign: TextAlign.center,
                   ),
                 ), 
-                SizedBox(height: 5.0),
+                SizedBox(height: 14.0),
                 Center(
                   child: RichText(
                     textAlign: TextAlign.center, // Center-align the text within the RichText
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Temps d\'arrivée de bus au station $selectedStation:',
+                          text: 'Temps d\'arrivée de Ligne $nomBus A au station $selectedStation:',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             color: Colors.white,
                           ),
                         ),
                         TextSpan(
-                          text: ' $estimatedTimeToStation',
+                          text: ' $estimatedTimeToStationA ',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          
+                ),
+                SizedBox(height: 7.0),
+                 Center(
+                  child: RichText(
+                    textAlign: TextAlign.center, // Center-align the text within the RichText
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Temps d\'arrivée de Ligne $nomBus B au station $selectedStation:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' $estimatedTimeToStationB ',
+                          style: TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -362,14 +464,6 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
     },
   );
 }
-
-
-
-
-
-
-
-
   // Function to parse time string in "HH:mm" format
   DateTime _parseTime(String timeString) {
     final parts = timeString.split(':');
@@ -380,15 +474,7 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
     final minute = int.parse(parts[1]);
     return DateTime(2024, 1, 1, hour, minute); // Date doesn't matter, only time is considered
   }
-
-
-
-
-
-
-
-
-
+  
  void buildCameraNewPosition() {
     goToSearchedForPlace = CameraPosition(
       bearing: 0.0,
@@ -432,7 +518,7 @@ Widget MyCard(String selectedBusDocumentId, String selectedStation, String estim
   void initState() {
     super.initState();
     getMyCurrentLocation();
-    _goToMyCurrentLocation();
+   // _goToMyCurrentLocation();
     getData();  
      markLocationOnMap;
     drawPolylineBetweenLocationAndDocument();
@@ -504,62 +590,113 @@ Future<void> _performInitialActions(String selectedBusDocumentId) async {
 
               int selectedIndex = stations.indexWhere((station) => station['name'] == selectedStationName);
 
-              if (selectedIndex != -1) {
-                double timeToStation = 0.0;
+         
+         if (selectedIndex != -1) {
+            double timeToStationA = 0.0;
+            double timeToStationB = 0.0;
 
-                if (isGoDirection) {
-                  double durationToSelectedStation = 0.0;
-                  for (int i = 0; i <= selectedIndex; i++) {
-                    durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                  }
-                  if (currentTripMinutes <= durationToSelectedStation) {
-                    timeToStation = durationToSelectedStation - currentTripMinutes;
-                  } else {
-                    double remainingDuration = 0.0;
-                    for (int i = selectedIndex; i < stations.length; i++) {
-                      remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                    }
-                    double returnRouteDuration = 0.0;
-                    for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                      returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                    }
-                    timeToStation = remainingDuration + returnRouteDuration - currentTripMinutes;
-                  }
-                } else {
-                  double durationToSelectedStation = 0.0;
-                  for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                    durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                  }
-                  if (currentTripMinutes <= durationToSelectedStation) {
-                    timeToStation = durationToSelectedStation - currentTripMinutes;
-                  } else {
-                    double remainingDuration = 0.0;
-                    for (int i = selectedIndex - 1; i >= 0; i--) {
-                      remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                    }
-                    double goRouteDuration = 0.0;
-                    for (int i = 0; i < selectedIndex; i++) {
-                      goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                    }
-                    timeToStation = remainingDuration + goRouteDuration - currentTripMinutes;
-                  }
-                }
-
-                setState(() {
-                  estimatedTimeToStation = '${timeToStation.toStringAsFixed(2)} minutes';
-                });
-              } else {
-                setState(() {
-                  estimatedTimeToStation = 'Station not found';
-                });
-              }
+             // Calculate time to selected station for bus A ("quatrième A")
+        if (isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
             }
-          } catch (e) {
-            print('Error calculating time to arrival: $e');
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
+
+        // Calculate time to selected station for bus B ("quatrième B")
+        if (!isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
             setState(() {
-              estimatedTimeToStation = 'Error calculating time';
+              estimatedTimeToStationA = '${timeToStationA.toStringAsFixed(2)} minutes';
+              estimatedTimeToStationB = '${timeToStationB.toStringAsFixed(2)} minutes';
+            });
+          } else {
+            setState(() {
+              estimatedTimeToStationA = 'Station not found';
+              estimatedTimeToStationB = 'Station not found';
             });
           }
+        } else {
+          setState(() {
+            estimatedTimeToStationA = 'Error: First departure time is null';
+            estimatedTimeToStationB = 'Error: First departure time is null';
+
+          });
+        }
+      
+    } catch (e) {
+      print('Error calculating time to arrival: $e');
+      setState(() {
+       estimatedTimeToStationA = 'Error calculating time';
+        estimatedTimeToStationB = 'Error calculating time';
+      });
+    }
         }
       }
     }
@@ -655,64 +792,110 @@ void findNearestStation(String selectedBusDocumentId) async {
           int selectedIndex = stations.indexWhere((station) => station['name'] == nearestStationName);
 
           if (selectedIndex != -1) {
-            double timeToStation = 0.0;
+            double timeToStationA = 0.0;
+            double timeToStationB = 0.0;
 
-            if (isGoDirection) {
-              double durationToSelectedStation = 0.0;
-              for (int i = 0; i <= selectedIndex; i++) {
-                durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-              }
-              if (currentTripMinutes <= durationToSelectedStation) {
-                timeToStation = durationToSelectedStation - currentTripMinutes;
-              } else {
-                double remainingDuration = 0.0;
-                for (int i = selectedIndex; i < stations.length; i++) {
-                  remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                }
-                double returnRouteDuration = 0.0;
-                for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                  returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                }
-                timeToStation = remainingDuration + returnRouteDuration - currentTripMinutes;
-              }
-            } else {
-              double durationToSelectedStation = 0.0;
-              for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-              }
-              if (currentTripMinutes <= durationToSelectedStation) {
-                timeToStation = durationToSelectedStation - currentTripMinutes;
-              } else {
-                double remainingDuration = 0.0;
-                for (int i = selectedIndex - 1; i >= 0; i--) {
-                  remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                }
-                double goRouteDuration = 0.0;
-                for (int i = 0; i < selectedIndex; i++) {
-                  goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                }
-                timeToStation = remainingDuration + goRouteDuration - currentTripMinutes;
-              }
+           // Calculate time to selected station for bus A ("quatrième A")
+        if (isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
             }
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
+
+        // Calculate time to selected station for bus B ("quatrième B")
+        if (!isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
 
             setState(() {
-              estimatedTimeToStation = '${timeToStation.toStringAsFixed(2)} minutes';
+              estimatedTimeToStationA = '${timeToStationA.toStringAsFixed(2)} minutes';
+              estimatedTimeToStationB = '${timeToStationB.toStringAsFixed(2)} minutes';
             });
           } else {
             setState(() {
-              estimatedTimeToStation = 'Station not found';
+              estimatedTimeToStationA = 'Station not found';
+              estimatedTimeToStationB = 'Station not found';
             });
           }
         } else {
           setState(() {
-            estimatedTimeToStation = 'Error: First departure time is null';
+            estimatedTimeToStationA = 'Error: First departure time is null';
+            estimatedTimeToStationB = 'Error: First departure time is null';
+
           });
         }
       }
     } catch (e) {
       print('Error calculating time to arrival: $e');
       setState(() {
-        estimatedTimeToStation = 'Error calculating time';
+       estimatedTimeToStationA = 'Error calculating time';
+        estimatedTimeToStationB = 'Error calculating time';
       });
     }
 
@@ -741,7 +924,8 @@ void findNearestStation(String selectedBusDocumentId) async {
     });
   }
   
-   void updateSelectedStations(LatLng station1, LatLng station2) {
+ 
+  void updateSelectedStations(LatLng station1, LatLng station2) {
     setState(() {
       selectedStation1 = station1;
       selectedStation2 = station2;
@@ -757,33 +941,63 @@ void findNearestStation(String selectedBusDocumentId) async {
         position: station2,
       ));
     });
+     if (selectedStation1 != null && selectedStation2 != null) {
+    // Update camera position to center between both markers
+    centerCameraBetweenStations();
+     } 
+  }
+
+  void centerCameraBetweenStations() async {
+    if (selectedStation1 != null && selectedStation2 != null) {
+      // Calculate the midpoint between the two selected stations
+      LatLng midPoint = LatLng(
+        selectedStation1!.latitude  ,
+        selectedStation1!.longitude ,
+      );
+
+      // Calculate the zoom level
+      double zoomLevel = 14; // Adjust zoom level as needed
+
+      // Get GoogleMapController from the Completer
+      GoogleMapController controller = await _mapController.future;
+
+      // Animate camera to the midpoint with the calculated zoom level
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: midPoint, zoom: zoomLevel),
+        ),
+      );
+    }
   }
   Widget buildMap() {
-    Set<Marker> selectedMarkers = {};
+ Set<Marker> selectedMarkers = {};
 
-  if (selectedStation1 != null) {
-    selectedMarkers.add(Marker(
-      markerId: MarkerId('station1'),
-      position: selectedStation1!,
-    ));
-  }
+    if (selectedStation1 != null) {
+      selectedMarkers.add(Marker(
+        markerId: MarkerId('station1'),
+        position: selectedStation1!,
+      ));
+    }
 
-  if (selectedStation2 != null) {
-    selectedMarkers.add(Marker(
-      markerId: MarkerId('station2'),
-      position: selectedStation2!,
-    ));
-  }
+    if (selectedStation2 != null) {
+      selectedMarkers.add(Marker(
+        markerId: MarkerId('station2'),
+        position: selectedStation2!,
+      ));
+    }
 
     return GoogleMap(
-      mapType: MapType.normal,
+     mapType: MapType.normal,
       myLocationEnabled: true,
-      zoomControlsEnabled: false,
+      zoomControlsEnabled: true,
       myLocationButtonEnabled: false,
       markers: selectedMarkers,
       initialCameraPosition: _myCurrentLocationCameraPosition,
-      onMapCreated: (GoogleMapController controller) {
+       onMapCreated: (GoogleMapController controller) {
         _mapController.complete(controller);
+        if (selectedStation1 != null && selectedStation2 != null) {
+          centerCameraBetweenStations();
+        }
       },
       polylines: {
       if (polylinePoints.isNotEmpty)
@@ -855,13 +1069,13 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
         FloatingSearchBar(
           controller: controller,
           elevation: 6,
-          hintStyle: TextStyle(fontSize: 15, color: Colors.black),
+          hintStyle: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal),
           queryStyle: TextStyle(fontSize: 15),
           hint:  selectedStation,
           borderRadius: BorderRadius.circular(24),
           margins: EdgeInsets.fromLTRB(20, 70, 20, 0),
           padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-          height: 50,
+          height: 54,
           backgroundColor: Color.fromARGB(255, 226, 222, 222),
           iconColor: Color.fromARGB(255, 43, 26, 92),
           scrollPadding: const EdgeInsets.only(top: 20, bottom: 56),
@@ -922,6 +1136,7 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
                                     Navigator.of(context).pop();
                                   },
                                   style: ElevatedButton.styleFrom(
+                                    
                                     backgroundColor: Color.fromARGB(255, 43, 26, 92),
                                   ),
                                   child: Text(
@@ -981,83 +1196,136 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
     });
     markLocationOnMap(stationId);
     drawPolylineBetweenLocationAndDocument();
-    selectedStationsProvider.setStation1(stationId, selectedStation);
+    selectedStationsProvider.setStation2(stationId, selectedStation);
      updateSelectedStations(
              LatLng(startStationLatitude!, startStationLongitude!),
                  selectedStation2 ?? LatLng(0.0, 0.0), // Pass the existing second station or a default value
                                               );
    
   }
-                                          try {
-                                            DateTime currentTime = DateTime.now();
-                                            DateTime firstDeparture = _parseTime(snapshot.data!['firstdepart']);
-                                  
-                                            double totalDurationMinutes = double.parse(snapshot.data!['route_details']['total_duration'].replaceAll(' min', ''));
-                                  
-                                            int minutesSinceDeparture = currentTime.difference(firstDeparture).inMinutes;
-                                            int currentTripMinutes = minutesSinceDeparture % totalDurationMinutes.toInt();
-                                  
-                                            List stations = snapshot.data!['route_details']['stations'];
-                                            int currentCycle = minutesSinceDeparture ~/ totalDurationMinutes.toInt();
-                                            bool isGoDirection = currentCycle % 2 == 0;
-                                  
-                                            int selectedIndex = stations.indexWhere((station) => station['name'] == selectedStation);
-                                  
-                                            if (selectedIndex != -1) {
-                                              double timeToStation = 0.0;
-                                  
-                                              if (isGoDirection) {
-                                                double durationToSelectedStation = 0.0;
-                                                for (int i = 0; i <= selectedIndex; i++) {
-                                                  durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                }
-                                                if (currentTripMinutes <= durationToSelectedStation) {
-                                                  timeToStation = durationToSelectedStation - currentTripMinutes;
-                                                } else {
-                                                  double remainingDuration = 0.0;
-                                                  for (int i = selectedIndex; i < stations.length; i++) {
-                                                    remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                  }
-                                                  double returnRouteDuration = 0.0;
-                                                  for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                                                    returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                  }
-                                                  timeToStation = remainingDuration + returnRouteDuration - currentTripMinutes;
-                                                }
-                                              } else {
-                                                double durationToSelectedStation = 0.0;
-                                                for (int i = stations.length - 2; i >= selectedIndex; i--) {
-                                                  durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                }
-                                                if (currentTripMinutes <= durationToSelectedStation) {
-                                                  timeToStation = durationToSelectedStation - currentTripMinutes;
-                                                } else {
-                                                  double remainingDuration = 0.0;
-                                                  for (int i = selectedIndex - 1; i >= 0; i--) {
-                                                    remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                  }
-                                                  double goRouteDuration = 0.0;
-                                                  for (int i = 0; i < selectedIndex; i++) {
-                                                    goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
-                                                  }
-                                                  timeToStation = remainingDuration + goRouteDuration - currentTripMinutes;
-                                                }
-                                              }
-                                  
-                                              setState(() {
-                                                estimatedTimeToStation = '${timeToStation.toStringAsFixed(2)} minutes';
-                                              });
-                                            } else {
-                                              setState(() {
-                                                estimatedTimeToStation = 'Station not found';
-                                              });
-                                            }
-                                          } catch (e) {
-                                            print('Error calculating time to arrival: $e');
-                                            setState(() {
-                                              estimatedTimeToStation = 'Error calculating time';
-                                            });
-                                          }
+
+    try {
+    DateTime currentTime = DateTime.now();
+    DateTime firstDeparture = _parseTime(snapshot.data!['firstdepart']);
+     if (firstDeparture != null) {
+    double totalDurationMinutes = double.parse(snapshot.data!['route_details']['total_duration'].replaceAll(' min', ''));
+    int minutesSinceDeparture = currentTime.difference(firstDeparture).inMinutes;
+    int currentTripMinutes = minutesSinceDeparture % totalDurationMinutes.toInt();
+
+    List stations = snapshot.data!['route_details']['stations'];
+    int currentCycle = minutesSinceDeparture ~/ totalDurationMinutes.toInt();
+    bool isGoDirection = currentCycle % 2 == 0;
+
+    int selectedIndex = stations.indexWhere((station) => station['name'] == selectedStation);
+
+      
+         if (selectedIndex != -1) {
+            double timeToStationA = 0.0;
+            double timeToStationB = 0.0;
+
+             // Calculate time to selected station for bus A ("quatrième A")
+        if (isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationA = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationA = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
+
+        // Calculate time to selected station for bus B ("quatrième B")
+        if (!isGoDirection) {
+          double durationToSelectedStation = 0.0;
+          for (int i = 0; i <= selectedIndex; i++) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex; i < stations.length; i++) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double returnRouteDuration = 0.0;
+            for (int i = stations.length - 2; i >= selectedIndex; i--) {
+              returnRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + returnRouteDuration - currentTripMinutes;
+          }
+        } else {
+          double durationToSelectedStation = 0.0;
+          for (int i = stations.length - 2; i >= selectedIndex; i--) {
+            durationToSelectedStation += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+          }
+          if (currentTripMinutes <= durationToSelectedStation) {
+            timeToStationB = durationToSelectedStation - currentTripMinutes;
+          } else {
+            double remainingDuration = 0.0;
+            for (int i = selectedIndex - 1; i >= 0; i--) {
+              remainingDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            double goRouteDuration = 0.0;
+            for (int i = 0; i < selectedIndex; i++) {
+              goRouteDuration += double.parse(stations[i]['duration_to_next'].replaceAll(' min', ''));
+            }
+            timeToStationB = remainingDuration + goRouteDuration - currentTripMinutes;
+          }
+        }
+            setState(() {
+              estimatedTimeToStationA = '${timeToStationA.toStringAsFixed(2)} minutes';
+              estimatedTimeToStationB = '${timeToStationB.toStringAsFixed(2)} minutes';
+            });
+          } else {
+            setState(() {
+              estimatedTimeToStationA = 'Station not found';
+              estimatedTimeToStationB = 'Station not found';
+            });
+          }
+        } else {
+          setState(() {
+            estimatedTimeToStationA = 'Error: First departure time is null';
+            estimatedTimeToStationB = 'Error: First departure time is null';
+
+          });
+        }
+      
+    } catch (e) {
+      print('Error calculating time to arrival: $e');
+      setState(() {
+       estimatedTimeToStationA = 'Error calculating time';
+        estimatedTimeToStationB = 'Error calculating time';
+      });
+    }
+
                                         },
                                       );
                                     },
@@ -1099,19 +1367,19 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 20.0, bottom: 8.0),
                       hintText: selectedstationn,
-                      hintStyle: TextStyle(fontSize: 15, color: Colors.black),
-                     // labelText: '',
-                      labelStyle: TextStyle(fontSize: 15, color: Colors.black),
+                      hintStyle: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.normal),
+                     labelStyle: TextStyle(fontSize: 15, color: Colors.black),
                       filled: true,
                       fillColor: Color.fromARGB(255, 226, 222, 222),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey),
+                       // borderSide: BorderSide(color: Colors.transparent),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey),
+                      borderSide: BorderSide(color: Colors.transparent),
                       ),
+                  prefixIcon: Icon(Icons.directions_bus,color: Color.fromARGB(255, 43, 26, 92),),
               suffixIcon: CircularButton(
             icon: Icon(Icons.arrow_drop_down, size: 40, color: Color.fromARGB(255, 43, 26, 92)),
             onPressed: () async {
@@ -1189,19 +1457,16 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
    // markLocationOnMap(stationId);
     drawPolylineBetweenLocationAndDocument();
    selectedStationsProvider.setStation2(stationId, stationNames);
-
                                             // Update the selected station
                                             updateSelectedStations(
                                               selectedStation1 ?? LatLng(0.0, 0.0), // Pass the existing first station or a default value
                                               LatLng(endStationLatitude!, endStationLongitude!),
                                             );
-
   }
-                                
-                                              }
-                              );
-                            },
-                          );
+  }
+  );
+  },
+    );
                         },
                       ),
                     ),
@@ -1214,12 +1479,67 @@ void hideOtherTextField({bool showList = true, bool showStation = true}) {
                     ),
                     
                   ),
+                  SizedBox(height: 10),
+                  MaterialButton(
+                  height: 50,
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),  
+                  color: Color.fromARGB(255, 43, 26, 92),
+                  onPressed: () {
+                  if (selectedStation != null && selectedStation.isNotEmpty && selectedstationn != null ) {
+                    addFavorite(selectedStation, selectedstationn, nomBus);
+                  } else {
+                    // Show a message to select a station first
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Veuillez sélectionner une station')),
+                    );
+                  }
+                },
+                child: Text('Ajouter Au Favoris', style:TextStyle(color: Color(0xFFffd400)),),
+              )
               ],
             )
     )
       ],
     );
   }
+void addFavorite(String selectedStation, String selectedStationn, String nomBus) async {
+  try {
+    final selectedBusProvider = Provider.of<SelectedBusDocumentIdProvider>(context, listen: false);
+    final selectedBusDocumentId = selectedBusProvider.selectedBusDocumentId;
+    // Fetch the selected bus document
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('bus').doc(selectedBusDocumentId).get();
+    // Cast the data to a Map<String, dynamic> and handle null case
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    // Check if data is not null
+    if (data != null) {
+      // Ensure 'nombus' is a string, or handle different data types appropriately
+      String nomBus = data['nombus'] as String;
+
+      // Add the favorite to Firestore
+      await FirebaseFirestore.instance.collection('favoris').add({
+        'stationSource': selectedStation,
+        'stationDestination': selectedStationn,
+        'nomLigne': nomBus,
+        'isDefault': false,
+      });
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Favoris ajouté avec succès')),
+      );
+    } else {
+      throw 'Aucune donnée disponible pour le bus sélectionné';
+    }
+  } catch (error) {
+    // Show error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erreur lors de l\'ajout du favoris: $error')),
+    );
+  }
+}
+
+
 
 /* departStation = value;
               setState(() {});
@@ -1479,9 +1799,9 @@ Widget build(BuildContext context) {
     ),
      bottomNavigationBar: selectedStation != null && selectedBusProvider.selectedBusDocumentId != null
   ? SizedBox(
-      height: 150,
+      height: 200,
       width: 50,
-      child: MyCard(selectedBusProvider.selectedBusDocumentId, selectedStation, estimatedTimeToStation)
+      child: MyCard(selectedBusProvider.selectedBusDocumentId, selectedStation, estimatedTimeToStationA, estimatedTimeToStationB)
     )
   : Container(), 
   

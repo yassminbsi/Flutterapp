@@ -25,6 +25,7 @@ const controlepage = "/ControlePage";
 const mapStation= "/AddStationCurrentPosition";
 const mapadmin= "/MapAdmin";
 const mapligne="/MapLigne";
+const homefavoris= "/HomeFavoris";
 
 const googleAPIKey = 'AIzaSyDI1prEDeGy0UImJM0ZDPikd0lYZOEp6PQ';
 const suggestionsBaseUrl =

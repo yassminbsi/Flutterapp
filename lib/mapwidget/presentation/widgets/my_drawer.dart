@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_app/mapwidget/business_logic/cubit/phone_auth/phone_auth_cubit.dart';
 import 'package:flutter_app/mapwidget/constnats/my_colors.dart';
-import 'package:flutter_app/mapwidget/constnats/strings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -128,7 +125,14 @@ class MyDrawer extends StatelessWidget {
               child: buildDrawerHeader(context),
             ),
           ),
-          buildDrawerListItem(leadingIcon: Icons.person, title: 'My Profile'),
+         // buildDrawerListItem(leadingIcon: Icons.person, title: 'My Profile'),
+          buildDrawerListItem(
+            leadingIcon: Icons.star_border,
+            title: 'Favoris',
+            onTap: () {
+              Navigator.of(context).pushNamed("/HomeFavoris");
+            },
+          ),
           buildDrawerListItemsDivider(),
           buildDrawerListItem(
             leadingIcon: Icons.history,
@@ -144,10 +148,12 @@ class MyDrawer extends StatelessWidget {
           const SizedBox(
             height: 180,
           ),
-          ListTile(
-            leading: Text(
-              'Follow us',
-              style: TextStyle(color: Colors.grey[600]),
+          Center(
+            child: ListTile(
+              leading: Text(
+                'Follow us',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             ),
           ),
           buildSocialMediaIcons(),
