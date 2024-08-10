@@ -4,9 +4,11 @@
     "Attribuer",
     "docidbus",
     "firestore",
+    "firstdepart",
     "hinttext",
     "nombus",
     "webservices"
   ],
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "commentTranslate.hover.enabled": true
 }

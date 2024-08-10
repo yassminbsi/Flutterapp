@@ -133,9 +133,11 @@ import 'package:flutter_app/mapwidget/business_logic/cubit/maps/maps_cubit.dart'
 import 'package:flutter_app/mapwidget/constnats/strings.dart';
 import 'package:flutter_app/mapwidget/data/repository/maps_repo.dart';
 import 'package:flutter_app/mapwidget/data/webservices/places_webservices.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/favoris_providers.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/map_screen.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/mapligne.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedbus.dart';
+import 'package:flutter_app/mapwidget/presentation/screens/selectedbusfavoris.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedstation.dart';
 import 'package:flutter_app/mapwidget/presentation/screens/selectedstationname.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -188,6 +190,8 @@ void main() async {
     runApp(
       MultiProvider(
         providers: [
+           ChangeNotifierProvider(create: (_) => FavorisProvider()),
+          ChangeNotifierProvider(create: (_) => SelectedBusDocumentIdProviderForFavoris()),
           ChangeNotifierProvider(create: (_) => SelectedStationsProvider()),
           ChangeNotifierProvider(create: (_) => SelectedStationssProvider()),
           ChangeNotifierProvider(create: (_) => SelectedStationNameProvider()),

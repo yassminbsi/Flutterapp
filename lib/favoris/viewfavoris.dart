@@ -160,6 +160,7 @@ child:Card(
 class HomeFavoris extends StatefulWidget {
    
   const HomeFavoris({super.key});
+  @override
   State<HomeFavoris> createState() => _HomeStationState();
 }
 
@@ -228,8 +229,8 @@ Future<void> setDefaultFavorite(String docId) async {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Color(0xFFffd400)),
-        backgroundColor: Color(0xFF25243A),
+        iconTheme: const IconThemeData(color: Color(0xFFffd400)),
+        backgroundColor: const Color(0xFF25243A),
         title: const Text(
           'Mes favoris',
           style: TextStyle(
@@ -240,19 +241,19 @@ Future<void> setDefaultFavorite(String docId) async {
         ),
       ),
       
-      floatingActionButton: FloatingActionButton(
+     /* floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFffd400),
         foregroundColor: Colors.black54,
         onPressed: () {
           Navigator.of(context).pushNamed("/MapLigne");
         },
         child: Icon(Icons.add),
-      ),
+      ),*/
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : GridView.builder(
               itemCount: data.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 mainAxisExtent: 140,
               ),
@@ -269,7 +270,7 @@ Future<void> setDefaultFavorite(String docId) async {
                       dialogType: DialogType.info,
                       animType: AnimType.rightSlide,
                       title: '',
-                      desc: 'Voulez-vous vraiment supprimer cette favoris ?',
+                      desc: 'Voulez-vous vraiment supprimer ce favori ?',
                       btnCancelText: "Supprimer",
                       btnCancelOnPress: () => deleteFavoris(doc.id),
                     ).show();
@@ -282,7 +283,7 @@ Future<void> setDefaultFavorite(String docId) async {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,18 +291,18 @@ Future<void> setDefaultFavorite(String docId) async {
                                 ListTile(
                                   title: Text(
                                     "Ligne: ${doc['nomLigne']}",
-                                    style: TextStyle(fontSize: 15),
+                                    style: const TextStyle(fontSize: 15),
                                   ),
                                   subtitle: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Départ: ${doc['stationSource']}",
-                                        style: TextStyle(fontSize: 11),
+                                        style: const TextStyle(fontSize: 11),
                                       ),
                                       Text(
                                         "Destination: ${doc['stationDestination']}",
-                                        style: TextStyle(fontSize: 11),
+                                        style: const TextStyle(fontSize: 11),
                                       ),
                                     ],
                                   ),
@@ -309,10 +310,10 @@ Future<void> setDefaultFavorite(String docId) async {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                        if (isDefault)
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 8.0),
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
                                           child: Text(
-                                            "by default",
+                                            "par défaut",
                                             style: TextStyle( fontSize: 13,
                                               color: Color.fromARGB(242, 255, 226, 61),
                                             ),
